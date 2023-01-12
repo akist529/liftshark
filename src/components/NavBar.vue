@@ -1,0 +1,92 @@
+<template>
+    <nav>
+        <ul>
+            <li>
+                <router-link class="link" to="/">
+                    <img alt="Dashboard Icon" :src="require('@/../public/images/ui/sidebar/dashboard.webp')" />
+                    <span>Dashboard</span>
+                </router-link>
+            </li>
+            <li>
+                <router-link class="link" to="/workouts">
+                    <img alt="Workouts Icon" :src="require('@/../public/images/ui/sidebar/workouts.webp')" />
+                    <span>Workouts</span>
+                </router-link>
+            </li>
+            <li>
+                <router-link class="link" to="/routines">
+                    <img alt="Routines Icon" :src="require('@/../public/images/ui/sidebar/routines.webp')" />
+                    <span>Routines</span>
+                </router-link>
+            </li>
+            <li>
+                <router-link class="link" to="/stats">
+                    <img alt="Stats Icon" :src="require('@/../public/images/ui/sidebar/stats.webp')" />
+                    <span>Stats</span>
+                </router-link>
+            </li>
+            <li>
+                <router-link class="link" to="Exercises">
+                    <img alt="Exercises Icon" :src="require('@/../public/images/ui/sidebar/exercises.webp')" />
+                    <span>Exercises</span>
+                </router-link>
+            </li>
+        </ul>
+    </nav>
+</template>
+
+<style lang="scss">
+nav {
+    grid-row: 2 / 3;
+    grid-column: 1 / -1;
+
+    margin: 0 auto;
+    padding: 10px 5px;
+    width: 100%;
+
+    background: rgb(20, 20, 20);
+
+    ul {
+        display: grid;
+        grid-template-columns: repeat(5, 1fr);
+        grid-template-rows: 1fr;
+
+        font-family: var(--sidebar-font);
+        font-size: 1rem;
+
+        li {
+            list-style-type: none;
+            padding-right: 5px;
+
+            a {
+                display: flex;
+                flex-direction: column;
+                justify-content: space-between;
+                align-items: center;
+                gap: 5px;
+                text-decoration: none;
+                color: rgb(100, 100, 100);
+                font-size: clamp(8px, 80%, 16px);
+
+                img {
+                    width: auto;
+                    height: 30px;
+                    filter: invert(0.25);
+                }
+            }
+
+            .router-link-active {
+                color: white;
+
+                img {
+                    filter: invert(1);
+                }
+            }
+        }
+
+        li:nth-child(5) {
+            padding-right: 0;
+        }
+    }
+}
+</style>
