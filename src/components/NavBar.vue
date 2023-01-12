@@ -19,10 +19,22 @@
                     <span>Routines</span>
                 </router-link>
             </li>
-            <li>
+            <li v-if="windowWidth <= 480">
                 <router-link class="link" to="/stats">
                     <img alt="Stats Icon" :src="require('@/../public/images/ui/sidebar/stats.webp')" />
                     <span>Stats</span>
+                </router-link>
+            </li>
+            <li v-if="windowWidth > 480">
+                <router-link class="link" to="/stats/measurements">
+                    <img alt="Measurements Icon" :src="require('@/../public/images/ui/sidebar/measurements.webp')" />
+                    <span>Measurements</span>
+                </router-link>
+            </li>
+            <li v-if="windowWidth > 480">
+                <router-link class="link" to="/stats/weight">
+                    <img alt="Weight Icon" :src="require('@/../public/images/ui/sidebar/weight.webp')" />
+                    <span>Weight</span>
                 </router-link>
             </li>
             <li>
@@ -34,6 +46,23 @@
         </ul>
     </nav>
 </template>
+
+<script lang="ts">
+import { defineComponent } from 'vue'
+
+export default defineComponent({
+  data () {
+    return {
+      windowWidth: window.innerWidth
+    }
+  },
+  mounted () {
+    window.addEventListener('resize', () => {
+      this.windowWidth = window.innerWidth
+    })
+  }
+})
+</script>
 
 <style lang="scss">
 nav {
@@ -98,7 +127,7 @@ nav {
 
         ul {
             grid-template-columns: 1fr;
-            grid-template-rows: repeat(5, 1fr);
+            grid-template-rows: repeat(6, 1fr);
 
             margin-top: 10vh;
 
@@ -118,7 +147,7 @@ nav {
         padding: 0;
 
         ul {
-            grid-template-columns: repeat(5, 1fr);
+            grid-template-columns: repeat(6, 1fr);
             grid-template-rows: 1fr;
             margin-top: 0;
             height: 100%;
