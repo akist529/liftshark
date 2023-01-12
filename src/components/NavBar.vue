@@ -94,6 +94,7 @@ nav {
     nav {
         grid-row: 1 / -1;
         grid-column: 1 / 2;
+        padding: 2vw;
 
         ul {
             grid-template-columns: 1fr;
@@ -102,7 +103,46 @@ nav {
             margin-top: 10vh;
 
             li {
+                padding-right: 0;
                 padding-bottom: 20px;
+            }
+        }
+    }
+}
+
+@media (width > 1024px) {
+    nav {
+        grid-row: 1 / 2;
+        grid-column: 1 / -1;
+        height: 100%;
+        padding: 0;
+
+        ul {
+            grid-template-columns: repeat(5, 1fr);
+            grid-template-rows: 1fr;
+            margin-top: 0;
+            height: 100%;
+
+            li {
+                padding: 0;
+                height: 100%;
+
+                a {
+                    flex-direction: row;
+                    justify-content: center;
+                    gap: 10px;
+                    padding: 20px 30px;
+
+                    color: white;
+
+                    img {
+                        filter: invert(1);
+                    }
+                }
+
+                a:hover {
+                    background-color: rgb(40, 40, 40);
+                }
             }
         }
     }

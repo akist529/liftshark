@@ -55,6 +55,18 @@ export default {
     }
   }
 
+  @media (width > 1024px) {
+    #app {
+      grid-template-columns: 1fr;
+      grid-template-rows: auto 1fr;
+
+      #router-view {
+        grid-row: 2 / 3;
+        grid-column: 1 / -1;
+      }
+    }
+  }
+
   /*
   MAX PHONE WIDTH: 480px
   MAX TABLET WIDTH: 1024px
