@@ -89,4 +89,22 @@ nav {
         }
     }
 }
+
+@media (width > 480px) {
+    nav {
+        grid-row: 1 / -1;
+        grid-column: 1 / 2;
+
+        ul {
+            grid-template-columns: 1fr;
+            grid-template-rows: repeat(5, 1fr);
+
+            margin-top: 10vh;
+
+            li {
+                padding-bottom: 20px;
+            }
+        }
+    }
+}
 </style>
