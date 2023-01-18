@@ -1,7 +1,11 @@
 <template>
-  <div class="ExerciseView" ref="ExerciseView">
+  <div class="ExerciseView" ref="view">
     <h1>Exercises</h1>
-    <ul class="ExerciseList">
+    <div class="page-buttons">
+      <PrevPageButton @click="getPage('previous')" />
+      <NextPageButton @click="getPage('next')" />
+    </div>
+    <ul class="exercise-list">
       <MyExercise
         v-for="exercise in exercises"
         :key="exercise.id"
@@ -11,16 +15,20 @@
         :equipment="getNames(exercise.equipment, equipment)"
         :image="getImage(exercise.exercise_base)" />
     </ul>
-    <NextPageButton @click="getPage()" />
+    <div class="page-buttons">
+      <PrevPageButton @click="getPage('previous')" />
+      <NextPageButton @click="getPage('next')" />
+    </div>
     <MyFooter />
   </div>
 </template>
 
 <script lang="ts">
-import { defineComponent, ref } from 'vue'
+import { defineComponent } from 'vue'
 import MyExercise from '@/components/MyExercise.vue'
 import MyFooter from '@/components/MyFooter.vue'
 import NextPageButton from '@/components/buttons/NextPageButton.vue'
+import PrevPageButton from '@/components/buttons/PrevPageButton.vue'
 import { fetchData } from '@/mixins/fetchData'
 import { Exercise, Muscle, Equipment, Category, Image } from '@/types/index'
 
@@ -79,17 +87,26 @@ export default defineComponent({
 
       return imageURL
     },
-    getPage: async function () {
+    getPage: async function (direction) {
+      if (direction === 'next') {
+        this.offset += 20
+      } else if (direction === 'previous') {
+        this.offset -= 20
+      }
+
+      if (this.offset < 0) {
+        this.offset = 0
+      }
+
       this.getResults(`https://wger.de/api/v2/exercise/?limit=20&offset=${this.offset}&language=2`, 'name')
         .then(data => {
-          this.exercises = data
-          this.offset += 20
-
-          /*
-          this.$nextTick(() => {
-            (this.$refs.ExerciseView as any).scrollIntoView({ top: 0, scrollBehavior: 'smooth' })
-          })
-          */
+          if (data.length > 0) {
+            this.exercises = data
+          } else {
+            this.offset -= 20
+          }
+        }).then(() => {
+          (this.$refs.view as HTMLDivElement).scrollTo({ top: 0, behavior: 'smooth' })
         })
     }
   },
@@ -97,7 +114,8 @@ export default defineComponent({
   components: {
     MyExercise,
     MyFooter,
-    NextPageButton
+    NextPageButton,
+    PrevPageButton
   },
   async created () {
     this.getResults('https://wger.de/api/v2/exercise/?limit=20&language=2', 'name')
@@ -116,7 +134,15 @@ export default defineComponent({
 
 <style lang="scss">
 .ExerciseView {
-  .ExerciseList {
+  overflow: scroll;
+
+  .page-buttons {
+    display: flex;
+    justify-content: space-evenly;
+    width: 100%;
+  }
+
+  .exercise-list {
     display: grid;
     grid-template-rows: repeat(auto-fill, auto);
     grid-template-columns: auto;

@@ -26,21 +26,21 @@
 <script lang="ts">
 import { defineComponent } from 'vue'
 import { fetchData } from '@/mixins/fetchData'
-import { fetchImage } from '@/mixins/fetchImage'
+import { fetchImages } from '@/mixins/fetchImages'
 
 export default defineComponent({
   props: ['name', 'muscles', 'secondaryMuscles', 'equipment', 'image'],
-  mixins: [fetchData, fetchImage],
+  mixins: [fetchData, fetchImages],
   methods: {
     getFileName: function (item) {
       if (item === 'Obliquus externus abdominis') {
-        return 'obliques.webp'
+        return 'ui/exercises/obliques.webp'
       } else if (item === 'Soleus') {
-        return 'calves.webp'
+        return 'ui/exercises/calves.webp'
       } else if (item === 'SZ-Bar') {
-        return 'ez-bar.webp'
+        return 'ui/exercises/ez-bar.webp'
       } else {
-        return `${item.toLowerCase().replaceAll(' ', '-').replaceAll(/[()]/g, '')}.webp`
+        return `ui/exercises/${item.toLowerCase().replaceAll(' ', '-').replaceAll(/[()]/g, '')}.webp`
       }
     }
   }
@@ -54,6 +54,7 @@ export default defineComponent({
   border: 2px solid black;
   border-radius: 10px;
   padding: 10px;
+  cursor: pointer;
 
   main {
     margin: 0 auto;
@@ -76,7 +77,8 @@ export default defineComponent({
   }
 
   img {
-    width: 50vw;
+    width: 15vw;
+    height: auto;
   }
 }
 </style>
