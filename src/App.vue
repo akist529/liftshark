@@ -1,6 +1,6 @@
 <template>
-  <NavBar />
   <router-view id="router-view" />
+  <NavBar />
 </template>
 
 <script lang="ts">
@@ -38,8 +38,11 @@ export default {
       grid-column: 1 / -1;
 
       display: flex;
-      justify-content: center;
+      flex-direction: column;
       align-items: center;
+      padding: 20px;
+
+      overflow: scroll;
     }
   }
 

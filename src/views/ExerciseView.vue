@@ -1,77 +1,126 @@
 <template>
-  <div class="ExerciseView">
+  <div class="ExerciseView" ref="ExerciseView">
     <h1>Exercises</h1>
-    <div class="ExerciseList">
-      <span v-for="exercise in exercises" v-bind:key="exercise.id">{{ exercise.name }}</span>
-    </div>
+    <ul class="ExerciseList">
+      <MyExercise
+        v-for="exercise in exercises"
+        :key="exercise.id"
+        :name="exercise.name"
+        :muscles="getNames(exercise.muscles, muscles)"
+        :secondaryMuscles="getNames(exercise.muscles_secondary, muscles)"
+        :equipment="getNames(exercise.equipment, equipment)"
+        :image="getImage(exercise.exercise_base)" />
+    </ul>
+    <NextPageButton @click="getPage()" />
+    <MyFooter />
   </div>
 </template>
 
 <script lang="ts">
-import { defineComponent } from 'vue'
-
-interface Exercise {
-  id: number
-  uuid: string
-  name: string
-  // eslint-disable-next-line camelcase
-  exercise_base: number
-  description: string
-  // eslint-disable-next-line camelcase
-  creation_date: string
-  category: number
-  muscles: string[]
-  // eslint-disable-next-line camelcase
-  muscles_secondary: string[]
-  equipment: number[]
-  langage: number
-  license: number
-  // eslint-disable-next-line camelcase
-  license_author: string
-  variations: number[]
-  // eslint-disable-next-line camelcase
-  author_history: string[]
-}
+import { defineComponent, ref } from 'vue'
+import MyExercise from '@/components/MyExercise.vue'
+import MyFooter from '@/components/MyFooter.vue'
+import NextPageButton from '@/components/buttons/NextPageButton.vue'
+import { fetchData } from '@/mixins/fetchData'
+import { Exercise, Muscle, Equipment, Category, Image } from '@/types/index'
 
 export default defineComponent({
   data () {
     const exercises: Exercise[] = []
+    const muscles: Muscle[] = []
+    const equipment: Equipment[] = []
+    const categories: Category[] = []
+    const images: Image[] = []
+    const offset = 0
 
     return {
-      exercises
+      exercises,
+      muscles,
+      equipment,
+      categories,
+      images,
+      offset
     }
   },
   methods: {
-    getExerciseData: async function () {
-      try {
-        const response = await fetch('https://wger.de/api/v2/exercise?limit=999&language=2')
-        return await response.json()
-      } catch (error) {
-        console.log(error)
-      }
+    getNames: function (arr, data) {
+      const names: string[] = []
+
+      arr.forEach(item => {
+        data.forEach(entry => {
+          if (item === entry.id) {
+            names.push((() => {
+              if (data === this.muscles) {
+                if (entry.name_en) {
+                  return entry.name_en
+                } else {
+                  return entry.name
+                }
+              } else if (data === this.equipment) {
+                return entry.name
+              } else {
+                return ''
+              }
+            })())
+          }
+        })
+      })
+
+      return names
     },
-    getExercises: async function () {
-      const data = await this.getExerciseData()
-      const results: Exercise[] = data.results
-      const key = 'name'
-      const unique = [...new Map(results.map(item => [item[key], item])).values()]
-      this.exercises = unique
+    getImage: function (id: number) {
+      let imageURL = ''
+
+      this.images.forEach(item => {
+        if (item.exercise_base === id) {
+          imageURL = item.image
+        }
+      })
+
+      return imageURL
+    },
+    getPage: async function () {
+      this.getResults(`https://wger.de/api/v2/exercise/?limit=20&offset=${this.offset}&language=2`, 'name')
+        .then(data => {
+          this.exercises = data
+          this.offset += 20
+
+          /*
+          this.$nextTick(() => {
+            (this.$refs.ExerciseView as any).scrollIntoView({ top: 0, scrollBehavior: 'smooth' })
+          })
+          */
+        })
     }
   },
-  mounted () {
-    this.getExercises()
+  mixins: [fetchData],
+  components: {
+    MyExercise,
+    MyFooter,
+    NextPageButton
+  },
+  async created () {
+    this.getResults('https://wger.de/api/v2/exercise/?limit=20&language=2', 'name')
+      .then(data => { this.exercises = data })
+    await this.getResults('https://wger.de/api/v2/muscle?limit=999', 'name')
+      .then(data => { this.muscles = data })
+    await this.getResults('https://wger.de/api/v2/equipment?limit=999', 'name')
+      .then(data => { this.equipment = data })
+    await this.getResults('https://wger.de/api/v2/exercisecategory?limit=999', 'name')
+      .then(data => { this.categories = data })
+    await this.getResults('https://wger.de/api/v2/exerciseimage?limit=999', 'id')
+      .then(data => { this.images = data })
   }
 })
 </script>
 
 <style lang="scss">
 .ExerciseView {
-  display: flex;
-  flex-direction: column;
-
   .ExerciseList {
-    display: flex;
-    flex-direction: column;
+    display: grid;
+    grid-template-rows: repeat(auto-fill, auto);
+    grid-template-columns: auto;
+    gap: 20px;
   }
 }
 </style>

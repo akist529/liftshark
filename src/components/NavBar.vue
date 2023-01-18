@@ -38,7 +38,7 @@
                 </router-link>
             </li>
             <li>
-                <router-link class="link" to="Exercises">
+                <router-link class="link" to="/exercises">
                     <img alt="Exercises Icon" :src="require('@/../public/images/ui/sidebar/exercises.webp')" />
                     <span>Exercises</span>
                 </router-link>
