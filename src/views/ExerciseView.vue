@@ -27,8 +27,8 @@
 import { defineComponent } from 'vue'
 import MyExercise from '@/components/MyExercise.vue'
 import MyFooter from '@/components/MyFooter.vue'
-import NextPageButton from '@/components/buttons/NextPageButton.vue'
 import PrevPageButton from '@/components/buttons/PrevPageButton.vue'
+import NextPageButton from '@/components/buttons/NextPageButton.vue'
 import { fetchData } from '@/mixins/fetchData'
 import { Exercise, Muscle, Equipment, Category, Image } from '@/types/index'
 
@@ -114,8 +114,8 @@ export default defineComponent({
   components: {
     MyExercise,
     MyFooter,
-    NextPageButton,
-    PrevPageButton
+    PrevPageButton,
+    NextPageButton
   },
   async created () {
     this.getResults('https://wger.de/api/v2/exercise/?limit=20&language=2', 'name')
@@ -135,6 +135,9 @@ export default defineComponent({
 <style lang="scss">
 .ExerciseView {
   overflow: scroll;
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
 
   .page-buttons {
     display: flex;

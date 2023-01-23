@@ -1,24 +1,39 @@
 <template>
     <li className="ExerciseWrapper">
         <main><b>{{ name }}</b></main>
-        <ul v-if="muscles.length">
+        <div v-if="muscles.length">
           <header><b>Primary Muscles:</b></header>
-          <li v-for="muscle in muscles" :key="muscle">
-            <img :muscle="muscle" :alt="muscle" :title="muscle" :src="assetspath(`./${getFileName(muscle)}`)" />
-          </li>
-        </ul>
-        <ul v-if="secondaryMuscles.length">
+          <ul>
+            <li v-for="muscle in muscles" :key="muscle">
+              <figure>
+                <img :alt="muscle" :title="muscle" :src="assetspath(`./${getFileName(muscle)}`)" />
+                <figcaption>{{ muscle }}</figcaption>
+              </figure>
+            </li>
+          </ul>
+        </div>
+        <div v-if="secondaryMuscles.length">
           <header><b>Secondary Muscles:</b></header>
-          <li v-for="muscle in secondaryMuscles" :key="muscle">
-            <img :muscle="muscle" :alt="muscle" :title="muscle" :src="assetspath(`./${getFileName(muscle)}`)" />
-          </li>
-        </ul>
-        <ul v-if="equipment.length">
+          <ul>
+            <li v-for="muscle in secondaryMuscles" :key="muscle">
+              <figure>
+                <img :alt="muscle" :title="muscle" :src="assetspath(`./${getFileName(muscle)}`)" />
+                <figcaption>{{ muscle }}</figcaption>
+              </figure>
+            </li>
+          </ul>
+        </div>
+        <div v-if="equipment.length">
           <header><b>Equipment</b></header>
-          <li v-for="item in equipment" :key="item">
-            <img :item="item" :alt="item" :title="item" :src="assetspath(`./${getFileName(item)}`)" />
-          </li>
-        </ul>
+          <ul>
+            <li v-for="item in equipment" :key="item">
+              <figure>
+                <img :alt="item" :title="item" :src="assetspath(`./${getFileName(item)}`)" />
+                <figcaption>{{ item }}</figcaption>
+              </figure>
+            </li>
+          </ul>
+        </div>
         <img v-if="image" alt="Exercise Image" :src="image" className="exercise-image" />
     </li>
 </template>
@@ -51,6 +66,7 @@ export default defineComponent({
 .ExerciseWrapper {
   display: flex;
   flex-direction: column;
+  gap: 10px;
   border: 2px solid black;
   border-radius: 10px;
   padding: 10px;
@@ -58,27 +74,60 @@ export default defineComponent({
 
   main {
     margin: 0 auto;
+    font-size: 1.5rem;
+    text-align: center;
   }
 
-  ul {
-    list-style-type: none;
-    display: grid;
-    grid-template-rows: repeat(auto-fill, auto);
-    grid-template-columns: repeat(4, auto);
+  div {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    gap: 5px;
 
-    li {
-      img {
-        max-width: 32px;
-        max-height: 32px;
-        width: auto;
-        height: auto;
+    header {
+      font-size: 1.25rem;
+    }
+
+    ul {
+      display: grid;
+      grid-template-columns: repeat(3, minmax(0px, auto));
+      grid-row-gap: 5px;
+      margin: 0 auto;
+
+      li {
+        list-style-type: none;
+        padding: 0 20px;
+
+        figure {
+          display: flex;
+          flex-direction: column;
+          justify-content: space-between;
+          align-items: center;
+          gap: 2px;
+          min-height: 40px;
+
+          img {
+          max-width: 48px;
+          max-height: 48px;
+          width: auto;
+          height: auto;
+          }
+
+          figcaption {
+            font-size: 16px;
+            text-align: center;
+          }
+        }
       }
     }
   }
 
-  img {
+  >img {
+    min-width: 150px;
     width: 15vw;
     height: auto;
+    margin: 0 auto;
   }
 }
 </style>
