@@ -11,8 +11,13 @@ export const fetchData = {
     getResults: async function (url: string, key: string) {
       const data = await this.getData(url)
       const results: any[] = data.results
-      const uniqueValues = [...new Map(results.map(item => [item[key], item])).values()]
-      return uniqueValues
+
+      if (results === null || results === undefined) {
+        return null
+      } else {
+        const uniqueValues = [...new Map(results.map(item => [item[key], item])).values()]
+        return uniqueValues
+      }
     }
   }
 }

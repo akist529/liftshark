@@ -14,57 +14,58 @@ import PageErrorView from '@/views/PageErrorView.vue'
 const routes: Array<RouteRecordRaw> = [
   {
     path: '/',
-    name: 'Dashboard',
+    name: 'dashboard',
     component: DashboardView
   },
   {
     path: '/workouts',
-    name: 'Workouts',
+    name: 'workouts',
     component: WorkoutView
   },
   {
     path: '/workouts/:date',
-    name: 'WorkoutDetail',
+    name: 'workoutDetail',
     component: WorkoutDetailView
   },
   {
     path: '/routines',
-    name: 'Routines',
+    name: 'routines',
     component: RoutineView
   },
   {
     path: '/routines/:id',
-    name: 'RoutineDetail',
+    name: 'routineDetail',
     component: RoutineDetailView
   },
   {
     path: '/stats',
-    name: 'Stats',
+    name: 'stats',
     component: StatsView
   },
   {
     path: '/stats/weight',
-    name: 'Weight',
+    name: 'weight',
     component: WeightView
   },
   {
     path: '/stats/measurements',
-    name: 'Measurements',
+    name: 'measurements',
     component: MeasureView
   },
   {
-    path: '/exercises/',
-    name: 'Exercises',
+    path: '/exercises',
+    name: 'exercises',
     component: ExerciseView
   },
   {
     path: '/exercises/:id',
-    name: 'ExerciseDetail',
-    component: ExerciseDetailView
+    name: 'exerciseDetail',
+    component: ExerciseDetailView,
+    props: true
   },
   {
     path: '/:catchAll(.*)*',
-    name: 'PageError',
+    name: 'pageError',
     component: PageErrorView
   }
 ]

@@ -9,7 +9,7 @@
       <MyExercise
         v-for="exercise in exercises"
         :key="exercise.id"
-        :name="exercise.name"
+        :exerciseName="exercise.name"
         :muscles="getNames(exercise.muscles, muscles)"
         :secondaryMuscles="getNames(exercise.muscles_secondary, muscles)"
         :equipment="getNames(exercise.equipment, equipment)"
@@ -89,21 +89,25 @@ export default defineComponent({
     },
     getPage: async function (direction) {
       if (direction === 'next') {
-        this.offset += 20
+        this.offset += 10
       } else if (direction === 'previous') {
-        this.offset -= 20
+        this.offset -= 10
       }
 
       if (this.offset < 0) {
         this.offset = 0
       }
 
-      this.getResults(`https://wger.de/api/v2/exercise/?limit=20&offset=${this.offset}&language=2`, 'name')
+      this.getResults(`https://wger.de/api/v2/exercise/?limit=10&offset=${this.offset}&language=2`, 'name')
         .then(data => {
+          if (data === null) {
+            return
+          }
+
           if (data.length > 0) {
             this.exercises = data
           } else {
-            this.offset -= 20
+            this.offset -= 10
           }
         }).then(() => {
           (this.$refs.view as HTMLDivElement).scrollTo({ top: 0, behavior: 'smooth' })
@@ -118,16 +122,36 @@ export default defineComponent({
     NextPageButton
   },
   async created () {
-    this.getResults('https://wger.de/api/v2/exercise/?limit=20&language=2', 'name')
-      .then(data => { this.exercises = data })
+    this.getResults('https://wger.de/api/v2/exercise/?limit=10&language=2', 'name')
+      .then(data => {
+        if (data) {
+          this.exercises = data
+        }
+      })
     await this.getResults('https://wger.de/api/v2/muscle?limit=999', 'name')
-      .then(data => { this.muscles = data })
+      .then(data => {
+        if (data) {
+          this.muscles = data
+        }
+      })
     await this.getResults('https://wger.de/api/v2/equipment?limit=999', 'name')
-      .then(data => { this.equipment = data })
+      .then(data => {
+        if (data) {
+          this.equipment = data
+        }
+      })
     await this.getResults('https://wger.de/api/v2/exercisecategory?limit=999', 'name')
-      .then(data => { this.categories = data })
+      .then(data => {
+        if (data) {
+          this.categories = data
+        }
+      })
     await this.getResults('https://wger.de/api/v2/exerciseimage?limit=999', 'id')
-      .then(data => { this.images = data })
+      .then(data => {
+        if (data) {
+          this.images = data
+        }
+      })
   }
 })
 </script>
