@@ -51,31 +51,6 @@ export default defineComponent({
     }
   },
   methods: {
-    getNames: function (arr, data) {
-      const names: string[] = []
-
-      arr.forEach(item => {
-        data.forEach(entry => {
-          if (item === entry.id) {
-            names.push((() => {
-              if (data === this.muscles) {
-                if (entry.name_en) {
-                  return entry.name_en
-                } else {
-                  return entry.name
-                }
-              } else if (data === this.equipment) {
-                return entry.name
-              } else {
-                return ''
-              }
-            })())
-          }
-        })
-      })
-
-      return names
-    },
     getImage: function (id: number) {
       let imageURL = ''
 
@@ -112,6 +87,31 @@ export default defineComponent({
         }).then(() => {
           (this.$refs.view as HTMLDivElement).scrollTo({ top: 0, behavior: 'smooth' })
         })
+    },
+    getNames: function (arr, data) {
+      const names: string[] = []
+
+      arr.forEach(item => {
+        data.forEach(entry => {
+          if (item === entry.id) {
+            names.push((() => {
+              if (data === this.muscles) {
+                if (entry.name_en) {
+                  return entry.name_en
+                } else {
+                  return entry.name
+                }
+              } else if (data === this.equipment) {
+                return entry.name
+              } else {
+                return ''
+              }
+            })())
+          }
+        })
+      })
+
+      return names
     }
   },
   mixins: [fetchData],

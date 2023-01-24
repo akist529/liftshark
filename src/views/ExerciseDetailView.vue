@@ -2,7 +2,22 @@
     <div class="ExerciseDetails">
         <PrevPageButton @click="$router.back()" />
         <h1>{{ exerciseName }}</h1>
-        <p :innerHTML="exerciseDesc"></p>
+        <ul v-if="primaryMuscles">
+          <li :key="muscle" v-for="muscle in primaryMuscles">
+            <span>{{ muscle }}</span>
+          </li>
+        </ul>
+        <ul v-if="secondaryMuscles">
+          <li :key="muscle" v-for="muscle in secondaryMuscles">
+            <span>{{ muscle }}</span>
+          </li>
+        </ul>
+        <ul v-if="equipment">
+          <li :key="item" v-for="item in equipment">
+            <span>{{ item }}</span>
+          </li>
+        </ul>
+        <p v-if="exerciseDesc" :innerHTML="exerciseDesc"></p>
         <ul class="exercise-pics" v-if="exercisePics">
           <li :key="image" v-for="image in exercisePics">
             <img alt="Exercise Example" :src="image" />
@@ -25,12 +40,18 @@ export default defineComponent({
     const exerciseName = ''
     const exerciseDesc = ''
     const exerciseBase = ''
+    const primaryMuscles: any[] = []
+    const secondaryMuscles: any[] = []
+    const equipment: any[] = []
     const exercisePics: string[] = []
 
     return {
       exerciseName,
       exerciseDesc,
       exerciseBase,
+      primaryMuscles,
+      secondaryMuscles,
+      equipment,
       exercisePics
     }
   },
@@ -55,6 +76,9 @@ export default defineComponent({
             this.exerciseName = data[0].name
             this.exerciseDesc = data[0].description
             this.exerciseBase = data[0].exercise_base
+            this.primaryMuscles = data[0].muscles
+            this.secondaryMuscles = data[0].muscles_secondary
+            this.equipment = data[0].equipment
           }
         })
     } catch (error) {
