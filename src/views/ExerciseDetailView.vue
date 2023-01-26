@@ -4,17 +4,17 @@
         <h1>{{ exerciseName }}</h1>
         <ul v-if="primaryMuscles">
           <li :key="muscle" v-for="muscle in primaryMuscles">
-            <span>{{ muscle }}</span>
+            <span>{{ getName(muscle, muscleData) }}</span>
           </li>
         </ul>
         <ul v-if="secondaryMuscles">
           <li :key="muscle" v-for="muscle in secondaryMuscles">
-            <span>{{ muscle }}</span>
+            <span>{{ getName(muscle, muscleData) }}</span>
           </li>
         </ul>
         <ul v-if="equipment">
           <li :key="item" v-for="item in equipment">
-            <span>{{ item }}</span>
+            <span>{{ getName(item, equipmentData) }}</span>
           </li>
         </ul>
         <p v-if="exerciseDesc" :innerHTML="exerciseDesc"></p>
@@ -40,18 +40,22 @@ export default defineComponent({
     const exerciseName = ''
     const exerciseDesc = ''
     const exerciseBase = ''
+    const exerciseEquipment: any[] = []
     const primaryMuscles: any[] = []
     const secondaryMuscles: any[] = []
-    const equipment: any[] = []
+    const muscleData: any[] = []
+    const equipmentData: any[] = []
     const exercisePics: string[] = []
 
     return {
       exerciseName,
       exerciseDesc,
       exerciseBase,
+      exerciseEquipment,
       primaryMuscles,
       secondaryMuscles,
-      equipment,
+      muscleData,
+      equipmentData,
       exercisePics
     }
   },
@@ -66,37 +70,60 @@ export default defineComponent({
       displayName = displayName[0] + displayName[1].toUpperCase()
 
       return displayName
+    },
+    getName: function (item, data) {
+      data.forEach(entry => {
+        if (item === entry.id) {
+          if (data === this.muscleData) {
+            if (entry.name_en) {
+              return entry.name_en
+            } else {
+              return entry.name
+            }
+          } else if (data === this.equipmentData) {
+            return entry.name
+          } else {
+            return ''
+          }
+        }
+      })()
     }
   },
   async created () {
-    try {
-      this.getResults(`https://wger.de/api/v2/exercise/?name=${this.displayNameUpperCase()}&language=2`, 'name')
-        .then(data => {
-          if (data !== undefined && data !== null) {
-            this.exerciseName = data[0].name
-            this.exerciseDesc = data[0].description
-            this.exerciseBase = data[0].exercise_base
-            this.primaryMuscles = data[0].muscles
-            this.secondaryMuscles = data[0].muscles_secondary
-            this.equipment = data[0].equipment
-          }
-        })
-    } catch (error) {
-      console.log(error)
-    }
+    this.getResults(`https://wger.de/api/v2/exercise/?name=${this.displayNameUpperCase()}&language=2`, 'name')
+      .then(data => {
+        if (data !== undefined && data !== null) {
+          this.exerciseName = data[0].name
+          this.exerciseDesc = data[0].description
+          this.exerciseBase = data[0].exercise_base
+          this.exerciseEquipment = data[0].equipment
+          this.primaryMuscles = data[0].muscles
+          this.secondaryMuscles = data[0].muscles_secondary
+        }
+      })
 
-    try {
-      await this.getResults(`https://wger.de/api/v2/exerciseimage/?limit=999&exercise_base=${this.exerciseBase}`, 'id')
-        .then(data => {
-          if (data !== undefined && data !== null) {
-            for (const image of data.filter(image => image.exercise_base === this.exerciseBase)) {
-              this.exercisePics.push(image.image)
-            }
+    await this.getResults(`https://wger.de/api/v2/exerciseimage/?limit=999&exercise_base=${this.exerciseBase}`, 'id')
+      .then(data => {
+        if (data !== undefined && data !== null) {
+          for (const image of data.filter(image => image.exercise_base === this.exerciseBase)) {
+            this.exercisePics.push(image.image)
           }
-        })
-    } catch (error) {
-      console.log(error)
-    }
+        }
+      })
+
+    await this.getResults('https://wger.de/api/v2/muscle?limit=999', 'name')
+      .then(data => {
+        if (data) {
+          this.muscleData = data
+        }
+      })
+
+    await this.getResults('https://wger.de/api/v2/equipment?limit=999', 'name')
+      .then(data => {
+        if (data) {
+          this.equipmentData = data
+        }
+      })
   }
 })
 </script>

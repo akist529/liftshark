@@ -9,7 +9,7 @@
       <MyExercise
         v-for="exercise in exercises"
         :key="exercise.id"
-        :exerciseName="exercise.name"
+        :exerciseName="getCorrectName(exercise.name)"
         :muscles="getNames(exercise.muscles, muscles)"
         :secondaryMuscles="getNames(exercise.muscles_secondary, muscles)"
         :equipment="getNames(exercise.equipment, equipment)"
@@ -112,6 +112,18 @@ export default defineComponent({
       })
 
       return names
+    },
+    getCorrectName (name: string) {
+      const splitName = name.split(' ')
+      const correctNameArray: string[] = []
+
+      for (const word of splitName) {
+        const correctWord = word[0].toUpperCase() + word.substring(1)
+        correctNameArray.push(correctWord)
+      }
+
+      const correctName = correctNameArray.join(' ')
+      return correctName
     }
   },
   mixins: [fetchData],

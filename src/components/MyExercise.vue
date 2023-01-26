@@ -129,10 +129,9 @@ export default defineComponent({
     }
 
     >img {
-    min-width: 150px;
-    width: 15vw;
-    height: auto;
-    margin: 0 auto;
+      width: 250px;
+      margin: 0 auto;
+      display: flex;
     }
   }
 }
