@@ -8,7 +8,7 @@
           <li v-for="muscle in muscles" :key="muscle">
             <figure>
               <img :alt="muscle" :title="muscle" :src="assetspath(`./${getFileName(muscle)}`)" />
-              <figcaption>{{ muscle }}</figcaption>
+              <figcaption>{{ muscle.split(' ')[0] }}</figcaption>
             </figure>
           </li>
         </ul>
@@ -19,7 +19,7 @@
           <li v-for="muscle in secondaryMuscles" :key="muscle">
             <figure>
               <img :alt="muscle" :title="muscle" :src="assetspath(`./${getFileName(muscle)}`)" />
-              <figcaption>{{ muscle }}</figcaption>
+              <figcaption>{{ muscle.split(' ')[0] }}</figcaption>
             </figure>
           </li>
         </ul>

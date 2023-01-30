@@ -1,26 +1,38 @@
 <template>
     <div class="ExerciseDetails">
         <PrevPageButton @click="$router.back()" />
-        <h1>{{ exerciseName }}</h1>
-        <ul v-if="primaryMuscles">
-          <li :key="muscle" v-for="muscle in primaryMuscles">
-            <span>{{ getName(muscle, muscleData) }}</span>
+        <h1>{{ exercise.name }}</h1>
+        <h2>Primary Muscles</h2>
+        <ul v-if="exercise.muscles">
+          <li :key="muscle" v-for="muscle in exercise.muscles">
+            <figure>
+              <img :alt="getMuscleName(muscle)" :title="getMuscleName(muscle)" :src="assetspath(`./${getFileName(getMuscleName(muscle))}`)" />
+              <figcaption>{{ (getMuscleName(muscle).split(' '))[0] }}</figcaption>
+            </figure>
           </li>
         </ul>
-        <ul v-if="secondaryMuscles">
-          <li :key="muscle" v-for="muscle in secondaryMuscles">
-            <span>{{ getName(muscle, muscleData) }}</span>
+        <h2>Secondary Muscles</h2>
+        <ul v-if="exercise.muscles_secondary">
+          <li :key="muscle" v-for="muscle in exercise.muscles_secondary">
+            <figure>
+              <img :alt="getMuscleName(muscle)" :title="getMuscleName(muscle)" :src="assetspath(`./${getFileName(getMuscleName(muscle))}`)" />
+              <figcaption>{{ (getMuscleName(muscle).split(' '))[0] }}</figcaption>
+            </figure>
           </li>
         </ul>
-        <ul v-if="equipment">
-          <li :key="item" v-for="item in equipment">
-            <span>{{ getName(item, equipmentData) }}</span>
+        <h2>Equipment</h2>
+        <ul v-if="exercise.equipment">
+          <li :key="item" v-for="item in exercise.equipment">
+            <figure>
+              <img :alt="getEquipmentName(item)" :title="getEquipmentName(item)" :src="assetspath(`./${getFileName(getEquipmentName(item))}`)" />
+              <figcaption>{{ getEquipmentName(item) }}</figcaption>
+            </figure>
           </li>
         </ul>
-        <p v-if="exerciseDesc" :innerHTML="exerciseDesc"></p>
-        <ul class="exercise-pics" v-if="exercisePics">
-          <li :key="image" v-for="image in exercisePics">
-            <img alt="Exercise Example" :src="image" />
+        <p v-if="exercise.description" :innerHTML="exercise.description"></p>
+        <ul class="exercise-pics" v-if="images">
+          <li :key="image.id" v-for="image in images">
+            <img alt="Exercise Example" :src="image.image" />
           </li>
         </ul>
     </div>
@@ -30,98 +42,97 @@
 import { defineComponent } from 'vue'
 import PrevPageButton from '@/components/buttons/PrevPageButton.vue'
 import { fetchData } from '@/mixins/fetchData'
+import { fetchImages } from '@/mixins/fetchImages'
+import { Exercise, Muscle, Equipment, Category, Image } from '@/types/index'
 
 export default defineComponent({
   components: {
     PrevPageButton
   },
-  mixins: [fetchData],
+  mixins: [fetchData, fetchImages],
   data () {
-    const exerciseName = ''
-    const exerciseDesc = ''
-    const exerciseBase = ''
-    const exerciseEquipment: any[] = []
-    const primaryMuscles: any[] = []
-    const secondaryMuscles: any[] = []
-    const muscleData: any[] = []
-    const equipmentData: any[] = []
-    const exercisePics: string[] = []
+    const exercise = {} as Exercise
+    const muscles: Muscle[] = []
+    const equipment: Equipment[] = []
+    const categories: Category[] = []
+    const images: Image[] = []
 
     return {
-      exerciseName,
-      exerciseDesc,
-      exerciseBase,
-      exerciseEquipment,
-      primaryMuscles,
-      secondaryMuscles,
-      muscleData,
-      equipmentData,
-      exercisePics
+      exercise,
+      muscles,
+      equipment,
+      categories,
+      images
     }
   },
   methods: {
-    displayNameUpperCase () {
-      const displayName = (this.$route.params.id as string).split('-').map(word => (word[0].toUpperCase() + word.slice(1))).join(' ')
-
+    getDisplayName () {
+      const displayName: string = (this.$route.params.id as string).split('-').map(word => (word[0].toUpperCase() + word.slice(1))).join(' ')
       return displayName
     },
-    displayNameLowerCase () {
-      let displayName: any = (this.$route.params.id as string).split('-')
-      displayName = displayName[0] + displayName[1].toUpperCase()
-
-      return displayName
-    },
-    getName: function (item, data) {
-      data.forEach(entry => {
-        if (item === entry.id) {
-          if (data === this.muscleData) {
-            if (entry.name_en) {
-              return entry.name_en
-            } else {
-              return entry.name
-            }
-          } else if (data === this.equipmentData) {
-            return entry.name
+    getMuscleName (item: number) {
+      for (let i = 0; i < this.muscles.length; i++) {
+        if (item === this.muscles[i].id) {
+          if (this.muscles[i].name_en) {
+            return this.muscles[i].name_en
           } else {
-            return ''
+            return this.muscles[i].name
           }
         }
-      })()
+      }
+
+      return ''
+    },
+    getEquipmentName (item: number) {
+      for (let i = 0; i < this.equipment.length; i++) {
+        if (item === this.equipment[i].id) {
+          return this.equipment[i].name
+        }
+      }
+
+      return ''
+    },
+    getFileName (item) {
+      if (item === 'Obliquus externus abdominis') {
+        return 'ui/exercises/obliques.webp'
+      } else if (item === 'Soleus') {
+        return 'ui/exercises/calves.webp'
+      } else if (item === 'SZ-Bar') {
+        return 'ui/exercises/ez-bar.webp'
+      } else {
+        return `ui/exercises/${item.toLowerCase().replaceAll(' ', '-').replaceAll(/[()]/g, '')}.webp`
+      }
     }
   },
   async created () {
-    this.getResults(`https://wger.de/api/v2/exercise/?name=${this.displayNameUpperCase()}&language=2`, 'name')
+    this.getResults(`https://wger.de/api/v2/exercise/?name=${this.getDisplayName()}&language=2`, 'name')
       .then(data => {
-        if (data !== undefined && data !== null) {
-          this.exerciseName = data[0].name
-          this.exerciseDesc = data[0].description
-          this.exerciseBase = data[0].exercise_base
-          this.exerciseEquipment = data[0].equipment
-          this.primaryMuscles = data[0].muscles
-          this.secondaryMuscles = data[0].muscles_secondary
-        }
-      })
-
-    await this.getResults(`https://wger.de/api/v2/exerciseimage/?limit=999&exercise_base=${this.exerciseBase}`, 'id')
-      .then(data => {
-        if (data !== undefined && data !== null) {
-          for (const image of data.filter(image => image.exercise_base === this.exerciseBase)) {
-            this.exercisePics.push(image.image)
-          }
+        if (data) {
+          this.exercise = data[0]
         }
       })
 
     await this.getResults('https://wger.de/api/v2/muscle?limit=999', 'name')
       .then(data => {
         if (data) {
-          this.muscleData = data
+          this.muscles = data
         }
       })
 
     await this.getResults('https://wger.de/api/v2/equipment?limit=999', 'name')
       .then(data => {
         if (data) {
-          this.equipmentData = data
+          this.equipment = data
+        }
+      })
+
+    // eslint-disable-next-line
+    await this.getResults(`https://wger.de/api/v2/exerciseimage/?limit=999&exercise_base=${this.exercise.exercise_base}`, 'id')
+      .then(data => {
+        if (data) {
+          for (const image of data.filter(image => image.exercise_base === this.exercise.exercise_base)) {
+            this.images.push(image)
+          }
         }
       })
   }
@@ -130,6 +141,20 @@ export default defineComponent({
 
 <style lang="scss">
 .ExerciseDetails {
+  ul {
+    list-style-type: none;
+    display: grid;
+    grid-template-rows: repeat(6, auto);
+
+    li {
+      figure {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+      }
+    }
+  }
+
   .exercise-pics {
     list-style-type: none;
     display: flex;

@@ -8,9 +8,9 @@ export interface Exercise {
     // eslint-disable-next-line camelcase
     creation_date: string
     category: number
-    muscles: string[]
+    muscles: number[]
     // eslint-disable-next-line camelcase
-    muscles_secondary: string[]
+    muscles_secondary: number[]
     equipment: number[]
     langage: number
     license: number
