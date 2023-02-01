@@ -80,7 +80,7 @@ nav {
         grid-template-columns: repeat(5, 1fr);
         grid-template-rows: 1fr;
 
-        font-family: var(--sidebar-font);
+        font-family: var(--title-font);
         font-size: 1rem;
 
         li {

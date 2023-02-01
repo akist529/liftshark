@@ -2,35 +2,47 @@
     <div class="ExerciseDetails">
         <PrevPageButton @click="$router.back()" />
         <h1>{{ exercise.name }}</h1>
-        <h2>Primary Muscles</h2>
-        <ul v-if="exercise.muscles">
+        <h2 v-if="exercise.muscles && exercise.muscles.length">Primary Muscles</h2>
+        <ul v-if="exercise.muscles && exercise.muscles.length">
           <li :key="muscle" v-for="muscle in exercise.muscles">
             <figure>
-              <img :alt="getMuscleName(muscle)" :title="getMuscleName(muscle)" :src="assetspath(`./${getFileName(getMuscleName(muscle))}`)" />
+              <img
+                :alt="getMuscleName(muscle)"
+                :title="getMuscleName(muscle)"
+                :src="assetspath(`./${getFileName(muscle, getMuscleName)}`)"
+              />
               <figcaption>{{ (getMuscleName(muscle).split(' '))[0] }}</figcaption>
             </figure>
           </li>
         </ul>
-        <h2>Secondary Muscles</h2>
-        <ul v-if="exercise.muscles_secondary">
+        <h2 v-if="exercise.muscles_secondary && exercise.muscles_secondary.length">Secondary Muscles</h2>
+        <ul v-if="exercise.muscles_secondary && exercise.muscles_secondary.length">
           <li :key="muscle" v-for="muscle in exercise.muscles_secondary">
             <figure>
-              <img :alt="getMuscleName(muscle)" :title="getMuscleName(muscle)" :src="assetspath(`./${getFileName(getMuscleName(muscle))}`)" />
+              <img
+                :alt="getMuscleName(muscle)"
+                :title="getMuscleName(muscle)"
+                :src="assetspath(`./${getFileName(muscle, getMuscleName)}`)"
+              />
               <figcaption>{{ (getMuscleName(muscle).split(' '))[0] }}</figcaption>
             </figure>
           </li>
         </ul>
-        <h2>Equipment</h2>
-        <ul v-if="exercise.equipment">
+        <h2 v-if="exercise.equipment && exercise.equipment.length">Equipment</h2>
+        <ul v-if="exercise.equipment && exercise.equipment.length">
           <li :key="item" v-for="item in exercise.equipment">
             <figure>
-              <img :alt="getEquipmentName(item)" :title="getEquipmentName(item)" :src="assetspath(`./${getFileName(getEquipmentName(item))}`)" />
+              <img
+                :alt="getEquipmentName(item)"
+                :title="getEquipmentName(item)"
+                :src="assetspath(`./${getFileName(item, getEquipmentName)}`)"
+              />
               <figcaption>{{ getEquipmentName(item) }}</figcaption>
             </figure>
           </li>
         </ul>
         <p v-if="exercise.description" :innerHTML="exercise.description"></p>
-        <ul class="exercise-pics" v-if="images">
+        <ul v-if="images" class="exercise-pics">
           <li :key="image.id" v-for="image in images">
             <img alt="Exercise Example" :src="image.image" />
           </li>
@@ -71,6 +83,8 @@ export default defineComponent({
       return displayName
     },
     getMuscleName (item: number) {
+      console.log(item)
+
       for (let i = 0; i < this.muscles.length; i++) {
         if (item === this.muscles[i].id) {
           if (this.muscles[i].name_en) {
@@ -81,7 +95,7 @@ export default defineComponent({
         }
       }
 
-      return ''
+      return 'test'
     },
     getEquipmentName (item: number) {
       for (let i = 0; i < this.equipment.length; i++) {
@@ -92,15 +106,17 @@ export default defineComponent({
 
       return ''
     },
-    getFileName (item) {
-      if (item === 'Obliquus externus abdominis') {
+    getFileName (item: number, callback) {
+      const name = callback(item)
+
+      if (name === 'Obliquus externus abdominis') {
         return 'ui/exercises/obliques.webp'
-      } else if (item === 'Soleus') {
+      } else if (name === 'Soleus') {
         return 'ui/exercises/calves.webp'
-      } else if (item === 'SZ-Bar') {
+      } else if (name === 'SZ-Bar') {
         return 'ui/exercises/ez-bar.webp'
       } else {
-        return `ui/exercises/${item.toLowerCase().replaceAll(' ', '-').replaceAll(/[()]/g, '')}.webp`
+        return `ui/exercises/${name.toLowerCase().replaceAll(' ', '-').replaceAll(/[()]/g, '')}.webp`
       }
     }
   },
@@ -141,10 +157,22 @@ export default defineComponent({
 
 <style lang="scss">
 .ExerciseDetails {
+  font-family: var(--content-font);
+
+  h1 {
+    font-family: var(--title-font);
+    font-weight: 700;
+  }
+
+  h2 {
+    font-weight: 500;
+  }
+
   ul {
     list-style-type: none;
     display: grid;
     grid-template-rows: repeat(6, auto);
+    font-weight: 300;
 
     li {
       figure {

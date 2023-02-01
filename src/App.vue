@@ -15,7 +15,8 @@ export default {
 </script>
 
 <style lang="scss">
-@import url('https://fonts.googleapis.com/css2?family=Roboto:wght@500&display=swap');
+@import url('https://fonts.googleapis.com/css?family=Roboto:500');
+@import url('https://fonts.googleapis.com/css?family=Karla:300,500,700');
 
   * {
     margin: 0;
@@ -24,7 +25,8 @@ export default {
   }
 
   :root {
-    --sidebar-font: 'Roboto';
+    --title-font: 'Roboto';
+    --content-font: 'Karla';
   }
 
   #app {

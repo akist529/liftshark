@@ -174,6 +174,12 @@ export default defineComponent({
   display: flex;
   flex-direction: column;
   gap: 10px;
+  font-family: var(--content-font);
+
+  h1 {
+    font-family: var(--title-font);
+    font-weight: 700;
+  }
 
   .page-buttons {
     display: flex;
