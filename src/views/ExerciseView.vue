@@ -2,7 +2,7 @@
   <div class="ExerciseView" ref="view">
     <h1>Exercises</h1>
     <div class="page-buttons">
-      <PrevPageButton @click="getPage('previous')" />
+      <BackButton @click="getPage('previous')" />
       <NextPageButton @click="getPage('next')" />
     </div>
     <ul class="exercise-list">
@@ -16,7 +16,7 @@
         :image="getImage(exercise.exercise_base)" />
     </ul>
     <div class="page-buttons">
-      <PrevPageButton @click="getPage('previous')" />
+      <BackButton @click="getPage('previous')" />
       <NextPageButton @click="getPage('next')" />
     </div>
     <MyFooter />
@@ -27,7 +27,7 @@
 import { defineComponent } from 'vue'
 import MyExercise from '@/components/MyExercise.vue'
 import MyFooter from '@/components/MyFooter.vue'
-import PrevPageButton from '@/components/buttons/PrevPageButton.vue'
+import BackButton from '@/components/buttons/BackButton.vue'
 import NextPageButton from '@/components/buttons/NextPageButton.vue'
 import { fetchData } from '@/mixins/fetchData'
 import { Exercise, Muscle, Equipment, Category, Image } from '@/types/index'
@@ -130,7 +130,7 @@ export default defineComponent({
   components: {
     MyExercise,
     MyFooter,
-    PrevPageButton,
+    BackButton,
     NextPageButton
   },
   async created () {

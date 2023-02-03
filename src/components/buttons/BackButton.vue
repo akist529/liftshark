@@ -1,7 +1,7 @@
 <template>
     <button>
-        <img alt="Back" :src="assetspath('./ui/exercises/arrow_left.webp')" />
-        <span>Back</span>
+        <img alt="Back" :src="assetspath('./ui/double_arrow_left.webp')" />
+        <span>BACK</span>
     </button>
 </template>
 
@@ -18,11 +18,15 @@ export default defineComponent({
 button {
     background-color: var(--button-bg-color);
     color: white;
-    padding: 5px 5px;
+    padding: 4px 8px;
     font-size: 1.25rem;
+    border: none;
+    border-radius: 10px;
+    cursor: pointer;
 
     display: flex;
+    flex-direction: column;
+    justify-content: center;
     align-items: center;
-    gap: 10px;
 }
 </style>

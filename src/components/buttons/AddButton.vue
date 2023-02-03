@@ -1,6 +1,8 @@
 <template>
     <button>
-        <slot></slot>
+        <div class="add-button-content">
+            <slot></slot>
+        </div>
     </button>
 </template>
 
@@ -10,8 +12,14 @@
         color: white;
         padding: 5px 10px;
         border-radius: 20px;
-        display: flex;
-        align-items: center;
-        gap: 10px;
+        :slotted(.add-button-content) {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+
+            img {
+                filter: invert(100%);
+            }
+        }
     }
 </style>

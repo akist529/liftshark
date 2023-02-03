@@ -1,7 +1,7 @@
 <template>
     <div v-if="loaded" class="ExerciseDetails">
         <div class="exercise-header">
-          <PrevPageButton @click="$router.back()" />
+          <BackButton @click="$router.back()" />
           <h1>{{ exercise.name }}</h1>
           <BookmarkButton />
         </div>
@@ -67,7 +67,7 @@
 import { defineComponent } from 'vue'
 import AddButton from '@/components/buttons/AddButton.vue'
 import BookmarkButton from '@/components/buttons/BookmarkButton.vue'
-import PrevPageButton from '@/components/buttons/PrevPageButton.vue'
+import BackButton from '@/components/buttons/BackButton.vue'
 import { fetchData } from '@/mixins/fetchData'
 import { fetchImages } from '@/mixins/fetchImages'
 import { Exercise, Muscle, Equipment, Category, Image } from '@/types/index'
@@ -76,7 +76,7 @@ export default defineComponent({
   components: {
     AddButton,
     BookmarkButton,
-    PrevPageButton
+    BackButton
   },
   mixins: [fetchData, fetchImages],
   data () {
@@ -180,13 +180,6 @@ export default defineComponent({
 .ExerciseDetails {
   font-family: var(--content-font);
 
-  button {
-    img {
-      filter: invert(100%);
-      max-width: 30px;
-    }
-  }
-
   h1 {
     font-family: var(--title-font);
     font-weight: 700;
@@ -216,7 +209,6 @@ export default defineComponent({
     display: flex;
     justify-content: center;
     align-items: center;
-    overflow: auto;
   }
 
   .add-buttons {
