@@ -27,6 +27,7 @@ export default {
   :root {
     --title-font: 'Roboto';
     --content-font: 'Karla';
+    --button-bg-color: rgb(66, 103, 178);
   }
 
   #app {

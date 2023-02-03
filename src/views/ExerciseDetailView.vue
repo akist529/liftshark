@@ -1,9 +1,22 @@
 <template>
-    <div class="ExerciseDetails">
-        <PrevPageButton @click="$router.back()" />
-        <h1>{{ exercise.name }}</h1>
-        <h2 v-if="exercise.muscles && exercise.muscles.length">Primary Muscles</h2>
-        <ul v-if="exercise.muscles && exercise.muscles.length">
+    <div v-if="loaded" class="ExerciseDetails">
+        <div class="exercise-header">
+          <PrevPageButton @click="$router.back()" />
+          <h1>{{ exercise.name }}</h1>
+          <BookmarkButton />
+        </div>
+        <div class="add-buttons">
+          <AddButton>
+            <span>Add to Routine</span>
+            <img alt="Routine" src="@/../public/images/ui/sidebar/routines.webp" />
+          </AddButton>
+          <AddButton>
+            <span>Add to Workout</span>
+            <img alt="Workout" src="@/../public/images/ui/sidebar/workouts.webp" />
+          </AddButton>
+        </div>
+        <h2 v-if="exercise.muscles.length">Primary Muscles</h2>
+        <ul v-if="exercise.muscles.length">
           <li :key="muscle" v-for="muscle in exercise.muscles">
             <figure>
               <img
@@ -15,8 +28,8 @@
             </figure>
           </li>
         </ul>
-        <h2 v-if="exercise.muscles_secondary && exercise.muscles_secondary.length">Secondary Muscles</h2>
-        <ul v-if="exercise.muscles_secondary && exercise.muscles_secondary.length">
+        <h2 v-if="exercise.muscles_secondary.length">Secondary Muscles</h2>
+        <ul v-if="exercise.muscles_secondary.length">
           <li :key="muscle" v-for="muscle in exercise.muscles_secondary">
             <figure>
               <img
@@ -28,8 +41,8 @@
             </figure>
           </li>
         </ul>
-        <h2 v-if="exercise.equipment && exercise.equipment.length">Equipment</h2>
-        <ul v-if="exercise.equipment && exercise.equipment.length">
+        <h2 v-if="exercise.equipment.length">Equipment</h2>
+        <ul v-if="exercise.equipment.length">
           <li :key="item" v-for="item in exercise.equipment">
             <figure>
               <img
@@ -52,6 +65,8 @@
 
 <script lang="ts">
 import { defineComponent } from 'vue'
+import AddButton from '@/components/buttons/AddButton.vue'
+import BookmarkButton from '@/components/buttons/BookmarkButton.vue'
 import PrevPageButton from '@/components/buttons/PrevPageButton.vue'
 import { fetchData } from '@/mixins/fetchData'
 import { fetchImages } from '@/mixins/fetchImages'
@@ -59,6 +74,8 @@ import { Exercise, Muscle, Equipment, Category, Image } from '@/types/index'
 
 export default defineComponent({
   components: {
+    AddButton,
+    BookmarkButton,
     PrevPageButton
   },
   mixins: [fetchData, fetchImages],
@@ -74,17 +91,50 @@ export default defineComponent({
       muscles,
       equipment,
       categories,
-      images
+      images,
+      loaded: false
     }
   },
   methods: {
+    async getExerciseData () {
+      this.getResults(`https://wger.de/api/v2/exercise/?name=${this.getDisplayName()}&language=2`, 'name')
+        .then(data => {
+          if (data) {
+            this.exercise = data[0] as Exercise
+          }
+        })
+
+      await this.getResults('https://wger.de/api/v2/muscle?limit=999', 'name')
+        .then(data => {
+          if (data) {
+            this.muscles = data
+          }
+        })
+
+      await this.getResults('https://wger.de/api/v2/equipment?limit=999', 'name')
+        .then(data => {
+          if (data) {
+            this.equipment = data
+          }
+        })
+
+      // eslint-disable-next-line
+      await this.getResults(`https://wger.de/api/v2/exerciseimage/?limit=999&exercise_base=${this.exercise.exercise_base}`, 'id')
+        .then(data => {
+          if (data) {
+            for (const image of data.filter(image => image.exercise_base === this.exercise.exercise_base)) {
+              this.images.push(image)
+            }
+          }
+        })
+
+      this.loaded = true
+    },
     getDisplayName () {
       const displayName: string = (this.$route.params.id as string).split('-').map(word => (word[0].toUpperCase() + word.slice(1))).join(' ')
       return displayName
     },
     getMuscleName (item: number) {
-      console.log(item)
-
       for (let i = 0; i < this.muscles.length; i++) {
         if (item === this.muscles[i].id) {
           if (this.muscles[i].name_en) {
@@ -120,37 +170,8 @@ export default defineComponent({
       }
     }
   },
-  async created () {
-    this.getResults(`https://wger.de/api/v2/exercise/?name=${this.getDisplayName()}&language=2`, 'name')
-      .then(data => {
-        if (data) {
-          this.exercise = data[0]
-        }
-      })
-
-    await this.getResults('https://wger.de/api/v2/muscle?limit=999', 'name')
-      .then(data => {
-        if (data) {
-          this.muscles = data
-        }
-      })
-
-    await this.getResults('https://wger.de/api/v2/equipment?limit=999', 'name')
-      .then(data => {
-        if (data) {
-          this.equipment = data
-        }
-      })
-
-    // eslint-disable-next-line
-    await this.getResults(`https://wger.de/api/v2/exerciseimage/?limit=999&exercise_base=${this.exercise.exercise_base}`, 'id')
-      .then(data => {
-        if (data) {
-          for (const image of data.filter(image => image.exercise_base === this.exercise.exercise_base)) {
-            this.images.push(image)
-          }
-        }
-      })
+  created () {
+    this.getExerciseData()
   }
 })
 </script>
@@ -159,9 +180,17 @@ export default defineComponent({
 .ExerciseDetails {
   font-family: var(--content-font);
 
+  button {
+    img {
+      filter: invert(100%);
+      max-width: 30px;
+    }
+  }
+
   h1 {
     font-family: var(--title-font);
     font-weight: 700;
+    text-align: center;
   }
 
   h2 {
@@ -181,6 +210,19 @@ export default defineComponent({
         align-items: center;
       }
     }
+  }
+
+  .exercise-header {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    overflow: auto;
+  }
+
+  .add-buttons {
+    display: flex;
+    justify-content: space-evenly;
+    width: 100%;
   }
 
   .exercise-pics {

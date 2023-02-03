@@ -16,7 +16,7 @@ export default defineComponent({
 
 <style scoped lang="scss">
 button {
-    background-color: rgb(66, 103, 178);
+    background-color: var(--button-bg-color);
     color: white;
     padding: 5px 5px;
     font-size: 1.25rem;
