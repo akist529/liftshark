@@ -38,7 +38,7 @@
                 </router-link>
             </li>
             <li>
-                <router-link class="link" to="Exercises">
+                <router-link class="link" to="/exercises">
                     <img alt="Exercises Icon" :src="require('@/../public/images/ui/sidebar/exercises.webp')" />
                     <span>Exercises</span>
                 </router-link>
@@ -64,7 +64,7 @@ export default defineComponent({
 })
 </script>
 
-<style lang="scss">
+<style scoped lang="scss">
 nav {
     grid-row: 2 / 3;
     grid-column: 1 / -1;
@@ -80,7 +80,7 @@ nav {
         grid-template-columns: repeat(5, 1fr);
         grid-template-rows: 1fr;
 
-        font-family: var(--sidebar-font);
+        font-family: var(--title-font);
         font-size: 1rem;
 
         li {

@@ -1,6 +1,6 @@
 <template>
+  <router-view id="router-view" :key="$route.fullPath" />
   <NavBar />
-  <router-view id="router-view" />
 </template>
 
 <script lang="ts">
@@ -15,7 +15,8 @@ export default {
 </script>
 
 <style lang="scss">
-@import url('https://fonts.googleapis.com/css2?family=Roboto:wght@500&display=swap');
+@import url('https://fonts.googleapis.com/css?family=Roboto:500');
+@import url('https://fonts.googleapis.com/css?family=Karla:300,500,700');
 
   * {
     margin: 0;
@@ -24,7 +25,9 @@ export default {
   }
 
   :root {
-    --sidebar-font: 'Roboto';
+    --title-font: 'Roboto';
+    --content-font: 'Karla';
+    --button-bg-color: rgb(66, 103, 178);
   }
 
   #app {
@@ -32,14 +35,18 @@ export default {
     grid-template-columns: 1fr;
     grid-template-rows: 1fr auto;
     height: 100vh;
+    overflow: hidden;
 
     #router-view {
       grid-row: 1 / 2;
       grid-column: 1 / -1;
 
       display: flex;
-      justify-content: center;
+      flex-direction: column;
       align-items: center;
+      padding: 20px;
+      overflow-x: hidden;
+      overflow-y: scroll;
     }
   }
 
