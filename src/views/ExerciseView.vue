@@ -3,9 +3,10 @@
     <h1>Exercises</h1>
     <div class="page-buttons">
       <BackButton @click="getPage('previous')" />
-      <NextPageButton @click="getPage('next')" />
+      <ForwardButton @click="getPage('next')" />
     </div>
-    <ul class="exercise-list">
+    <LoadIcon v-if="!loaded" />
+    <ul v-if="loaded" class="exercise-list">
       <MyExercise
         v-for="exercise in exercises"
         :key="exercise.id"
@@ -17,7 +18,7 @@
     </ul>
     <div class="page-buttons">
       <BackButton @click="getPage('previous')" />
-      <NextPageButton @click="getPage('next')" />
+      <ForwardButton @click="getPage('next')" />
     </div>
     <MyFooter />
   </div>
@@ -28,7 +29,8 @@ import { defineComponent } from 'vue'
 import MyExercise from '@/components/MyExercise.vue'
 import MyFooter from '@/components/MyFooter.vue'
 import BackButton from '@/components/buttons/BackButton.vue'
-import NextPageButton from '@/components/buttons/NextPageButton.vue'
+import ForwardButton from '@/components/buttons/ForwardButton.vue'
+import LoadIcon from '@/components/LoadIcon.vue'
 import { fetchData } from '@/mixins/fetchData'
 import { Exercise, Muscle, Equipment, Category, Image } from '@/types/index'
 
@@ -47,7 +49,8 @@ export default defineComponent({
       equipment,
       categories,
       images,
-      offset
+      offset,
+      loaded: false
     }
   },
   methods: {
@@ -63,6 +66,8 @@ export default defineComponent({
       return imageURL
     },
     getPage: async function (direction) {
+      this.changeLoadStatus()
+
       if (direction === 'next') {
         this.offset += 10
       } else if (direction === 'previous') {
@@ -73,7 +78,7 @@ export default defineComponent({
         this.offset = 0
       }
 
-      this.getResults(`https://wger.de/api/v2/exercise/?limit=10&offset=${this.offset}&language=2`, 'name')
+      await this.getResults(`https://wger.de/api/v2/exercise/?limit=10&offset=${this.offset}&language=2`, 'name')
         .then(data => {
           if (data === null) {
             return
@@ -87,6 +92,8 @@ export default defineComponent({
         }).then(() => {
           (this.$refs.view as HTMLDivElement).scrollTo({ top: 0, behavior: 'smooth' })
         })
+
+      this.changeLoadStatus()
     },
     getNames: function (arr, data) {
       const names: string[] = []
@@ -124,6 +131,9 @@ export default defineComponent({
 
       const correctName = correctNameArray.join(' ')
       return correctName
+    },
+    changeLoadStatus () {
+      this.loaded = !this.loaded
     }
   },
   mixins: [fetchData],
@@ -131,7 +141,8 @@ export default defineComponent({
     MyExercise,
     MyFooter,
     BackButton,
-    NextPageButton
+    ForwardButton,
+    LoadIcon
   },
   async created () {
     this.getResults('https://wger.de/api/v2/exercise/?limit=10&language=2', 'name')
@@ -164,13 +175,14 @@ export default defineComponent({
           this.images = data
         }
       })
+
+    this.changeLoadStatus()
   }
 })
 </script>
 
-<style lang="scss">
+<style scoped lang="scss">
 .ExerciseView {
-  overflow: scroll;
   display: flex;
   flex-direction: column;
   gap: 10px;

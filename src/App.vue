@@ -35,6 +35,7 @@ export default {
     grid-template-columns: 1fr;
     grid-template-rows: 1fr auto;
     height: 100vh;
+    overflow: hidden;
 
     #router-view {
       grid-row: 1 / 2;
@@ -44,6 +45,8 @@ export default {
       flex-direction: column;
       align-items: center;
       padding: 20px;
+      overflow-x: hidden;
+      overflow-y: scroll;
     }
   }
 

@@ -1,7 +1,6 @@
 <template>
     <button>
-        <span>More</span>
-        <img alt="More Exercises" :src="assetspath('./ui/exercises/arrow_right.webp')" />
+        <img alt="More Exercises" :src="assetspath('./ui/double_arrow_right.webp')" />
     </button>
 </template>
 
@@ -16,13 +15,14 @@ export default defineComponent({
 
 <style scoped lang="scss">
 button {
-    background-color: rgb(66, 103, 178);
-    color: white;
-    padding: 5px 5px;
-    font-size: 1.25rem;
+    background-color: var(--button-bg-color);
+    padding: 8px 16px;
+    border: none;
+    border-radius: 10px;
+    cursor: pointer;
 
     display: flex;
+    justify-content: center;
     align-items: center;
-    gap: 10px;
 }
 </style>

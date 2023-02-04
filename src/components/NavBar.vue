@@ -64,7 +64,7 @@ export default defineComponent({
 })
 </script>
 
-<style lang="scss">
+<style scoped lang="scss">
 nav {
     grid-row: 2 / 3;
     grid-column: 1 / -1;

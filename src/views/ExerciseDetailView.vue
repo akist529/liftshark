@@ -1,65 +1,70 @@
 <template>
-    <div v-if="loaded" class="ExerciseDetails">
-        <div class="exercise-header">
-          <BackButton @click="$router.back()" />
-          <h1>{{ exercise.name }}</h1>
-          <BookmarkButton />
-        </div>
-        <div class="add-buttons">
-          <AddButton>
-            <span>Add to Routine</span>
-            <img alt="Routine" src="@/../public/images/ui/sidebar/routines.webp" />
-          </AddButton>
-          <AddButton>
-            <span>Add to Workout</span>
-            <img alt="Workout" src="@/../public/images/ui/sidebar/workouts.webp" />
-          </AddButton>
-        </div>
-        <h2 v-if="exercise.muscles.length">Primary Muscles</h2>
-        <ul v-if="exercise.muscles.length">
-          <li :key="muscle" v-for="muscle in exercise.muscles">
-            <figure>
-              <img
-                :alt="getMuscleName(muscle)"
-                :title="getMuscleName(muscle)"
-                :src="assetspath(`./${getFileName(muscle, getMuscleName)}`)"
-              />
-              <figcaption>{{ (getMuscleName(muscle).split(' '))[0] }}</figcaption>
-            </figure>
-          </li>
-        </ul>
-        <h2 v-if="exercise.muscles_secondary.length">Secondary Muscles</h2>
-        <ul v-if="exercise.muscles_secondary.length">
-          <li :key="muscle" v-for="muscle in exercise.muscles_secondary">
-            <figure>
-              <img
-                :alt="getMuscleName(muscle)"
-                :title="getMuscleName(muscle)"
-                :src="assetspath(`./${getFileName(muscle, getMuscleName)}`)"
-              />
-              <figcaption>{{ (getMuscleName(muscle).split(' '))[0] }}</figcaption>
-            </figure>
-          </li>
-        </ul>
-        <h2 v-if="exercise.equipment.length">Equipment</h2>
-        <ul v-if="exercise.equipment.length">
-          <li :key="item" v-for="item in exercise.equipment">
-            <figure>
-              <img
-                :alt="getEquipmentName(item)"
-                :title="getEquipmentName(item)"
-                :src="assetspath(`./${getFileName(item, getEquipmentName)}`)"
-              />
-              <figcaption>{{ getEquipmentName(item) }}</figcaption>
-            </figure>
-          </li>
-        </ul>
-        <p v-if="exercise.description" :innerHTML="exercise.description"></p>
-        <ul v-if="images" class="exercise-pics">
-          <li :key="image.id" v-for="image in images">
-            <img alt="Exercise Example" :src="image.image" />
-          </li>
-        </ul>
+    <div>
+      <LoadIcon v-if="!loaded" />
+      <div v-if="loaded" class="ExerciseDetails">
+          <div class="exercise-header">
+            <h1>{{ exercise.name }}</h1>
+          </div>
+          <h2 v-if="exercise.muscles.length">Primary Muscles</h2>
+          <ul v-if="exercise.muscles.length">
+            <li :key="muscle" v-for="muscle in exercise.muscles">
+              <figure>
+                <img
+                  :alt="getMuscleName(muscle)"
+                  :title="getMuscleName(muscle)"
+                  :src="assetspath(`./${getFileName(muscle, getMuscleName)}`)"
+                />
+                <figcaption>{{ (getMuscleName(muscle).split(' '))[0] }}</figcaption>
+              </figure>
+            </li>
+          </ul>
+          <h2 v-if="exercise.muscles_secondary.length">Secondary Muscles</h2>
+          <ul v-if="exercise.muscles_secondary.length">
+            <li :key="muscle" v-for="muscle in exercise.muscles_secondary">
+              <figure>
+                <img
+                  :alt="getMuscleName(muscle)"
+                  :title="getMuscleName(muscle)"
+                  :src="assetspath(`./${getFileName(muscle, getMuscleName)}`)"
+                />
+                <figcaption>{{ (getMuscleName(muscle).split(' '))[0] }}</figcaption>
+              </figure>
+            </li>
+          </ul>
+          <h2 v-if="exercise.equipment.length">Equipment</h2>
+          <ul v-if="exercise.equipment.length">
+            <li :key="item" v-for="item in exercise.equipment">
+              <figure>
+                <img
+                  :alt="getEquipmentName(item)"
+                  :title="getEquipmentName(item)"
+                  :src="assetspath(`./${getFileName(item, getEquipmentName)}`)"
+                />
+                <figcaption>{{ getEquipmentName(item) }}</figcaption>
+              </figure>
+            </li>
+          </ul>
+          <p v-if="exercise.description" :innerHTML="exercise.description"></p>
+          <ul v-if="images" class="exercise-pics">
+            <li :key="image.id" v-for="image in images">
+              <img alt="Exercise Example" :src="image.image" />
+            </li>
+          </ul>
+          <div class="exercise-btns">
+            <BackButton class="back-btn" @click="$router.back()" />
+            <BurgerButton class="burger-btn">
+              <AddButton>
+                <span>Add to Routine</span>
+                <img alt="Routine" src="@/../public/images/ui/sidebar/routines.webp" />
+              </AddButton>
+              <AddButton>
+                <span>Add to Workout</span>
+                <img alt="Workout" src="@/../public/images/ui/sidebar/workouts.webp" />
+              </AddButton>
+            </BurgerButton>
+            <BookmarkButton class="bookmark-btn" />
+          </div>
+      </div>
     </div>
 </template>
 
@@ -68,6 +73,8 @@ import { defineComponent } from 'vue'
 import AddButton from '@/components/buttons/AddButton.vue'
 import BookmarkButton from '@/components/buttons/BookmarkButton.vue'
 import BackButton from '@/components/buttons/BackButton.vue'
+import BurgerButton from '@/components/buttons/BurgerButton.vue'
+import LoadIcon from '@/components/LoadIcon.vue'
 import { fetchData } from '@/mixins/fetchData'
 import { fetchImages } from '@/mixins/fetchImages'
 import { Exercise, Muscle, Equipment, Category, Image } from '@/types/index'
@@ -76,7 +83,9 @@ export default defineComponent({
   components: {
     AddButton,
     BookmarkButton,
-    BackButton
+    BackButton,
+    BurgerButton,
+    LoadIcon
   },
   mixins: [fetchData, fetchImages],
   data () {
@@ -176,24 +185,36 @@ export default defineComponent({
 })
 </script>
 
-<style lang="scss">
+<style scoped lang="scss">
 .ExerciseDetails {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  padding-bottom: 50px;
+  position: relative;
+  width: 100%;
+
   font-family: var(--content-font);
 
   h1 {
     font-family: var(--title-font);
     font-weight: 700;
+    font-size: 6vw;
     text-align: center;
   }
 
   h2 {
     font-weight: 500;
+    text-align: center;
   }
 
   ul {
     list-style-type: none;
-    display: grid;
-    grid-template-rows: repeat(6, auto);
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+    align-items: center;
+    gap: 10px;
     font-weight: 300;
 
     li {
@@ -205,12 +226,6 @@ export default defineComponent({
     }
   }
 
-  .exercise-header {
-    display: flex;
-    justify-content: center;
-    align-items: center;
-  }
-
   .add-buttons {
     display: flex;
     justify-content: space-evenly;
@@ -220,13 +235,29 @@ export default defineComponent({
   .exercise-pics {
     list-style-type: none;
     display: flex;
-    justify-items: space-around;
+    flex-direction: column;
+    justify-content: center;
     align-items: center;
 
     li {
       img {
         max-width: 250px;
       }
+    }
+  }
+
+  .exercise-btns {
+    display: flex;
+    justify-content: space-evenly;
+    align-items: flex-end;
+    position: fixed;
+    bottom: 80px;
+    left: 0;
+    right: 0;
+
+    img {
+      filter: invert(1);
+      width: 40px;
     }
   }
 }

@@ -64,7 +64,7 @@ export default defineComponent({
 })
 </script>
 
-<style lang="scss">
+<style scoped lang="scss">
 .ExerciseWrapper {
   display: flex;
   flex-direction: column;
@@ -129,7 +129,8 @@ export default defineComponent({
     }
 
     >img {
-      width: 250px;
+      max-width: 250px;
+      max-height: 250px;
       margin: 0 auto;
       display: flex;
     }
