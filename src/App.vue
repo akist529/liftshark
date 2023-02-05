@@ -1,17 +1,36 @@
 <template>
+  <TopNavBar v-if="windowWidth <= 480" />
   <router-view id="router-view" :key="$route.fullPath" />
   <NavBar />
 </template>
 
 <script lang="ts">
+import { defineComponent } from 'vue'
 import NavBar from '@/components/NavBar.vue'
+import TopNavBar from '@/components/TopNavBar.vue'
 
-export default {
+export default defineComponent({
   name: 'App',
   components: {
-    NavBar
+    NavBar,
+    TopNavBar
+  },
+  data () {
+    return {
+      windowWidth: window.innerWidth
+    }
+  },
+  mounted () {
+    this.$nextTick(() => {
+      window.addEventListener('resize', this.onResize)
+    })
+  },
+  methods: {
+    onResize () {
+      this.windowWidth = window.innerWidth
+    }
   }
-}
+})
 </script>
 
 <style lang="scss">
@@ -33,12 +52,12 @@ export default {
   #app {
     display: grid;
     grid-template-columns: 1fr;
-    grid-template-rows: 1fr auto;
+    grid-template-rows: auto 1fr auto;
     height: 100vh;
     overflow: hidden;
 
     #router-view {
-      grid-row: 1 / 2;
+      grid-row: 2 / 3;
       grid-column: 1 / -1;
 
       display: flex;
