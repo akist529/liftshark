@@ -1,7 +1,7 @@
 <template>
   <div class="top-navbar">
     <ModeButton />
-    <LogButton />
+    <LogButton @click="$emit('openModal')" />
   </div>
 </template>
 

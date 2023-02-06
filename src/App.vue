@@ -1,23 +1,27 @@
 <template>
-  <TopNavBar v-if="windowWidth <= 480" />
+  <TopNavBar v-if="windowWidth <= 480" @openModal="openModal" />
   <router-view id="router-view" :key="$route.fullPath" />
   <NavBar />
+  <LoginModal v-if="loginModalOpen" :loginModalOpen="loginModalOpen" @closeModal="closeModal" />
 </template>
 
 <script lang="ts">
 import { defineComponent } from 'vue'
 import NavBar from '@/components/NavBar.vue'
 import TopNavBar from '@/components/TopNavBar.vue'
+import LoginModal from '@/components/LoginModal.vue'
 
 export default defineComponent({
   name: 'App',
   components: {
     NavBar,
-    TopNavBar
+    TopNavBar,
+    LoginModal
   },
   data () {
     return {
-      windowWidth: window.innerWidth
+      windowWidth: window.innerWidth,
+      loginModalOpen: false
     }
   },
   mounted () {
@@ -28,6 +32,12 @@ export default defineComponent({
   methods: {
     onResize () {
       this.windowWidth = window.innerWidth
+    },
+    closeModal () {
+      this.loginModalOpen = false
+    },
+    openModal () {
+      this.loginModalOpen = true
     }
   }
 })
