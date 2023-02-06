@@ -5,18 +5,20 @@
             <form>
                 <CloseButton @click="$emit('closeModal')" />
                 <label for="email">E-Mail:</label><br/>
-                <input type="email" id="email" name="email" />
+                <input v-model="email" type="email" id="email" name="email" />
                 <label for="password">Password:</label><br/>
-                <input type="password" id="password" name="password" />
-                <input type="submit" id="submit" value="Log In" />
+                <input v-model="password" type="password" id="password" name="password" />
             </form>
+            <button @click="loginUser" id="submit">Log In</button>
         </div>
     </div>
 </template>
 
 <script lang="ts">
 import { defineComponent } from 'vue'
+import { fetchData } from '@/mixins/fetchData'
 import CloseButton from '@/components/buttons/CloseButton.vue'
+import axios from 'axios'
 
 export default defineComponent({
   components: {
@@ -24,6 +26,29 @@ export default defineComponent({
   },
   props: {
     loginModalOpen: Boolean
+  },
+  mixins: [fetchData],
+  data () {
+    const email = ''
+    const password = ''
+
+    return {
+      email,
+      password
+    }
+  },
+  methods: {
+    async loginUser () {
+      await axios.post('http://localhost:1337/api/auth/local', {
+        identifier: this.email,
+        password: this.password
+      }).then(response => {
+        console.log(response.data.user)
+        console.log(response.data.jwt)
+      }).catch(error => {
+        console.log(error.response)
+      })
+    }
   }
 })
 </script>
@@ -56,11 +81,11 @@ export default defineComponent({
             flex-direction: column;
             justify-content: center;
             align-items: center;
+        }
 
-            #submit {
-                width: 100%;
-                background-color: var(--button-bg-color);
-            }
+        #submit {
+            width: 100%;
+            background-color: var(--button-bg-color);
         }
     }
 }
