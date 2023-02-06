@@ -1,6 +1,7 @@
 <template>
   <div class="top-navbar">
     <ModeButton />
+    <LogButton />
   </div>
 </template>
 
@@ -8,16 +9,18 @@
 import { defineComponent } from 'vue'
 import { fetchImages } from '@/mixins/fetchImages'
 import ModeButton from '@/components/buttons/ModeButton.vue'
+import LogButton from '@/components/buttons/LogButton.vue'
 
 export default defineComponent({
   components: {
-    ModeButton
+    ModeButton,
+    LogButton
   },
   mixins: [fetchImages]
 })
 </script>
 
-<style lang="scss">
+<style scoped lang="scss">
 .top-navbar {
   grid-row: 1 / 2;
   grid-column: 1 / -1;

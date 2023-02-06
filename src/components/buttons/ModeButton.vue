@@ -45,11 +45,11 @@ export default defineComponent({
     }
 
     .inactive {
-      filter: invert(1) opacity(0.3);
+      filter: invert(1) opacity(30%);
     }
 
     .active {
-      filter: invert(1) opacity (1);
+      filter: invert(1) opacity(100%);
     }
 }
 </style>
