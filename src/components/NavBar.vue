@@ -3,8 +3,8 @@
         <ul>
             <li>
                 <router-link class="link" to="/">
-                    <img alt="Dashboard Icon" :src="require('@/../public/images/ui/sidebar/dashboard.webp')" />
-                    <span>Dashboard</span>
+                    <img alt="Home Icon" :src="require('@/../public/images/ui/sidebar/home.webp')" />
+                    <span>Home</span>
                 </router-link>
             </li>
             <li>
@@ -49,6 +49,7 @@
 
 <script lang="ts">
 import { defineComponent } from 'vue'
+import { fetchImages } from '@/mixins/fetchImages'
 
 export default defineComponent({
   data () {
@@ -60,13 +61,14 @@ export default defineComponent({
     window.addEventListener('resize', () => {
       this.windowWidth = window.innerWidth
     })
-  }
+  },
+  mixins: [fetchImages]
 })
 </script>
 
 <style scoped lang="scss">
 nav {
-    grid-row: 2 / 3;
+    grid-row: 3 / 4;
     grid-column: 1 / -1;
 
     margin: 0 auto;
@@ -85,7 +87,6 @@ nav {
 
         li {
             list-style-type: none;
-            padding-right: 5px;
 
             a {
                 display: flex;
@@ -111,10 +112,6 @@ nav {
                     filter: invert(1);
                 }
             }
-        }
-
-        li:nth-child(5) {
-            padding-right: 0;
         }
     }
 }
