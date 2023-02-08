@@ -1,23 +1,50 @@
 <template>
-  <TopNavBar v-if="windowWidth <= 480" />
+  <TopNavBar
+    v-if="windowWidth <= 480"
+    @openLoginModal="openLoginModal"
+    @openWarningModal="openWarningModal"
+    :userLoggedIn="userLoggedIn"
+  />
   <router-view id="router-view" :key="$route.fullPath" />
   <NavBar />
+  <LoginModal
+    v-if="loginModalOpen"
+    :loginModalOpen="loginModalOpen"
+    @closeLoginModal="closeLoginModal"
+    @logUserIn="logUserIn"
+  />
+  <WarningModal
+    v-if="warningModalOpen"
+    :warningModalOpen="warningModalOpen"
+    @closeWarningModal="closeWarningModal"
+    @yes="logUserOut"
+  >
+    <span>Are you sure you want to log out?</span>
+  </WarningModal>
 </template>
 
 <script lang="ts">
 import { defineComponent } from 'vue'
 import NavBar from '@/components/NavBar.vue'
 import TopNavBar from '@/components/TopNavBar.vue'
+import LoginModal from '@/components/LoginModal.vue'
+import WarningModal from '@/components/WarningModal.vue'
+import Cookies from 'js-cookie'
 
 export default defineComponent({
   name: 'App',
   components: {
     NavBar,
-    TopNavBar
+    TopNavBar,
+    LoginModal,
+    WarningModal
   },
   data () {
     return {
-      windowWidth: window.innerWidth
+      windowWidth: window.innerWidth,
+      userLoggedIn: Cookies.get('token'),
+      loginModalOpen: false,
+      warningModalOpen: false
     }
   },
   mounted () {
@@ -28,6 +55,26 @@ export default defineComponent({
   methods: {
     onResize () {
       this.windowWidth = window.innerWidth
+    },
+    closeLoginModal () {
+      this.loginModalOpen = false
+    },
+    openLoginModal () {
+      this.loginModalOpen = true
+    },
+    closeWarningModal () {
+      this.warningModalOpen = false
+    },
+    openWarningModal () {
+      this.warningModalOpen = true
+    },
+    logUserOut () {
+      Cookies.remove('token')
+      this.userLoggedIn = false
+      this.closeWarningModal()
+    },
+    logUserIn () {
+      this.userLoggedIn = true
     }
   }
 })
@@ -47,6 +94,8 @@ export default defineComponent({
     --title-font: 'Roboto';
     --content-font: 'Karla';
     --button-bg-color: rgb(66, 103, 178);
+    --button-bg-color-hover: rgb(84, 115, 177);
+    --error-color: rgb(160, 0, 0);
   }
 
   #app {
