@@ -115,6 +115,8 @@ export default defineComponent({
       padding: 20px;
       overflow-x: hidden;
       overflow-y: scroll;
+
+      font-family: var(--content-font);
     }
   }
 
