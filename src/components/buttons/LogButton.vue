@@ -1,8 +1,10 @@
 <template>
     <button>
-        <span>Log In</span>
+        <span v-if="userLoggedIn">Log Out</span>
+        <span v-if="!userLoggedIn">Log In</span>
         <div>
-          <img alt="Log In" :src="assetspath('./ui/sidebar/login.webp')" />
+          <img v-if="userLoggedIn" alt="Log Out" :src="assetspath('./ui/sidebar/logout.webp')" />
+          <img v-if="!userLoggedIn" alt="Log In" :src="assetspath('./ui/sidebar/login.webp')" />
         </div>
     </button>
 </template>
@@ -10,9 +12,18 @@
 <script lang="ts">
 import { defineComponent } from 'vue'
 import { fetchImages } from '@/mixins/fetchImages'
+import Cookies from 'js-cookie'
 
 export default defineComponent({
-  mixins: [fetchImages]
+  data () {
+    return {
+      Cookies
+    }
+  },
+  mixins: [fetchImages],
+  props: {
+    userLoggedIn: Boolean
+  }
 })
 </script>
 
