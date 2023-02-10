@@ -65,7 +65,7 @@ export default defineComponent({
         password: this.password
       }).then(response => {
         this.error = false
-        Cookies.set('token', response.data.jwt)
+        Cookies.set('token', response.data.jwt, { sameSite: 'None', Secure: 'None' })
         this.$emit('closeLoginModal')
         this.$emit('logUserIn')
       }).catch(error => {
