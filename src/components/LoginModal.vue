@@ -13,12 +13,14 @@
       </div>
       <CloseButton @click="$emit('closeLoginModal')" />
       <form>
+          <label v-if="!loggingUserIn" for="username">Username:</label><br/>
+          <input v-if="!loggingUserIn" v-model="username" type="text" id="username" name="username" />
           <label for="email">E-Mail:</label><br/>
           <input v-model="email" type="email" id="email" name="email" />
           <label for="password">Password:</label><br/>
           <input v-model="password" type="password" id="password" name="password" />
       </form>
-      <button @click="loginUser" id="submit">
+      <button @click="loggingUserIn ? loginUser() : registerUser()" id="submit">
         <span v-if="loggingUserIn">Log In</span>
         <span v-if="!loggingUserIn">Sign Up</span>
       </button>
@@ -46,11 +48,13 @@ export default defineComponent({
   },
   mixins: [fetchData, fetchImages],
   data () {
+    const username = ''
     const email = ''
     const password = ''
     const errorMessage = ''
 
     return {
+      username,
       email,
       password,
       errorMessage,
@@ -63,15 +67,36 @@ export default defineComponent({
       await axios.post('http://localhost:1337/api/auth/local', {
         identifier: this.email,
         password: this.password
+      }, {
+        headers: {
+          Accept: 'application/json',
+          'Content-Type': 'application/json'
+        }
       }).then(response => {
+        console.log(response)
         this.error = false
-        Cookies.set('token', response.data.jwt, { sameSite: 'None', Secure: 'None' })
+        Cookies.set('token', response.data.jwt)
         this.$emit('closeLoginModal')
         this.$emit('logUserIn')
       }).catch(error => {
         this.error = true
         console.log(error.response)
-        this.errorMessage = 'The account details entered are incorrect'
+        this.errorMessage = 'The account details entered are incorrect...'
+      })
+    },
+    async registerUser () {
+      await axios.post('http://localhost:1337/api/auth/local/register', {
+        username: this.username,
+        email: this.email,
+        password: this.password
+      }).then(response => {
+        console.log(response)
+        this.error = false
+        this.loginUser()
+      }).catch(error => {
+        this.error = true
+        console.log(error.response)
+        this.errorMessage = 'There was an issue registering the user...'
       })
     },
     setLoginFunction (state) {

@@ -9,7 +9,7 @@
             >{{ day }}</option>
         </select>
         <NewButton>
-          <button>
+          <button @click="newRoutine">
             <span>New Routine</span>
           </button>
           <button>
@@ -32,6 +32,7 @@ import { fetchImages } from '@/mixins/fetchImages'
 import { Exercise } from '@/types/index'
 import axios from 'axios'
 import Cookies from 'js-cookie'
+import { includeBooleanAttr } from '@vue/shared'
 
 export default defineComponent({
   data () {
@@ -50,6 +51,24 @@ export default defineComponent({
   methods: {
     updateActiveDay () {
       this.activeDay = (this.$refs.day as HTMLSelectElement).value
+    },
+    async newRoutine () {
+      await fetch('http://localhost:1337/api/routines', {
+        method: 'POST',
+        headers: {
+          Authorization: `Bearer ${Cookies.get('token')}`,
+          'Content-Type': 'application/json'
+        },
+        body: JSON.stringify({
+          data: {
+            day: 'Sunday'
+          }
+        })
+      }).then(response => {
+        console.log(response)
+      }).catch(error => {
+        console.log(error)
+      })
     }
   },
   components: {
@@ -57,21 +76,23 @@ export default defineComponent({
     MyRoutine
   },
   mixins: [fetchImages],
-  created () {
-    axios.get('http://localhost:1337/api/routines', {
+  async created () {
+    await axios.get('http://localhost:1337/api/routines', {
       headers: {
         Authorization: `Bearer ${Cookies.get('token')}`
       }
     })
       .then(response => {
-        this.routines = response.data
+        this.routines = response.data.data
       }).catch(error => {
         console.log(error)
       })
 
-    axios.get('https://wger.de/api/v2/exercise?limit=999&language=2')
+    await axios.get('https://wger.de/api/v2/exercise?limit=999&language=2')
       .then(response => {
-        this.exercises = response.data
+        this.exercises = response.data.results
+      }).catch(error => {
+        console.log(error)
       })
   }
 })
