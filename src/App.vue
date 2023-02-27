@@ -40,11 +40,18 @@ export default defineComponent({
     WarningModal
   },
   data () {
+    const windowWidth: number = window.innerWidth
+    const currentUser: string = Cookies.get('token')
+    const userLoggedIn = false
+    const loginModalOpen = false
+    const warningModalOpen = false
+
     return {
-      windowWidth: window.innerWidth,
-      userLoggedIn: Cookies.get('token'),
-      loginModalOpen: false,
-      warningModalOpen: false
+      windowWidth,
+      currentUser,
+      userLoggedIn,
+      loginModalOpen,
+      warningModalOpen
     }
   },
   mounted () {

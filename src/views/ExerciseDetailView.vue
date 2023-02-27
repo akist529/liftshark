@@ -53,14 +53,14 @@
           <div class="exercise-btns">
             <BackButton class="back-btn" @click="$router.back()" />
             <BurgerButton class="burger-btn">
-              <AddButton>
+              <BurgerMenuButton>
                 <span>Add to Routine</span>
                 <img alt="Routine" src="@/../public/images/ui/sidebar/routines.webp" />
-              </AddButton>
-              <AddButton>
+              </BurgerMenuButton>
+              <BurgerMenuButton>
                 <span>Add to Workout</span>
                 <img alt="Workout" src="@/../public/images/ui/sidebar/workouts.webp" />
-              </AddButton>
+              </BurgerMenuButton>
             </BurgerButton>
             <BookmarkButton class="bookmark-btn" />
           </div>
@@ -70,10 +70,10 @@
 
 <script lang="ts">
 import { defineComponent } from 'vue'
-import AddButton from '@/components/buttons/AddButton.vue'
 import BookmarkButton from '@/components/buttons/BookmarkButton.vue'
 import BackButton from '@/components/buttons/BackButton.vue'
 import BurgerButton from '@/components/buttons/BurgerButton.vue'
+import BurgerMenuButton from '@/components/buttons/BurgerMenuButton.vue'
 import LoadIcon from '@/components/LoadIcon.vue'
 import { fetchData } from '@/mixins/fetchData'
 import { fetchImages } from '@/mixins/fetchImages'
@@ -81,10 +81,10 @@ import { Exercise, Muscle, Equipment, Category, Image } from '@/types/index'
 
 export default defineComponent({
   components: {
-    AddButton,
     BookmarkButton,
     BackButton,
     BurgerButton,
+    BurgerMenuButton,
     LoadIcon
   },
   mixins: [fetchData, fetchImages],
