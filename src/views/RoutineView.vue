@@ -9,10 +9,10 @@
             >{{ day }}</option>
         </select>
         <NewButton>
-          <button @click="newRoutine">
+          <button type="button" @click="newRoutine">
             <span>New Routine</span>
           </button>
-          <button>
+          <button type="button">
             <img alt="More" :src="assetspath('./ui/expand_less.webp')" />
           </button>
         </NewButton>
@@ -48,6 +48,13 @@ export default defineComponent({
       exercises
     }
   },
+  watch: {
+    async routines () {
+      if (Cookies.get('token')) {
+        await this.getRoutines()
+      }
+    }
+  },
   methods: {
     updateActiveDay () {
       this.activeDay = (this.$refs.day as HTMLSelectElement).value
@@ -69,6 +76,18 @@ export default defineComponent({
       }).catch(error => {
         console.log(error)
       })
+    },
+    async getRoutines () {
+      await axios.get('http://localhost:1337/api/routines', {
+        headers: {
+          Authorization: `Bearer ${Cookies.get('token')}`
+        }
+      })
+        .then(response => {
+          this.routines = response.data.data
+        }).catch(error => {
+          console.log(error)
+        })
     }
   },
   components: {
@@ -77,16 +96,9 @@ export default defineComponent({
   },
   mixins: [fetchImages],
   async created () {
-    await axios.get('http://localhost:1337/api/routines', {
-      headers: {
-        Authorization: `Bearer ${Cookies.get('token')}`
-      }
-    })
-      .then(response => {
-        this.routines = response.data.data
-      }).catch(error => {
-        console.log(error)
-      })
+    if (Cookies.get('token')) {
+      await this.getRoutines()
+    }
 
     await axios.get('https://wger.de/api/v2/exercise?limit=999&language=2')
       .then(response => {
