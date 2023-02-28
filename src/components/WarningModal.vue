@@ -1,13 +1,13 @@
 <template>
   <ModalBackground>
     <div class="warning-modal">
-        <CloseButton @click="$emit('closeWarningModal')" />
+        <CloseButton @click="$emit('handleWarningModal')" />
         <strong>
             <slot></slot>
         </strong>
         <div class="warning-btns">
           <StrongButton @click="$emit('yes')">YES</StrongButton>
-          <GenericButton @click="$emit('closeWarningModal')">NO</GenericButton>
+          <GenericButton @click="$emit('handleWarningModal')">NO</GenericButton>
         </div>
     </div>
   </ModalBackground>

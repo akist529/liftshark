@@ -24,9 +24,9 @@ export default defineComponent({
   methods: {
     handleLogButton () {
       if (Cookies.get('token')) {
-        this.$emit('openWarningModal')
+        this.$emit('handleWarningModal')
       } else {
-        this.$emit('openLoginModal')
+        this.$emit('handleLoginModal')
       }
     }
   },

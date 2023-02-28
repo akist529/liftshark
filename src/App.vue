@@ -1,8 +1,8 @@
 <template>
   <TopNavBar
     v-if="windowWidth <= 480"
-    @openLoginModal="openLoginModal"
-    @openWarningModal="openWarningModal"
+    @handleLoginModal="handleLoginModal"
+    @handleWarningModal="handleWarningModal"
     :userToken = userToken
   />
   <router-view id="router-view" :key="$route.fullPath" />
@@ -10,13 +10,13 @@
   <LoginModal
     v-if="loginModalOpen"
     :loginModalOpen="loginModalOpen"
-    @closeLoginModal="closeLoginModal"
+    @handleLoginModal="handleLoginModal"
     :userToken = userToken
   />
   <WarningModal
     v-if="warningModalOpen"
     :warningModalOpen="warningModalOpen"
-    @closeWarningModal="closeWarningModal"
+    @handleWarningModal="handleWarningModal"
     @yes="logUserOut"
   >
     <span>Are you sure you want to log out?</span>
@@ -42,8 +42,8 @@ export default defineComponent({
   data () {
     const windowWidth: number = window.innerWidth
     const userToken: string = Cookies.get('token')
-    const loginModalOpen = false
-    const warningModalOpen = false
+    const loginModalOpen: boolean = JSON.parse(sessionStorage.getItem('loginModalOpen') || 'false')
+    const warningModalOpen: boolean = JSON.parse(sessionStorage.getItem('warningModalOpen') || 'false')
 
     return {
       windowWidth,
@@ -61,30 +61,30 @@ export default defineComponent({
     onResize () {
       this.windowWidth = window.innerWidth
     },
-    closeLoginModal () {
-      this.loginModalOpen = false
+    handleLoginModal () {
+      sessionStorage.setItem('loginModalOpen', JSON.stringify(!this.loginModalOpen))
     },
-    openLoginModal () {
-      this.loginModalOpen = true
-    },
-    closeWarningModal () {
-      this.warningModalOpen = false
-    },
-    openWarningModal () {
-      this.warningModalOpen = true
+    handleWarningModal () {
+      sessionStorage.setItem('warningModalOpen', JSON.stringify(!this.warningModalOpen))
     },
     logUserOut () {
       Cookies.remove('token')
-      this.closeWarningModal()
+      this.handleWarningModal()
     },
     updateUserToken () {
-      if (this.userToken !== Cookies.get('token')) {
-        this.userToken = Cookies.get('token')
-      }
+      this.userToken = Cookies.get('token')
+    },
+    updateLoginModal () {
+      this.loginModalOpen = (sessionStorage.getItem('loginModalOpen') === 'true')
+    },
+    updateWarningModal () {
+      this.warningModalOpen = (sessionStorage.getItem('warningModalOpen') === 'true')
     }
   },
   created () {
     window.setInterval(this.updateUserToken, 100)
+    window.setInterval(this.updateLoginModal, 100)
+    window.setInterval(this.updateWarningModal, 100)
   }
 })
 </script>

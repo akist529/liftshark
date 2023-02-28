@@ -11,7 +11,7 @@
           <span>Register</span>
         </button>
       </div>
-      <CloseButton @click="$emit('closeLoginModal')" />
+      <CloseButton @click="$emit('handleLoginModal')" />
       <form>
           <label v-if="!loggingUserIn" for="username">Username:</label><br/>
           <input v-if="!loggingUserIn" v-model="username" type="text" id="username" name="username" />
@@ -76,7 +76,7 @@ export default defineComponent({
         console.log(response)
         this.error = false
         Cookies.set('token', response.data.jwt)
-        this.$emit('closeLoginModal')
+        this.$emit('handleLoginModal')
       }).catch(error => {
         this.error = true
         console.log(error.response)
