@@ -59,3 +59,8 @@ export interface Image {
     // eslint-disable-next-line camelcase
     author_history: string[]
 }
+
+export interface Routine {
+    id: number,
+    day: string
+}

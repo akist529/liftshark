@@ -29,7 +29,7 @@ import { defineComponent } from 'vue'
 import NewButton from '@/components/buttons/NewButton.vue'
 import MyRoutine from '@/components/MyRoutine.vue'
 import { fetchImages } from '@/mixins/fetchImages'
-import { Exercise } from '@/types/index'
+import { Exercise, Routine } from '@/types/index'
 import axios from 'axios'
 import Cookies from 'js-cookie'
 import { includeBooleanAttr } from '@vue/shared'
@@ -38,14 +38,16 @@ export default defineComponent({
   data () {
     const weekdays = ['Sunday', 'Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday']
     const activeDay = 'Sunday'
-    const routines: any[] = []
+    const routines: Routine[] = []
     const exercises: Exercise[] = []
+    const localStorageIndex = 0
 
     return {
       weekdays,
       activeDay,
       routines,
-      exercises
+      exercises,
+      localStorageIndex
     }
   },
   watch: {
@@ -60,22 +62,34 @@ export default defineComponent({
       this.activeDay = (this.$refs.day as HTMLSelectElement).value
     },
     async newRoutine () {
-      await fetch('http://localhost:1337/api/routines', {
-        method: 'POST',
-        headers: {
-          Authorization: `Bearer ${Cookies.get('token')}`,
-          'Content-Type': 'application/json'
-        },
-        body: JSON.stringify({
-          data: {
-            day: 'Sunday'
-          }
+      if (Cookies.get('token')) {
+        await fetch('http://localhost:1337/api/routines', {
+          method: 'POST',
+          headers: {
+            Authorization: `Bearer ${Cookies.get('token')}`,
+            'Content-Type': 'application/json'
+          },
+          body: JSON.stringify({
+            data: {
+              day: 'Sunday'
+            }
+          })
+        }).then(response => {
+          console.log(response)
+        }).catch(error => {
+          console.log(error)
         })
-      }).then(response => {
-        console.log(response)
-      }).catch(error => {
-        console.log(error)
-      })
+      } else {
+        const localRoutines: Routine[] = JSON.parse(localStorage.getItem('routines') || '[]')
+
+        localRoutines.push({
+          id: this.localStorageIndex,
+          day: 'Sunday'
+        })
+
+        this.localStorageIndex++
+        localStorage.setItem('routines', JSON.stringify(localRoutines))
+      }
     },
     async getRoutines () {
       await axios.get('http://localhost:1337/api/routines', {
