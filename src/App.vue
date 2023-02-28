@@ -3,7 +3,7 @@
     v-if="windowWidth <= 480"
     @openLoginModal="openLoginModal"
     @openWarningModal="openWarningModal"
-    :userLoggedIn="userLoggedIn"
+    :userToken = userToken
   />
   <router-view id="router-view" :key="$route.fullPath" />
   <NavBar />
@@ -11,7 +11,7 @@
     v-if="loginModalOpen"
     :loginModalOpen="loginModalOpen"
     @closeLoginModal="closeLoginModal"
-    @logUserIn="logUserIn"
+    :userToken = userToken
   />
   <WarningModal
     v-if="warningModalOpen"
@@ -41,15 +41,13 @@ export default defineComponent({
   },
   data () {
     const windowWidth: number = window.innerWidth
-    const currentUser: string = Cookies.get('token')
-    const userLoggedIn = false
+    const userToken: string = Cookies.get('token')
     const loginModalOpen = false
     const warningModalOpen = false
 
     return {
       windowWidth,
-      currentUser,
-      userLoggedIn,
+      userToken,
       loginModalOpen,
       warningModalOpen
     }
@@ -77,12 +75,16 @@ export default defineComponent({
     },
     logUserOut () {
       Cookies.remove('token')
-      this.userLoggedIn = false
       this.closeWarningModal()
     },
-    logUserIn () {
-      this.userLoggedIn = true
+    updateUserToken () {
+      if (this.userToken !== Cookies.get('token')) {
+        this.userToken = Cookies.get('token')
+      }
     }
+  },
+  created () {
+    window.setInterval(this.updateUserToken, 100)
   }
 })
 </script>

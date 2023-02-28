@@ -1,10 +1,10 @@
 <template>
     <button>
-        <span v-if="userLoggedIn">Log Out</span>
-        <span v-if="!userLoggedIn">Log In</span>
+        <span v-if="userToken">Log Out</span>
+        <span v-if="!userToken">Log In</span>
         <div>
-          <img v-if="userLoggedIn" alt="Log Out" :src="assetspath('./ui/sidebar/logout.webp')" />
-          <img v-if="!userLoggedIn" alt="Log In" :src="assetspath('./ui/sidebar/login.webp')" />
+          <img v-if="userToken" alt="Log Out" :src="assetspath('./ui/sidebar/logout.webp')" />
+          <img v-if="!userToken" alt="Log In" :src="assetspath('./ui/sidebar/login.webp')" />
         </div>
     </button>
 </template>
@@ -22,7 +22,7 @@ export default defineComponent({
   },
   mixins: [fetchImages],
   props: {
-    userLoggedIn: Boolean
+    userToken: String
   }
 })
 </script>

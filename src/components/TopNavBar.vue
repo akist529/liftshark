@@ -1,7 +1,10 @@
 <template>
   <div class="top-navbar">
     <ModeButton />
-    <LogButton :userLoggedIn="userLoggedIn" @click="handleLogButton" />
+    <LogButton
+      :userToken = userToken
+      @click="handleLogButton"
+    />
   </div>
 </template>
 
@@ -18,9 +21,6 @@ export default defineComponent({
     LogButton
   },
   mixins: [fetchImages],
-  props: {
-    userLoggedIn: Boolean
-  },
   methods: {
     handleLogButton () {
       if (Cookies.get('token')) {
@@ -29,6 +29,9 @@ export default defineComponent({
         this.$emit('openLoginModal')
       }
     }
+  },
+  props: {
+    userToken: String
   }
 })
 </script>

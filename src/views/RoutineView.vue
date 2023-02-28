@@ -16,7 +16,7 @@
             <img alt="More" :src="assetspath('./ui/expand_less.webp')" />
           </button>
         </NewButton>
-        <MyRoutine v-for="routine in routines"
+        <MyRoutine v-for="routine in routines.filter(routine => routine.day === activeDay)"
           :routine="routine"
           :exercises="exercises"
           :key="routine.id"
@@ -32,34 +32,36 @@ import { fetchImages } from '@/mixins/fetchImages'
 import { Exercise, Routine } from '@/types/index'
 import axios from 'axios'
 import Cookies from 'js-cookie'
-import { includeBooleanAttr } from '@vue/shared'
 
 export default defineComponent({
   data () {
     const weekdays = ['Sunday', 'Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday']
-    const activeDay = 'Sunday'
+    const activeDay = localStorage.getItem('activeDay') || 'Sunday'
     const routines: Routine[] = []
     const exercises: Exercise[] = []
-    const localStorageIndex = 0
+    const userToken = Cookies.get('token')
 
     return {
       weekdays,
       activeDay,
       routines,
       exercises,
-      localStorageIndex
+      userToken
     }
   },
   watch: {
-    async routines () {
-      if (Cookies.get('token')) {
-        await this.getRoutines()
+    userToken () {
+      if (!this.userToken) {
+        this.getLocalRoutines()
+      } else {
+        this.getUserRoutines()
       }
     }
   },
   methods: {
     updateActiveDay () {
-      this.activeDay = (this.$refs.day as HTMLSelectElement).value
+      localStorage.setItem('activeDay', (this.$refs.day as HTMLSelectElement).value)
+      this.activeDay = localStorage.getItem('activeDay') || 'Sunday'
     },
     async newRoutine () {
       if (Cookies.get('token')) {
@@ -79,19 +81,21 @@ export default defineComponent({
         }).catch(error => {
           console.log(error)
         })
+
+        this.getUserRoutines()
       } else {
         const localRoutines: Routine[] = JSON.parse(localStorage.getItem('routines') || '[]')
 
         localRoutines.push({
-          id: this.localStorageIndex,
-          day: 'Sunday'
+          id: JSON.parse(localStorage.getItem('routines') || '[]').length,
+          day: this.activeDay
         })
 
-        this.localStorageIndex++
         localStorage.setItem('routines', JSON.stringify(localRoutines))
+        this.getLocalRoutines()
       }
     },
-    async getRoutines () {
+    async getUserRoutines () {
       await axios.get('http://localhost:1337/api/routines', {
         headers: {
           Authorization: `Bearer ${Cookies.get('token')}`
@@ -102,6 +106,14 @@ export default defineComponent({
         }).catch(error => {
           console.log(error)
         })
+    },
+    getLocalRoutines () {
+      this.routines = JSON.parse(localStorage.getItem('routines') || '[]')
+    },
+    updateUserToken () {
+      if (this.userToken !== Cookies.get('token')) {
+        this.userToken = Cookies.get('token')
+      }
     }
   },
   components: {
@@ -111,7 +123,9 @@ export default defineComponent({
   mixins: [fetchImages],
   async created () {
     if (Cookies.get('token')) {
-      await this.getRoutines()
+      await this.getUserRoutines()
+    } else {
+      this.getLocalRoutines()
     }
 
     await axios.get('https://wger.de/api/v2/exercise?limit=999&language=2')
@@ -120,6 +134,8 @@ export default defineComponent({
       }).catch(error => {
         console.log(error)
       })
+
+    window.setInterval(this.updateUserToken, 100)
   }
 })
 </script>

@@ -44,7 +44,7 @@ export default defineComponent({
     CloseButton
   },
   props: {
-    loginModalOpen: Boolean
+    userToken: String
   },
   mixins: [fetchData, fetchImages],
   data () {
@@ -77,7 +77,6 @@ export default defineComponent({
         this.error = false
         Cookies.set('token', response.data.jwt)
         this.$emit('closeLoginModal')
-        this.$emit('logUserIn')
       }).catch(error => {
         this.error = true
         console.log(error.response)
