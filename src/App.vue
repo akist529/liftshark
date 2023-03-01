@@ -82,9 +82,11 @@ export default defineComponent({
     }
   },
   created () {
-    window.setInterval(this.updateUserToken, 100)
-    window.setInterval(this.updateLoginModal, 100)
-    window.setInterval(this.updateWarningModal, 100)
+    window.setInterval(() => {
+      this.updateUserToken()
+      this.updateLoginModal()
+      this.updateWarningModal()
+    }, 100)
   }
 })
 </script>

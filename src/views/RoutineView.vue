@@ -16,7 +16,7 @@
             <img alt="More" :src="assetspath('./ui/expand_less.webp')" />
           </button>
         </NewButton>
-        <MyRoutine v-for="routine in routines.filter(routine => routine.day === activeDay)"
+        <MyRoutine v-for="routine in filterRoutines()"
           :routine="routine"
           :exercises="exercises"
           :key="routine.id"
@@ -62,6 +62,7 @@ export default defineComponent({
     updateActiveDay () {
       localStorage.setItem('activeDay', (this.$refs.day as HTMLSelectElement).value)
       this.activeDay = localStorage.getItem('activeDay') || 'Sunday'
+      console.log(this.filterRoutines())
     },
     async newRoutine () {
       if (Cookies.get('token')) {
@@ -73,7 +74,7 @@ export default defineComponent({
           },
           body: JSON.stringify({
             data: {
-              day: 'Sunday'
+              day: this.activeDay
             }
           })
         }).then(response => {
@@ -98,7 +99,8 @@ export default defineComponent({
     async getUserRoutines () {
       await axios.get('http://localhost:1337/api/routines', {
         headers: {
-          Authorization: `Bearer ${Cookies.get('token')}`
+          Authorization: `Bearer ${Cookies.get('token')}`,
+          'Content-Type': 'application/json'
         }
       })
         .then(response => {
@@ -114,6 +116,11 @@ export default defineComponent({
       if (this.userToken !== Cookies.get('token')) {
         this.userToken = Cookies.get('token')
       }
+    },
+    filterRoutines () {
+      return this.routines.filter(routine => {
+        return routine.day === this.activeDay
+      })
     }
   },
   components: {
