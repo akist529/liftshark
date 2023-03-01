@@ -97,17 +97,14 @@ export default defineComponent({
       }
     },
     async getUserRoutines () {
-      await axios.get('http://localhost:1337/api/routines', {
+      const response = await axios.get('http://localhost:1337/api/routines', {
         headers: {
           Authorization: `Bearer ${Cookies.get('token')}`,
           'Content-Type': 'application/json'
         }
       })
-        .then(response => {
-          this.routines = response.data.data
-        }).catch(error => {
-          console.log(error)
-        })
+
+      this.routines = response.data
     },
     getLocalRoutines () {
       this.routines = JSON.parse(localStorage.getItem('routines') || '[]')
