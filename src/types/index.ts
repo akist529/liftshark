@@ -62,5 +62,7 @@ export interface Image {
 
 export interface Routine {
     id: number,
-    day: string
+    attributes: {
+        day: string
+    }
 }

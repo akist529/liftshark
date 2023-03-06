@@ -89,7 +89,9 @@ export default defineComponent({
 
         localRoutines.push({
           id: JSON.parse(localStorage.getItem('routines') || '[]').length,
-          day: this.activeDay
+          attributes: {
+            day: this.activeDay
+          }
         })
 
         localStorage.setItem('routines', JSON.stringify(localRoutines))
@@ -97,14 +99,19 @@ export default defineComponent({
       }
     },
     async getUserRoutines () {
-      const response = await axios.get('http://localhost:1337/api/routines', {
+      const response = await fetch('http://localhost:1337/api/routines', {
+        method: 'GET',
         headers: {
           Authorization: `Bearer ${Cookies.get('token')}`,
           'Content-Type': 'application/json'
         }
+      }).then(response => {
+        return response.json()
+      }).then(data => {
+        this.routines = data.data
+      }).catch(error => {
+        console.log(error)
       })
-
-      this.routines = response.data
     },
     getLocalRoutines () {
       this.routines = JSON.parse(localStorage.getItem('routines') || '[]')
@@ -116,7 +123,7 @@ export default defineComponent({
     },
     filterRoutines () {
       return this.routines.filter(routine => {
-        return routine.day === this.activeDay
+        return routine.attributes.day === this.activeDay
       })
     }
   },
