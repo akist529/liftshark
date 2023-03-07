@@ -1,7 +1,13 @@
 <template>
-    <div>
+    <div class="RoutineView">
         <h1>My Routines</h1>
-        <select name="day" id="day" @change="updateActiveDay" ref="day">
+        <select
+          name="day"
+          id="day"
+          class="ArrowDown"
+          @change="updateActiveDay"
+          :style="`background-image: url(${assetspath('./ui/expand_more.webp')}), linear-gradient(to left, var(--button-bg-color) 0px, var(--button-bg-color) 30px, white 30px, white 100%);`"
+          ref="day">
             <option
                 v-for="day of weekdays"
                 :value="day"
@@ -152,4 +158,31 @@ export default defineComponent({
 </script>
 
 <style scoped lang="scss">
+.RoutineView {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+
+  button {
+    border: none;
+    background-color: none;
+
+    &:hover {
+      background-color: none;
+    }
+  }
+
+  #day {
+    font-size: 18px;
+    appearance: none;
+  }
+}
+
+.ArrowDown {
+  background-repeat: no-repeat, repeat;
+  background-position: right 10px top 50%, 0 0;
+  background-size: .65em auto, 100%;
+  padding: 0 5px;
+  width: 150px;
+}
 </style>
