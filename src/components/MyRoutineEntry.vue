@@ -1,7 +1,7 @@
 <template>
-    <div ref="routineEntry">
+    <div>
         <button @click="deleteEntry">DELETE</button>
-        <select name="exercise">
+        <select name="exercise" ref="name">
             <option v-for="exercise in exercises"
                 :value="exercise.name"
                 :key="exercise.name"
@@ -14,11 +14,12 @@
             max="6"
             value="0"
             @change="updateSetCount"
+            ref="setCount"
         /><span> sets</span>
-        <div v-for="set in setCount" :key="set">
-            <input type="number" min="1" max="100" value="1" />
+        <div v-for="set in entry?.sets" :key="set.id">
+            <input type="number" min="1" max="100" value="1" :ref="`repCount-${set}`" />
             <span> reps</span>
-            <input type="number" min="1" max="500" value="1" />
+            <input type="number" min="1" max="500" value="1" :ref="`weight-${set}`" />
             <span> lbs.</span>
         </div>
     </div>
@@ -28,30 +29,60 @@
 import { defineComponent } from 'vue'
 import type { PropType } from 'vue'
 import { fetchData } from '@/mixins/fetchData'
-import { Exercise } from '@/types/index'
+import { Routine, Entry, Exercise } from '@/types/index'
+import Cookies from 'js-cookie'
 
 export default defineComponent({
-  data () {
-    const setCount = 0
-
-    return {
-      setCount
+  props: {
+    routine: Object as PropType<Routine>,
+    entry: Object as PropType<Entry>,
+    exercises: {
+      type: Array as PropType<Exercise[]>
     }
   },
   mixins: [fetchData],
   methods: {
-    updateSetCount () {
-      this.setCount = Number((document.getElementById('setCount') as HTMLInputElement).value)
-      this.$emit('updateRoutine')
+    filterEntries () {
+      const filteredEntries: Entry[] = []
+
+      this.routine?.attributes.exercises?.forEach(exercise => {
+        if (exercise.id !== this.entry?.id) {
+          filteredEntries.push(exercise)
+        }
+      })
+
+      return filteredEntries
     },
-    deleteEntry () {
-      (this.$refs.routineEntry as HTMLElement).remove()
+    async deleteEntry () {
       this.$emit('updateRoutine')
-    }
-  },
-  props: {
-    exercises: {
-      type: Array as PropType<Exercise[]>
+
+      await fetch(`http://localhost:1337/api/routines/${this.routine?.id}`, {
+        method: 'PUT',
+        headers: {
+          Authorization: `Bearer ${Cookies.get('token')}`,
+          'Content-Type': 'application/json'
+        },
+        body: JSON.stringify({
+          exercises: this.filterEntries()
+        })
+      }).then(response => {
+        console.log(response)
+      }).catch(error => {
+        console.log(error)
+      })
+    },
+    async updateEntry () {
+      await fetch(`http://localhost:1337/api/routines/${this.routine?.id}`, {
+        method: 'PUT',
+        headers: {
+          Authorization: `Bearer ${Cookies.get('token')}`,
+          'Content-Type': 'application/json'
+        },
+        body: JSON.stringify({
+          id: this.entry?.id,
+          name: this.$refs.name
+        })
+      })
     }
   }
 })

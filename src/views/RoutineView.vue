@@ -14,19 +14,14 @@
                 :key="day"
             >{{ day }}</option>
         </select>
-        <NewButton>
-          <button type="button" @click="newRoutine">
-            <span>New Routine</span>
-          </button>
-          <button type="button">
-            <img alt="More" :src="assetspath('./ui/expand_less.webp')" />
-          </button>
-        </NewButton>
         <MyRoutine v-for="routine in filterRoutines()"
           :routine="routine"
           :exercises="exercises"
           :key="routine.id"
         />
+        <NewButton @clicked="newRoutine()">
+          <span>New Routine</span>
+        </NewButton>
     </div>
 </template>
 
@@ -68,7 +63,6 @@ export default defineComponent({
     updateActiveDay () {
       localStorage.setItem('activeDay', (this.$refs.day as HTMLSelectElement).value)
       this.activeDay = localStorage.getItem('activeDay') || 'Sunday'
-      console.log(this.filterRoutines())
     },
     async newRoutine () {
       if (Cookies.get('token')) {
@@ -105,7 +99,7 @@ export default defineComponent({
       }
     },
     async getUserRoutines () {
-      const response = await fetch('http://localhost:1337/api/routines', {
+      await fetch('http://localhost:1337/api/routines', {
         method: 'GET',
         headers: {
           Authorization: `Bearer ${Cookies.get('token')}`,
@@ -162,15 +156,6 @@ export default defineComponent({
   display: flex;
   flex-direction: column;
   gap: 10px;
-
-  button {
-    border: none;
-    background-color: none;
-
-    &:hover {
-      background-color: none;
-    }
-  }
 
   #day {
     font-size: 18px;

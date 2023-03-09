@@ -63,6 +63,37 @@ export interface Image {
 export interface Routine {
     id: number,
     attributes: {
-        day: string
+        day: string,
+        exercises?: [
+            {
+                id: number,
+                name: string,
+                sets: [
+                    {
+                        id: number,
+                        weight: number,
+                        reps: number
+                    }
+                ]
+            }
+        ]
     }
+}
+
+export interface Entry {
+    id: number,
+    name: string,
+    sets: [
+        {
+            id: number,
+            weight: number,
+            reps: number
+        }
+    ]
+}
+
+export interface Set {
+    id: number,
+    weight: number,
+    reps: number
 }
