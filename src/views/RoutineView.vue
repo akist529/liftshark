@@ -124,7 +124,12 @@ export default defineComponent({
     },
     filterRoutines () {
       return this.routines.filter(routine => {
-        return routine.attributes.day === this.activeDay
+        if (Cookies.get('token')) {
+          return routine.attributes.day === this.activeDay
+        } else {
+          console.log(routine)
+          return routine
+        }
       })
     }
   },

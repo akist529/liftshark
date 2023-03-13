@@ -52,55 +52,78 @@ export default defineComponent({
         ]
       })
 
-      await fetch(`http://localhost:1337/api/routines/${this.routine?.id}`, {
-        method: 'PUT',
-        headers: {
-          Authorization: `Bearer ${Cookies.get('token')}`,
-          'Content-Type': 'application/json'
-        },
-        body: JSON.stringify({
-          data: {
-            day: this.routine?.attributes.day,
-            exercises: newExercises
+      if (Cookies.get('token')) {
+        await fetch(`http://localhost:1337/api/routines/${this.routine?.id}`, {
+          method: 'PUT',
+          headers: {
+            Authorization: `Bearer ${Cookies.get('token')}`,
+            'Content-Type': 'application/json'
+          },
+          body: JSON.stringify({
+            data: {
+              day: this.routine?.attributes.day,
+              exercises: newExercises
+            }
+          })
+        }).then(response => {
+          console.log(response)
+        }).catch(error => {
+          console.log(error)
+        })
+      } else {
+        const prevRoutines = JSON.parse(localStorage.getItem('routines') || '[]')
+        prevRoutines.forEach(routine => {
+          if (routine.id === this.routine?.id) {
+            routine.attributes.sets.push(newExercises)
           }
         })
-      }).then(response => {
-        console.log(response)
-      }).catch(error => {
-        console.log(error)
-      })
+
+        localStorage.setItem('routines', prevRoutines)
+      }
 
       await this.getEntries()
     },
     async getEntries () {
-      await fetch(`http://localhost:1337/api/routines/${this.routine?.id}`, {
-        method: 'GET',
-        headers: {
-          Authorization: `Bearer ${Cookies.get('token')}`,
-          'Content-Type': 'application/json'
-        }
-      }).then(response => {
-        return response.json()
-      }).then(data => {
-        this.entries = data.data.attributes.exercises || []
-      }).catch(error => {
-        console.log(error)
-      })
+      if (Cookies.get('token')) {
+        await fetch(`http://localhost:1337/api/routines/${this.routine?.id}`, {
+          method: 'GET',
+          headers: {
+            Authorization: `Bearer ${Cookies.get('token')}`,
+            'Content-Type': 'application/json'
+          }
+        }).then(response => {
+          return response.json()
+        }).then(data => {
+          this.entries = data.data.attributes.exercises || []
+        }).catch(error => {
+          console.log(error)
+        })
+      } else {
+        this.entries = JSON.parse(localStorage.getItem('routines') || '[]')
+      }
     },
     async getKeyLength (routineID, key: string) {
-      const keyLength: number = await fetch(`http://localhost:1337/api/routines/${routineID}`, {
-        method: 'GET',
-        headers: {
-          Authorization: `Bearer ${Cookies.get('token')}`,
-          'Content-Type': 'application/json'
-        }
-      }).then(response => {
-        return response.json()
-      }).then(data => {
-        return data.data.attributes[`${key}`].length
-      }).catch(error => {
-        console.log(error)
-      })
+      let keyLength = 0
+
+      if (Cookies.get('token')) {
+        keyLength = await fetch(`http://localhost:1337/api/routines/${routineID}`, {
+          method: 'GET',
+          headers: {
+            Authorization: `Bearer ${Cookies.get('token')}`,
+            'Content-Type': 'application/json'
+          }
+        }).then(response => {
+          return response.json()
+        }).then(data => {
+          return data.data.attributes[`${key}`].length
+        }).catch(error => {
+          console.log(error)
+        })
+      } else {
+        JSON.parse(localStorage.getItem('routines') || '[]').forEach(routine => {
+          console.log(routine)
+        })
+      }
 
       return keyLength
     }
