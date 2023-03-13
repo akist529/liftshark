@@ -38,6 +38,20 @@ export default defineComponent({
   },
   methods: {
     async newEntry () {
+      const newExercises: Entry[] = this.entries || []
+
+      newExercises.push({
+        id: this.entries.length,
+        name: '2 Handed Kettlebell Swing',
+        sets: [
+          {
+            id: await this.getKeyLength(this.routine?.id, 'sets'),
+            weight: 0,
+            reps: 0
+          }
+        ]
+      })
+
       await fetch(`http://localhost:1337/api/routines/${this.routine?.id}`, {
         method: 'PUT',
         headers: {
@@ -47,17 +61,7 @@ export default defineComponent({
         body: JSON.stringify({
           data: {
             day: this.routine?.attributes.day,
-            exercises: [...this.entries, {
-              id: this.entries.length,
-              name: '2 Handed Kettlebell Swing',
-              sets: [
-                {
-                  weight: 0,
-                  reps: 0
-                }
-              ]
-            }
-            ]
+            exercises: newExercises
           }
         })
       }).then(response => {
@@ -78,10 +82,27 @@ export default defineComponent({
       }).then(response => {
         return response.json()
       }).then(data => {
-        this.entries = data.data.attributes.exercises
+        this.entries = data.data.attributes.exercises || []
       }).catch(error => {
         console.log(error)
       })
+    },
+    async getKeyLength (routineID, key: string) {
+      const keyLength: number = await fetch(`http://localhost:1337/api/routines/${routineID}`, {
+        method: 'GET',
+        headers: {
+          Authorization: `Bearer ${Cookies.get('token')}`,
+          'Content-Type': 'application/json'
+        }
+      }).then(response => {
+        return response.json()
+      }).then(data => {
+        return data.data.attributes[`${key}`].length
+      }).catch(error => {
+        console.log(error)
+      })
+
+      return keyLength
     }
   },
   async created () {

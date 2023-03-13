@@ -18,6 +18,7 @@
           :routine="routine"
           :exercises="exercises"
           :key="routine.id"
+          @updateRoutine="getUserRoutines()"
         />
         <NewButton @clicked="newRoutine()">
           <span>New Routine</span>

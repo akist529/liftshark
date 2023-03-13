@@ -54,8 +54,6 @@ export default defineComponent({
       return filteredEntries
     },
     async deleteEntry () {
-      this.$emit('updateRoutine')
-
       await fetch(`http://localhost:1337/api/routines/${this.routine?.id}`, {
         method: 'PUT',
         headers: {
@@ -63,10 +61,14 @@ export default defineComponent({
           'Content-Type': 'application/json'
         },
         body: JSON.stringify({
-          exercises: this.filterEntries()
+          data: {
+            day: this.routine?.attributes?.day,
+            exercises: this.filterEntries()
+          }
         })
       }).then(response => {
         console.log(response)
+        this.$emit('updateRoutine')
       }).catch(error => {
         console.log(error)
       })
