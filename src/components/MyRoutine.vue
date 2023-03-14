@@ -38,9 +38,9 @@ export default defineComponent({
   },
   methods: {
     async newEntry () {
-      const newExercises: Entry[] = this.entries || []
+      const newEntries: Entry[] = this.entries || []
 
-      newExercises.push({
+      newEntries.push({
         id: this.entries.length,
         name: '2 Handed Kettlebell Swing',
         sets: [
@@ -62,7 +62,7 @@ export default defineComponent({
           body: JSON.stringify({
             data: {
               day: this.routine?.attributes.day,
-              exercises: newExercises
+              exercises: newEntries
             }
           })
         }).then(response => {
@@ -72,13 +72,14 @@ export default defineComponent({
         })
       } else {
         const prevRoutines = JSON.parse(localStorage.getItem('routines') || '[]')
-        prevRoutines.forEach(routine => {
-          if (routine.id === this.routine?.id) {
-            routine.attributes.sets.push(newExercises)
-          }
-        })
 
-        localStorage.setItem('routines', prevRoutines)
+        for (let i = 0; i < prevRoutines.length; i++) {
+          if (prevRoutines[i].id === this.routine?.id) {
+            prevRoutines[i].attributes.exercises = newEntries
+          }
+        }
+
+        localStorage.setItem('routines', JSON.stringify(prevRoutines))
       }
 
       await this.getEntries()
@@ -99,7 +100,11 @@ export default defineComponent({
           console.log(error)
         })
       } else {
-        this.entries = JSON.parse(localStorage.getItem('routines') || '[]')
+        JSON.parse(localStorage.getItem('routines') || '[]').forEach(routine => {
+          if (routine.id === this.routine?.id) {
+            this.entries = routine.attributes.exercises || []
+          }
+        })
       }
     },
     async getKeyLength (routineID, key: string) {

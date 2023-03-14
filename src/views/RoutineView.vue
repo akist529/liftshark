@@ -5,9 +5,9 @@
           name="day"
           id="day"
           class="ArrowDown"
-          @change="updateActiveDay"
+          ref="day"
           :style="`background-image: url(${assetspath('./ui/expand_more.webp')}), linear-gradient(to left, var(--button-bg-color) 0px, var(--button-bg-color) 30px, white 30px, white 100%);`"
-          ref="day">
+          @change="updateActiveDay">
             <option
                 v-for="day of weekdays"
                 :value="day"
@@ -53,11 +53,7 @@ export default defineComponent({
   },
   watch: {
     userToken () {
-      if (!this.userToken) {
-        this.getLocalRoutines()
-      } else {
-        this.getUserRoutines()
-      }
+      this.getUserRoutines()
     }
   },
   methods: {
@@ -96,26 +92,27 @@ export default defineComponent({
         })
 
         localStorage.setItem('routines', JSON.stringify(localRoutines))
-        this.getLocalRoutines()
+        this.getUserRoutines()
       }
     },
     async getUserRoutines () {
-      await fetch('http://localhost:1337/api/routines', {
-        method: 'GET',
-        headers: {
-          Authorization: `Bearer ${Cookies.get('token')}`,
-          'Content-Type': 'application/json'
-        }
-      }).then(response => {
-        return response.json()
-      }).then(data => {
-        this.routines = data.data
-      }).catch(error => {
-        console.log(error)
-      })
-    },
-    getLocalRoutines () {
-      this.routines = JSON.parse(localStorage.getItem('routines') || '[]')
+      if (Cookies.get('token')) { // If user logged in
+        await fetch('http://localhost:1337/api/routines', {
+          method: 'GET',
+          headers: {
+            Authorization: `Bearer ${Cookies.get('token')}`,
+            'Content-Type': 'application/json'
+          }
+        }).then(response => {
+          return response.json()
+        }).then(data => {
+          this.routines = data.data
+        }).catch(error => {
+          console.log(error)
+        })
+      } else { // If signed out
+        this.routines = JSON.parse(localStorage.getItem('routines') || '[]')
+      }
     },
     updateUserToken () {
       if (this.userToken !== Cookies.get('token')) {
@@ -124,12 +121,7 @@ export default defineComponent({
     },
     filterRoutines () {
       return this.routines.filter(routine => {
-        if (Cookies.get('token')) {
-          return routine.attributes.day === this.activeDay
-        } else {
-          console.log(routine)
-          return routine
-        }
+        return routine.attributes.day === this.activeDay
       })
     }
   },
@@ -139,11 +131,7 @@ export default defineComponent({
   },
   mixins: [fetchImages],
   async created () {
-    if (Cookies.get('token')) {
-      await this.getUserRoutines()
-    } else {
-      this.getLocalRoutines()
-    }
+    await this.getUserRoutines()
 
     await axios.get('https://wger.de/api/v2/exercise?limit=999&language=2')
       .then(response => {
@@ -152,7 +140,7 @@ export default defineComponent({
         console.log(error)
       })
 
-    window.setInterval(this.updateUserToken, 100)
+    window.setInterval(this.updateUserToken, 100) // Routinely check if user signs in or out
   }
 })
 </script>

@@ -54,24 +54,38 @@ export default defineComponent({
       return filteredEntries
     },
     async deleteEntry () {
-      await fetch(`http://localhost:1337/api/routines/${this.routine?.id}`, {
-        method: 'PUT',
-        headers: {
-          Authorization: `Bearer ${Cookies.get('token')}`,
-          'Content-Type': 'application/json'
-        },
-        body: JSON.stringify({
-          data: {
-            day: this.routine?.attributes?.day,
-            exercises: this.filterEntries()
-          }
+      if (Cookies.get('token')) {
+        await fetch(`http://localhost:1337/api/routines/${this.routine?.id}`, {
+          method: 'PUT',
+          headers: {
+            Authorization: `Bearer ${Cookies.get('token')}`,
+            'Content-Type': 'application/json'
+          },
+          body: JSON.stringify({
+            data: {
+              day: this.routine?.attributes?.day,
+              exercises: this.filterEntries()
+            }
+          })
+        }).then(response => {
+          console.log(response)
+          this.$emit('updateRoutine')
+        }).catch(error => {
+          console.log(error)
         })
-      }).then(response => {
-        console.log(response)
+      } else {
+        const routines = JSON.parse(localStorage.getItem('routines') || '[]')
+        const newEntries = this.filterEntries()
+
+        for (let i = 0; i < routines.length; i++) {
+          if (routines[i].id === this.routine?.id) {
+            routines[i].attributes.exercises = newEntries
+          }
+        }
+
+        localStorage.setItem('routines', JSON.stringify(routines))
         this.$emit('updateRoutine')
-      }).catch(error => {
-        console.log(error)
-      })
+      }
     },
     async updateEntry () {
       await fetch(`http://localhost:1337/api/routines/${this.routine?.id}`, {
