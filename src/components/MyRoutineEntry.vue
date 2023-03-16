@@ -12,7 +12,7 @@
             type="number"
             min="1"
             max="6"
-            value="0"
+            value="1"
             @change="updateEntry()"
             ref="setCount"
         /><span> sets</span>
@@ -82,9 +82,9 @@ export default defineComponent({
             }
           })
         }).then(response => {
-          console.log(response)
+          console.log('ENTRY DELETED:', response)
         }).catch(error => {
-          console.log(error)
+          console.log('ENTRY DELETE FAILED:', error)
         })
       } else {
         const routines = JSON.parse(localStorage.getItem('routines') || '[]')
@@ -99,7 +99,7 @@ export default defineComponent({
         localStorage.setItem('routines', JSON.stringify(routines))
       }
 
-      this.$emit('updateRoutine')
+      this.$emit('getEntries')
     },
     async updateEntry () {
       const updatedEntries: Entry[] = []
@@ -108,6 +108,7 @@ export default defineComponent({
         if (exercise.id === this.entry?.id) {
           const updatedSets: Set[] = []
 
+          /*
           this.entry?.sets.forEach(set => {
             updatedSets.push({
               id: set.id,
@@ -115,6 +116,17 @@ export default defineComponent({
               reps: Number((this.$refs[`repCount-${set.id}`] as HTMLInputElement)[0].value as string)
             })
           })
+          */
+
+          for (let i = 0; i < Number((this.$refs.setCount as HTMLInputElement).value); i++) {
+            if (this.entry?.sets[i]) {
+              updatedSets.push({
+                id: this.entry?.sets[i].id,
+                weight: Number((this.$refs[`weight-${this.entry?.sets[i].id}`] as HTMLInputElement)[0].value as string),
+                reps: Number((this.$refs[`repCount-${this.entry?.sets[i].id}`] as HTMLInputElement)[0].value as string)
+              })
+            }
+          }
 
           updatedEntries.push({
             id: this.entry?.id,
@@ -139,6 +151,10 @@ export default defineComponent({
               exercises: updatedEntries
             }
           })
+        }).then(response => {
+          console.log('ENTRY UPDATE SUCCESSFUL:', response)
+        }).catch(error => {
+          console.log('ENTRY UPDATE FAILED:', error)
         })
       } else {
         const currentStorage: Routine[] = JSON.parse(localStorage.getItem('routines') || '[]')
@@ -149,6 +165,7 @@ export default defineComponent({
             newStorage.push({
               id: currentStorage[i].id,
               attributes: {
+                name: currentStorage[i].attributes.name,
                 day: (this.routine?.attributes.day || 'Sunday'),
                 exercises: updatedEntries
               }
@@ -160,6 +177,8 @@ export default defineComponent({
 
         localStorage.setItem('routines', JSON.stringify(newStorage))
       }
+
+      this.$emit('getEntries')
     }
   }
 })

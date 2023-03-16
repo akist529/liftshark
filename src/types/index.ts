@@ -75,6 +75,7 @@ export interface Entry {
 export interface Routine {
     id: number,
     attributes: {
+        name: string,
         day: string,
         exercises?: Entry[]
     }

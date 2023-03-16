@@ -1,11 +1,12 @@
 <template>
     <div class="routine-entries">
+      <input :value="routine?.attributes.name || 'New Routine'" />
         <MyRoutineEntry v-for="entry in entries"
           :key="entry.id"
           :routine="routine"
           :entry="entry"
           :exercises="exercises"
-          @updateRoutine="getEntries()"
+          @getEntries="getEntries()"
         />
         <NewButton @clicked="newEntry()">
           <slot>Add Exercise</slot>
@@ -42,7 +43,7 @@ export default defineComponent({
 
       newEntries.push({
         id: this.entries.length,
-        name: '2 Handed Kettlebell Swing',
+        name: 'New Exercise',
         sets: [
           {
             id: await this.getSetCount(this.entries.length),
@@ -146,6 +147,7 @@ export default defineComponent({
         }
       }
 
+      console.log('keyLength:', keyLength)
       return keyLength
     }
   },

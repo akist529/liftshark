@@ -70,6 +70,7 @@ export default defineComponent({
           },
           body: JSON.stringify({
             data: {
+              name: 'New Routine',
               day: this.activeDay
             }
           })
@@ -86,6 +87,7 @@ export default defineComponent({
         localRoutines.push({
           id: JSON.parse(localStorage.getItem('routines') || '[]').length,
           attributes: {
+            name: 'New Routine',
             day: this.activeDay
           }
         })
