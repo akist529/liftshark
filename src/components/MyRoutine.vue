@@ -46,7 +46,7 @@ export default defineComponent({
         name: 'New Exercise',
         sets: [
           {
-            id: await this.getSetCount(this.entries.length),
+            id: 0,
             weight: 0,
             reps: 0
           }
@@ -121,10 +121,10 @@ export default defineComponent({
         }).then(response => {
           return response.json()
         }).then(data => {
-          if (data.data.attributes.exercises) {
+          if (data.data.attributes.exercises.length) {
             for (const entry of data.data.attributes.exercises) {
               if (entry.id === entryID) {
-                return entry.sets.length
+                return entry.sets.length || 0
               }
             }
           } else {
@@ -147,7 +147,6 @@ export default defineComponent({
         }
       }
 
-      console.log('keyLength:', keyLength)
       return keyLength
     }
   },

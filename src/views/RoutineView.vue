@@ -71,7 +71,8 @@ export default defineComponent({
           body: JSON.stringify({
             data: {
               name: 'New Routine',
-              day: this.activeDay
+              day: this.activeDay,
+              exercises: []
             }
           })
         }).then(response => {
@@ -88,7 +89,8 @@ export default defineComponent({
           id: JSON.parse(localStorage.getItem('routines') || '[]').length,
           attributes: {
             name: 'New Routine',
-            day: this.activeDay
+            day: this.activeDay,
+            exercises: []
           }
         })
 
