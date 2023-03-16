@@ -60,40 +60,22 @@ export interface Image {
     author_history: string[]
 }
 
-export interface Routine {
+export interface Set {
     id: number,
-    attributes: {
-        day: string,
-        exercises?: [
-            {
-                id: number,
-                name: string,
-                sets: [
-                    {
-                        id: number,
-                        weight: number,
-                        reps: number
-                    }
-                ]
-            }
-        ]
-    }
+    weight: number,
+    reps: number
 }
 
 export interface Entry {
     id: number,
     name: string,
-    sets: [
-        {
-            id: number,
-            weight: number,
-            reps: number
-        }
-    ]
+    sets: Set[]
 }
 
-export interface Set {
+export interface Routine {
     id: number,
-    weight: number,
-    reps: number
+    attributes: {
+        day: string,
+        exercises?: Entry[]
+    }
 }

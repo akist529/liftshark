@@ -5,7 +5,7 @@
           :routine="routine"
           :entry="entry"
           :exercises="exercises"
-          @updateRoutine="$emit('updateRoutine')"
+          @updateRoutine="getEntries()"
         />
         <NewButton @clicked="newEntry()">
           <slot>Add Exercise</slot>
@@ -45,7 +45,7 @@ export default defineComponent({
         name: '2 Handed Kettlebell Swing',
         sets: [
           {
-            id: await this.getKeyLength(this.routine?.id, 'sets'),
+            id: await this.getSetCount(this.entries.length),
             weight: 0,
             reps: 0
           }
@@ -107,11 +107,11 @@ export default defineComponent({
         })
       }
     },
-    async getKeyLength (routineID, key: string) {
+    async getSetCount (entryID: number) {
       let keyLength = 0
 
       if (Cookies.get('token')) {
-        keyLength = await fetch(`http://localhost:1337/api/routines/${routineID}`, {
+        keyLength = await fetch(`http://localhost:1337/api/routines/${this.routine?.id}`, {
           method: 'GET',
           headers: {
             Authorization: `Bearer ${Cookies.get('token')}`,
@@ -120,14 +120,30 @@ export default defineComponent({
         }).then(response => {
           return response.json()
         }).then(data => {
-          return data.data.attributes[`${key}`].length
+          if (data.data.attributes.exercises) {
+            for (const entry of data.data.attributes.exercises) {
+              if (entry.id === entryID) {
+                return entry.sets.length
+              }
+            }
+          } else {
+            return 0
+          }
         }).catch(error => {
           console.log(error)
         })
       } else {
-        JSON.parse(localStorage.getItem('routines') || '[]').forEach(routine => {
-          console.log(routine)
-        })
+        const currentStorage = JSON.parse(localStorage.getItem('routines') || '[]')
+
+        for (let i = 0; i < currentStorage.length; i++) {
+          if (currentStorage[i].id === this.routine?.id) {
+            for (const entry of (currentStorage[i].attributes.exercises || [])) {
+              if (entry.id === entryID) {
+                keyLength = entry.sets.length
+              }
+            }
+          }
+        }
       }
 
       return keyLength
