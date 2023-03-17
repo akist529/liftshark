@@ -45,7 +45,7 @@ export default defineComponent({
 
       newEntries.push({
         id: this.entries.length,
-        name: 'New Exercise',
+        name: '2 Handed Kettlebell Swing',
         sets: [
           {
             id: 0,

@@ -1,10 +1,11 @@
 <template>
     <div>
         <button @click="deleteEntry">DELETE</button>
-        <select name="exercise" ref="name" :value="entry?.name" @change="updateEntry()">
+        <select name="exercise" ref="name" @change="updateEntry()">
             <option v-for="exercise in exercises"
                 :value="exercise.name"
                 :key="exercise.name"
+                :selected="exercise.name === entry?.name? true : false"
             >{{ exercise.name }}</option>
         </select>
         <input
