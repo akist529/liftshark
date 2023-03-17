@@ -1,6 +1,6 @@
 <template>
     <div class="routine-entries">
-      <input :value="routine?.attributes.name || 'New Routine'" />
+      <input v-model="name" @change="updateRoutineName()" />
         <MyRoutineEntry v-for="entry in entries"
           :key="entry.id"
           :routine="routine"
@@ -24,9 +24,11 @@ import Cookies from 'js-cookie'
 export default defineComponent({
   data () {
     const entries: Entry[] = []
+    const name = this.routine?.attributes.name || 'New Routine'
 
     return {
-      entries
+      entries,
+      name
     }
   },
   components: {
@@ -150,6 +152,24 @@ export default defineComponent({
       }
 
       return keyLength
+    },
+    async updateRoutineName () {
+      if (Cookies.get('token')) {
+        await fetch(`http://localhost:1337/api/routines/${this.routine?.id}`, {
+          method: 'PUT',
+          headers: {
+            Authorization: `Bearer ${Cookies.get('token')}`,
+            'Content-Type': 'application/json'
+          },
+          body: JSON.stringify({
+            data: {
+              day: this.routine?.attributes.day,
+              name: this.name,
+              exercise: this.routine?.attributes.exercises
+            }
+          })
+        })
+      }
     }
   },
   async created () {
