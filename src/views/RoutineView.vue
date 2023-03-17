@@ -12,6 +12,7 @@
                 v-for="day of weekdays"
                 :value="day"
                 :key="day"
+                :selected="day === activeDay"
             >{{ day }}</option>
         </select>
         <MyRoutine v-for="routine in filterRoutines()"
