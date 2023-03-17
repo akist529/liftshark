@@ -107,6 +107,8 @@ export default defineComponent({
           }
         })
       }
+
+      this.$emit('getUserRoutines')
     },
     async getSetCount (entryID: number) {
       let keyLength = 0

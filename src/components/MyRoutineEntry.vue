@@ -12,7 +12,7 @@
             type="number"
             min="1"
             max="6"
-            value="1"
+            v-model="setCount"
             @change="updateEntry()"
             ref="setCount"
         /><span> sets</span>
@@ -47,6 +47,13 @@ import { Routine, Entry, Exercise, Set } from '@/types/index'
 import Cookies from 'js-cookie'
 
 export default defineComponent({
+  data () {
+    const setCount = this.entry?.sets.length
+
+    return {
+      setCount
+    }
+  },
   props: {
     routine: Object as PropType<Routine>,
     entry: Object as PropType<Entry>,
@@ -55,6 +62,15 @@ export default defineComponent({
     }
   },
   mixins: [fetchData],
+  watch: {
+    setCount (newSetCount) {
+      if (newSetCount < 1) {
+        this.setCount = 1
+      } else if (newSetCount > 6) {
+        this.setCount = 6
+      }
+    }
+  },
   methods: {
     filterEntries () {
       const filteredEntries: Entry[] = []
@@ -108,22 +124,18 @@ export default defineComponent({
         if (exercise.id === this.entry?.id) {
           const updatedSets: Set[] = []
 
-          /*
-          this.entry?.sets.forEach(set => {
-            updatedSets.push({
-              id: set.id,
-              weight: Number((this.$refs[`weight-${set.id}`] as HTMLInputElement)[0].value as string),
-              reps: Number((this.$refs[`repCount-${set.id}`] as HTMLInputElement)[0].value as string)
-            })
-          })
-          */
-
-          for (let i = 0; i < Number((this.$refs.setCount as HTMLInputElement).value); i++) {
+          for (let i = 0; i < (this.setCount || 0); i++) {
             if (this.entry?.sets[i]) {
               updatedSets.push({
                 id: this.entry?.sets[i].id,
                 weight: Number((this.$refs[`weight-${this.entry?.sets[i].id}`] as HTMLInputElement)[0].value as string),
                 reps: Number((this.$refs[`repCount-${this.entry?.sets[i].id}`] as HTMLInputElement)[0].value as string)
+              })
+            } else {
+              updatedSets.push({
+                id: this.entry?.sets.length,
+                weight: 0,
+                reps: 0
               })
             }
           }
@@ -147,6 +159,7 @@ export default defineComponent({
           },
           body: JSON.stringify({
             data: {
+              name: this.routine?.attributes.name,
               day: this.routine?.attributes.day,
               exercises: updatedEntries
             }
