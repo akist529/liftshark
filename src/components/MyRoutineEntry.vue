@@ -21,7 +21,7 @@
               type="number"
               min="1"
               max="100"
-              value="1"
+              :value="set.reps || 1"
               :ref="`repCount-${set.id}`"
               @change="updateEntry()"
             />
@@ -30,7 +30,7 @@
               type="number"
               min="1"
               max="500"
-              value="1"
+              :value="set.weight || 1"
               :ref="`weight-${set.id}`"
               @change="updateEntry()"
             />
@@ -133,7 +133,7 @@ export default defineComponent({
               })
             } else {
               updatedSets.push({
-                id: this.entry?.sets.length,
+                id: i,
                 weight: 0,
                 reps: 0
               })
