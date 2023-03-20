@@ -4,6 +4,8 @@
     </button>
 </template>
 
+<script lang="ts"></script>
+
 <style scoped lang="scss">
     button {
         background-color: var(--button-bg-color);

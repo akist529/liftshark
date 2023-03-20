@@ -11,8 +11,11 @@
 </template>
 
 <script lang="ts">
+// Import global APIs & libraries
 import { defineComponent } from 'vue'
+// Import mixins
 import { fetchImages } from '@/mixins/fetchImages'
+// Import components
 import BackButton from '@/components/buttons/BackButton.vue'
 import ForwardButton from '@/components/buttons/ForwardButton.vue'
 
@@ -38,7 +41,7 @@ export default defineComponent({
 })
 </script>
 
-<style lang="scss">
+<style scoped lang="scss">
 .DateButton {
   display: flex;
 }

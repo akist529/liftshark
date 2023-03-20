@@ -3,7 +3,9 @@
 </template>
 
 <script lang="ts">
+// Import global APIs & libraries
 import { defineComponent } from 'vue'
+// Import mixins
 import { fetchImages } from '@/mixins/fetchImages'
 
 export default defineComponent({

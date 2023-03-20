@@ -69,15 +69,19 @@
 </template>
 
 <script lang="ts">
+// Import global APIs & libraries
 import { defineComponent } from 'vue'
+// Import mixins
+import { fetchData } from '@/mixins/fetchData'
+import { fetchImages } from '@/mixins/fetchImages'
+// Import types
+import { Exercise, Muscle, Equipment, Category, Image } from '@/types/index'
+// Import components
 import BookmarkButton from '@/components/buttons/BookmarkButton.vue'
 import BackButton from '@/components/buttons/BackButton.vue'
 import BurgerButton from '@/components/buttons/BurgerButton.vue'
 import BurgerMenuButton from '@/components/buttons/BurgerMenuButton.vue'
 import LoadIcon from '@/components/LoadIcon.vue'
-import { fetchData } from '@/mixins/fetchData'
-import { fetchImages } from '@/mixins/fetchImages'
-import { Exercise, Muscle, Equipment, Category, Image } from '@/types/index'
 
 export default defineComponent({
   components: {

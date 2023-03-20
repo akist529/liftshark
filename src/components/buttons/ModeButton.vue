@@ -7,8 +7,11 @@
 </template>
 
 <script lang="ts">
+// Import global APIs & libraries
 import { defineComponent } from 'vue'
+// Import mixins
 import { fetchImages } from '@/mixins/fetchImages'
+// Import components
 import SliderButton from '@/components/buttons/SliderButton.vue'
 
 export default defineComponent({

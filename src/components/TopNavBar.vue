@@ -9,11 +9,14 @@
 </template>
 
 <script lang="ts">
+// Import global APIs & libraries
 import { defineComponent } from 'vue'
+import Cookies from 'js-cookie'
+// Import mixins
 import { fetchImages } from '@/mixins/fetchImages'
+// Import components
 import ModeButton from '@/components/buttons/ModeButton.vue'
 import LogButton from '@/components/buttons/LogButton.vue'
-import Cookies from 'js-cookie'
 
 export default defineComponent({
   components: {

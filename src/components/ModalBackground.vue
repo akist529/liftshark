@@ -4,7 +4,7 @@
     </div>
 </template>
 
-<style>
+<style scoped lang="scss">
 .modal-bg {
     background-color: rgba(0, 0, 0, 0.8);
     width: 100vw;

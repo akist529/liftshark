@@ -30,13 +30,16 @@
 </template>
 
 <script lang="ts">
+// Import global APIs & libraries
 import { defineComponent } from 'vue'
-import { fetchData } from '@/mixins/fetchData'
-import { fetchImages } from '@/mixins/fetchImages'
-import ModalBackground from '@/components/ModalBackground.vue'
-import CloseButton from '@/components/buttons/CloseButton.vue'
 import axios from 'axios'
 import Cookies from 'js-cookie'
+// Import mixins
+import { fetchData } from '@/mixins/fetchData'
+import { fetchImages } from '@/mixins/fetchImages'
+// Import components
+import ModalBackground from '@/components/ModalBackground.vue'
+import CloseButton from '@/components/buttons/CloseButton.vue'
 
 export default defineComponent({
   components: {

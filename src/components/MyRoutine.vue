@@ -15,11 +15,14 @@
 </template>
 
 <script lang="ts">
+// Import global APIs & libraries
 import { defineComponent, PropType } from 'vue'
+import Cookies from 'js-cookie'
+// Import types
 import { Routine, Entry, Exercise } from '@/types/index'
+// Import components
 import MyRoutineEntry from '@/components/MyRoutineEntry.vue'
 import NewButton from '@/components/buttons/NewButton.vue'
-import Cookies from 'js-cookie'
 
 export default defineComponent({
   data () {

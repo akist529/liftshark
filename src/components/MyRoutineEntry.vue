@@ -41,11 +41,14 @@
 </template>
 
 <script lang="ts">
+// Import global APIs & libraries
 import { defineComponent } from 'vue'
 import type { PropType } from 'vue'
-import { fetchData } from '@/mixins/fetchData'
-import { Routine, Entry, Exercise, Set } from '@/types/index'
 import Cookies from 'js-cookie'
+// Import mixins
+import { fetchData } from '@/mixins/fetchData'
+// Import types
+import { Routine, Entry, Exercise, Set } from '@/types/index'
 
 export default defineComponent({
   data () {

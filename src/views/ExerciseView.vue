@@ -25,14 +25,18 @@
 </template>
 
 <script lang="ts">
+// Import global APIs & libraries
 import { defineComponent } from 'vue'
+// Import mixins
+import { fetchData } from '@/mixins/fetchData'
+// Import types
+import { Exercise, Muscle, Equipment, Category, Image } from '@/types/index'
+// Import components
 import MyExercise from '@/components/MyExercise.vue'
 import MyFooter from '@/components/MyFooter.vue'
 import BackButton from '@/components/buttons/BackButton.vue'
 import ForwardButton from '@/components/buttons/ForwardButton.vue'
 import LoadIcon from '@/components/LoadIcon.vue'
-import { fetchData } from '@/mixins/fetchData'
-import { Exercise, Muscle, Equipment, Category, Image } from '@/types/index'
 
 export default defineComponent({
   data () {

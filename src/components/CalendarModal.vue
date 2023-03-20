@@ -20,7 +20,9 @@
 </template>
 
 <script lang="ts">
+// Import global APIs & libraries
 import { defineComponent } from 'vue'
+// Import components
 import ModalBackground from '@/components/ModalBackground.vue'
 import CloseButton from '@/components/buttons/CloseButton.vue'
 import BackButton from '@/components/buttons/BackButton.vue'

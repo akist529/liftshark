@@ -48,13 +48,17 @@
 </template>
 
 <script lang="ts">
+// Import global APIs & libraries
 import { defineComponent } from 'vue'
+import Cookies from 'js-cookie'
+// Import mixins
+import { fetchImages } from '@/mixins/fetchImages'
+// Import types
+import { Routine, Workout } from '@/types/index'
+// Import components
 import DateButton from '@/components/buttons/DateButton.vue'
 import SubmitButton from '@/components/buttons/SubmitButton.vue'
 import CalendarModal from '@/components/CalendarModal.vue'
-import { fetchImages } from '@/mixins/fetchImages'
-import Cookies from 'js-cookie'
-import { Routine, Workout } from '@/types/index'
 
 export default defineComponent({
   data () {
