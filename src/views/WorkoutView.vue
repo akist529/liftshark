@@ -1,36 +1,60 @@
 <template>
     <div class="WorkoutView">
-        <h1>My Workouts</h1>
-        <DateButton
-          :selectedDate="selectedDate"
-          :selectedMonth="selectedMonth"
-          :selectedYear="selectedYear"
-          :months="months"
-          :date="date"
-          @openCalendar="handleCalendar()"
-          @changeDateBack="changeDateBack()"
-          @changeDateForward="changeDateForward()"
-        />
-        <CalendarModal
-        v-if="calendarOpen"
+      <h1>My Workouts</h1>
+      <DateButton
         :selectedDate="selectedDate"
         :selectedMonth="selectedMonth"
         :selectedYear="selectedYear"
         :months="months"
         :date="date"
-        :daysInMonth="daysInMonth(selectedYear, selectedMonth + 1)"
-        @handleCalendar="handleCalendar()"
-        @changeMonthBack="changeMonthBack()"
-        @changeMonthForward="changeMonthForward()"
-        @setSelectedDate="setSelectedDate"
-        />
+        @openCalendar="handleCalendar()"
+        @changeDateBack="changeDateBack()"
+        @changeDateForward="changeDateForward()"
+      />
+      <CalendarModal
+      v-if="calendarOpen"
+      :selectedDate="selectedDate"
+      :selectedMonth="selectedMonth"
+      :selectedYear="selectedYear"
+      :months="months"
+      :date="date"
+      :daysInMonth="daysInMonth(selectedYear, selectedMonth + 1)"
+      @handleCalendar="handleCalendar()"
+      @changeMonthBack="changeMonthBack()"
+      @changeMonthForward="changeMonthForward()"
+      @setSelectedDate="setSelectedDate"
+      />
+      <div class="routine-select">
+        <select
+          name="routine"
+          id="routine"
+          class="ArrowDown"
+          ref="routine"
+          :style="`background-image: url(${assetspath('./ui/expand_more.webp')}), linear-gradient(to left, var(--button-bg-color) 0px, var(--button-bg-color) 30px, white 30px, white 100%);`">
+            <option
+              v-for="routine of routines"
+              class="routine-option"
+              :value="routine.attributes.name"
+              :key="routine.id"
+              :id="routine.id.toString()"
+            >{{ routine.attributes.name }}</option>
+        </select>
+        <SubmitButton @click="useRoutine()" />
+      </div>
+      <div>
+
+      </div>
     </div>
 </template>
 
 <script lang="ts">
 import { defineComponent } from 'vue'
 import DateButton from '@/components/buttons/DateButton.vue'
+import SubmitButton from '@/components/buttons/SubmitButton.vue'
 import CalendarModal from '@/components/CalendarModal.vue'
+import { fetchImages } from '@/mixins/fetchImages'
+import Cookies from 'js-cookie'
+import { Routine, Workout } from '@/types/index'
 
 export default defineComponent({
   data () {
@@ -41,6 +65,7 @@ export default defineComponent({
     const selectedMonth = date.getMonth()
     const selectedYear = date.getFullYear()
     const months = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec']
+    const routines: Routine[] = []
 
     return {
       calendarOpen,
@@ -49,7 +74,8 @@ export default defineComponent({
       selectedDay,
       selectedMonth,
       selectedYear,
-      months
+      months,
+      routines
     }
   },
   watch: {
@@ -67,8 +93,10 @@ export default defineComponent({
   },
   components: {
     DateButton,
+    SubmitButton,
     CalendarModal
   },
+  mixins: [fetchImages],
   methods: {
     handleCalendar () {
       this.calendarOpen = !this.calendarOpen
@@ -90,18 +118,93 @@ export default defineComponent({
     },
     setSelectedDate (date) {
       this.selectedDate = date
+    },
+    async getRoutines () {
+      if (Cookies.get('token')) {
+        await fetch('http://localhost:1337/api/routines', {
+          method: 'GET',
+          headers: {
+            Authorization: `Bearer ${Cookies.get('token')}`,
+            'Content-Type': 'application/json'
+          }
+        }).then(response => {
+          return response.json()
+        }).then(data => {
+          this.routines = data.data
+        }).catch(error => {
+          console.log(error)
+        })
+      } else {
+        this.routines = JSON.parse(localStorage.getItem('routines') || '[]')
+      }
+    },
+    async useRoutine () {
+      for (const routine of document.querySelectorAll('.routine-option')) {
+        if ((routine as HTMLOptionElement).selected) {
+          if (Cookies.get('token')) {
+            await fetch('http://localhost:1337/api/workouts', {
+              method: 'POST',
+              headers: {
+                Authorization: `Bearer ${Cookies.get('token')}`,
+                'Content-Type': 'application/json'
+              },
+              body: JSON.stringify({
+                data: {
+                  date: new Date(this.selectedYear, this.selectedMonth, this.selectedDate, 0).toISOString().split('T')[0],
+                  routine: Number((routine as HTMLOptionElement).id)
+                }
+              })
+            }).then(response => {
+              console.log(response)
+            }).catch(error => {
+              console.log(error)
+            })
+          } else {
+            const workouts: Workout[] = JSON.parse(localStorage.getItem('workouts') || '[]')
+            workouts.push({
+              id: JSON.parse(localStorage.getItem('workouts') || '[]').length,
+              attributes: {
+                date: new Date(this.selectedYear, this.selectedMonth, this.selectedDate, 0).toISOString().split('T')[0],
+                routine: Number((routine as HTMLOptionElement).id)
+              }
+            })
+
+            localStorage.setItem('workouts', JSON.stringify(workouts))
+          }
+        }
+      }
     }
   },
   created () {
     this.date = new Date()
+    this.getRoutines()
   }
 })
 </script>
 
-<style lang="scss">
+<style scoped lang="scss">
 .WorkoutView {
   display: flex;
   flex-direction: column;
   gap: 10px;
+
+  .routine-select {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+
+    #routine {
+      font-size: 18px;
+      appearance: none;
+    }
+  }
+}
+
+.ArrowDown {
+  background-repeat: no-repeat, repeat;
+  background-position: right 10px top 50%, 0 0;
+  background-size: .65em auto, 100%;
+  padding: 0 5px;
+  width: 150px;
 }
 </style>

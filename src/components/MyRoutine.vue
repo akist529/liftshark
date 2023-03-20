@@ -1,16 +1,16 @@
 <template>
     <div class="routine-entries">
       <input v-model="name" @change="updateRoutineName()" />
-        <MyRoutineEntry v-for="entry in entries"
-          :key="entry.id"
-          :routine="routine"
-          :entry="entry"
-          :exercises="exercises"
-          @getEntries="getEntries()"
-        />
-        <NewButton @clicked="newEntry()">
-          <slot>Add Exercise</slot>
-        </NewButton>
+      <MyRoutineEntry v-for="entry in entries"
+        :key="entry.id"
+        :routine="routine"
+        :entry="entry"
+        :exercises="exercises"
+        @getEntries="getEntries()"
+      />
+      <NewButton @clicked="newEntry()">
+        <slot>Add Exercise</slot>
+      </NewButton>
     </div>
 </template>
 
@@ -169,6 +169,26 @@ export default defineComponent({
             }
           })
         })
+      } else {
+        const oldRoutines: Routine[] = JSON.parse(localStorage.getItem('routines') || '[]')
+        const newRoutines: Routine[] = []
+
+        for (const routine of oldRoutines) {
+          if (routine.id === this.routine?.id) {
+            newRoutines.push({
+              id: routine.id,
+              attributes: {
+                day: this.routine?.attributes.day,
+                name: this.name,
+                exercises: this.routine?.attributes.exercises
+              }
+            })
+          } else {
+            newRoutines.push(routine)
+          }
+        }
+
+        localStorage.setItem('routines', JSON.stringify(newRoutines))
       }
     }
   },
