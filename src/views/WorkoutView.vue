@@ -70,6 +70,7 @@ export default defineComponent({
     const selectedYear = date.getFullYear()
     const months = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec']
     const routines: Routine[] = []
+    const userToken = Cookies.get('token')
 
     return {
       calendarOpen,
@@ -79,7 +80,8 @@ export default defineComponent({
       selectedMonth,
       selectedYear,
       months,
-      routines
+      routines,
+      userToken
     }
   },
   watch: {
@@ -93,6 +95,9 @@ export default defineComponent({
         this.selectedMonth = ((this.selectedMonth += 12) + 1) % 12
         this.selectedDate = 1
       }
+    },
+    userToken () {
+      this.getRoutines()
     }
   },
   components: {
@@ -177,11 +182,17 @@ export default defineComponent({
           }
         }
       }
+    },
+    updateUserToken () {
+      if (this.userToken !== Cookies.get('token')) {
+        this.userToken = Cookies.get('token')
+      }
     }
   },
   created () {
     this.date = new Date()
     this.getRoutines()
+    window.setInterval(this.updateUserToken, 100) // Routinely check if user signs in or out
   }
 })
 </script>
