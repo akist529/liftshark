@@ -41,8 +41,8 @@
         </select>
         <SubmitButton @click="useRoutine()" />
       </div>
-      <div>
-
+      <div v-for="workout in workouts" :key="workout.id">
+        <span>{{ getRoutine(workout.attributes.routine) }}</span>
       </div>
     </div>
 </template>
@@ -62,15 +62,16 @@ import CalendarModal from '@/components/CalendarModal.vue'
 
 export default defineComponent({
   data () {
-    const calendarOpen = false
+    const userToken = Cookies.get('token')
     const date = new Date()
     const selectedDate = date.getDate()
     const selectedDay = date.getDay()
     const selectedMonth = date.getMonth()
     const selectedYear = date.getFullYear()
     const months = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec']
+    const calendarOpen = false
     const routines: Routine[] = []
-    const userToken = Cookies.get('token')
+    const workouts: Workout[] = []
 
     return {
       calendarOpen,
@@ -81,7 +82,8 @@ export default defineComponent({
       selectedYear,
       months,
       routines,
-      userToken
+      userToken,
+      workouts
     }
   },
   watch: {
@@ -89,12 +91,12 @@ export default defineComponent({
       if (date < 1) {
         this.selectedMonth = ((this.selectedMonth += 12) - 1) % 12
         this.selectedDate = this.daysInMonth(this.selectedYear, this.selectedMonth + 1)
-      }
-
-      if (date > this.daysInMonth(this.selectedYear, this.selectedMonth + 1)) {
+      } else if (date > this.daysInMonth(this.selectedYear, this.selectedMonth + 1)) {
         this.selectedMonth = ((this.selectedMonth += 12) + 1) % 12
         this.selectedDate = 1
       }
+
+      this.getWorkouts()
     },
     userToken () {
       this.getRoutines()
@@ -182,16 +184,52 @@ export default defineComponent({
           }
         }
       }
+
+      this.getWorkouts()
     },
     updateUserToken () {
       if (this.userToken !== Cookies.get('token')) {
         this.userToken = Cookies.get('token')
       }
+    },
+    async getWorkouts () {
+      if (Cookies.get('token')) {
+        await fetch('http://localhost:1337/api/workouts', {
+          method: 'GET',
+          headers: {
+            Authorization: `Bearer ${Cookies.get('token')}`,
+            'Content-Type': 'application/json'
+          }
+        }).then(response => {
+          return response.json()
+        }).then(data => {
+          const workouts: Workout[] = []
+
+          for (const workout of data.data) {
+            if (workout.attributes.date === new Date(this.selectedYear, this.selectedMonth, this.selectedDate, 0).toISOString().split('T')[0]) {
+              workouts.push(workout)
+            }
+          }
+
+          this.workouts = workouts
+        }).catch(error => {
+          console.log(error)
+        })
+      } else {
+        this.workouts = JSON.parse(localStorage.getItem('workouts') || '[]')
+      }
+    },
+    getRoutine (workoutID: number) {
+      for (const routine of this.routines) {
+        if (routine.id === workoutID) {
+          return routine.attributes.name
+        }
+      }
     }
   },
   created () {
-    this.date = new Date()
     this.getRoutines()
+    this.getWorkouts()
     window.setInterval(this.updateUserToken, 100) // Routinely check if user signs in or out
   }
 })
