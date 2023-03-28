@@ -20,8 +20,9 @@
           :exercises="exercises"
           :key="routine.id"
           @getUserRoutines="getUserRoutines()"
+          @deleteRoutine="deleteRoutine(id)"
         />
-        <NewButton @clicked="newRoutine()">
+        <NewButton itemAdded="routine" @clicked="newRoutine()">
           <span>New Routine</span>
         </NewButton>
     </div>
@@ -147,6 +148,31 @@ export default defineComponent({
       }).catch(error => {
         console.log(error)
       })
+    },
+    async deleteRoutine (id: number) {
+      console.log('test')
+
+      const updatedRoutines = this.routines.filter(routine => {
+        return routine.id !== id
+      })
+
+      if (Cookies.get('token')) {
+        await fetch('http://localhost:1337/apis/routines', {
+          method: 'PUT',
+          headers: {
+            Authorization: `Bearer ${Cookies.get('token')}`,
+            'Content-Type': 'application/json'
+          },
+          body: JSON.stringify({
+            data: {
+              updatedRoutines
+            }
+          })
+        })
+      } else {
+        console.log('test')
+        localStorage.setItem('routines', JSON.stringify(updatedRoutines))
+      }
     }
   },
   components: {
@@ -173,7 +199,7 @@ export default defineComponent({
 .RoutineView {
   display: flex;
   flex-direction: column;
-  gap: 10px;
+  gap: 30px;
 
   #day {
     font-size: 18px;

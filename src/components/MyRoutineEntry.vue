@@ -1,5 +1,5 @@
 <template>
-    <div>
+    <div class="routine-entry">
         <button @click="deleteEntry">DELETE</button>
         <select name="exercise" ref="name" @change="updateEntry()">
             <option v-for="exercise in exercises"
@@ -200,3 +200,12 @@ export default defineComponent({
   }
 })
 </script>
+
+<style lang="scss">
+.routine-entry {
+  display: flex;
+  flex-direction: column;
+
+  background-color: rgb(230, 230, 230);
+}
+</style>

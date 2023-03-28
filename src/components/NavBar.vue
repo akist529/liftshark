@@ -171,6 +171,10 @@ nav {
                 a:hover {
                     background-color: rgb(40, 40, 40);
                 }
+
+                .router-link-active {
+                    background-color: rgb(40, 40, 40);
+                }
             }
         }
     }
