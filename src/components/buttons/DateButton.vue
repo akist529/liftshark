@@ -1,8 +1,9 @@
 <template>
     <div class="DateButton">
         <BackButton @click="$emit('changeDateBack')" />
-        <button @click="$emit('openCalendar')">
-          <img :src="assetspath('./ui/calendar_today.webp')" />
+        <button class="calendar-btn" @click="$emit('openCalendar')">
+          <img v-if="dateIsToday()" :src="assetspath('./ui/today.svg')" />
+          <img v-else :src="assetspath('./ui/calendar_month.svg')" />
           <span v-if="dateIsToday()">Today</span>
           <span v-else>{{ months[selectedMonth] }} {{ selectedDate }}</span>
         </button>
@@ -44,5 +45,20 @@ export default defineComponent({
 <style scoped lang="scss">
 .DateButton {
   display: flex;
+  gap: 10px;
+  align-items: center;
+
+  .calendar-btn {
+    display: flex;
+    flex-direction: column;
+    padding: 5px 10px;
+    background: none;
+    border: none;
+    cursor: pointer;
+
+    &:hover {
+      background: rgb(235,235,235);
+    }
+  }
 }
 </style>
