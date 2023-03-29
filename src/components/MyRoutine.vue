@@ -1,25 +1,31 @@
 <template>
     <div class="routine-entries">
-      <input v-model="name" @change="updateRoutineName()" />
-        <MyRoutineEntry v-for="entry in entries"
-          :key="entry.id"
-          :routine="routine"
-          :entry="entry"
-          :exercises="exercises"
-          @getEntries="getEntries()"
-        />
-        <NewButton @clicked="newEntry()">
-          <slot>Add Exercise</slot>
-        </NewButton>
+      <DeleteRoutineButton @click="$emit('deleteRoutine, this.routine.id')" />
+      <label for="name">Routine Name</label>
+      <input id="name" v-model="name" @change="updateRoutineName()" />
+      <MyRoutineEntry v-for="entry in entries"
+        :key="entry.id"
+        :routine="routine"
+        :entry="entry"
+        :exercises="exercises"
+        @getEntries="getEntries()"
+      />
+      <NewButton itemAdded="exercise" @clicked="newEntry()">
+        <slot>Add Exercise</slot>
+      </NewButton>
     </div>
 </template>
 
 <script lang="ts">
+// Import global APIs & libraries
 import { defineComponent, PropType } from 'vue'
+import Cookies from 'js-cookie'
+// Import types
 import { Routine, Entry, Exercise } from '@/types/index'
+// Import components
 import MyRoutineEntry from '@/components/MyRoutineEntry.vue'
 import NewButton from '@/components/buttons/NewButton.vue'
-import Cookies from 'js-cookie'
+import DeleteRoutineButton from '@/components/buttons/DeleteRoutineButton.vue'
 
 export default defineComponent({
   data () {
@@ -33,7 +39,8 @@ export default defineComponent({
   },
   components: {
     MyRoutineEntry,
-    NewButton
+    NewButton,
+    DeleteRoutineButton
   },
   props: {
     routine: Object as PropType<Routine>,
@@ -169,6 +176,26 @@ export default defineComponent({
             }
           })
         })
+      } else {
+        const oldRoutines: Routine[] = JSON.parse(localStorage.getItem('routines') || '[]')
+        const newRoutines: Routine[] = []
+
+        for (const routine of oldRoutines) {
+          if (routine.id === this.routine?.id) {
+            newRoutines.push({
+              id: routine.id,
+              attributes: {
+                day: this.routine?.attributes.day,
+                name: this.name,
+                exercises: this.routine?.attributes.exercises
+              }
+            })
+          } else {
+            newRoutines.push(routine)
+          }
+        }
+
+        localStorage.setItem('routines', JSON.stringify(newRoutines))
       }
     }
   },
@@ -177,3 +204,17 @@ export default defineComponent({
   }
 })
 </script>
+
+<style lang="scss">
+.routine-entries {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  gap: 10px;
+  position: relative;
+
+  padding: 20px;
+  background-color: rgb(206, 206, 206);
+}
+</style>

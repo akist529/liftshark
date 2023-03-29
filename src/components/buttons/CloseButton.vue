@@ -5,7 +5,9 @@
 </template>
 
 <script lang="ts">
+// Import global APIs & libraries
 import { defineComponent } from 'vue'
+// Import mixins
 import { fetchImages } from '@/mixins/fetchImages'
 
 export default defineComponent({
@@ -16,22 +18,25 @@ export default defineComponent({
 <style scoped lang="scss">
 button {
     position: absolute;
-    right: 15px;
-    top: 15px;
-    width: 25px;
-    height: 25px;
+    right: 5px;
+    top: 5px;
 
     display: flex;
     justify-content: center;
     align-items: center;
+    padding: 5px;
 
     background: none;
     border: none;
     cursor: pointer;
 
     img {
-        width: 80%;
-        height: 80%;
+        width: 20px;
+        height: 20px;
+    }
+
+    &:hover {
+        background: rgba(0,0,0,0.1);
     }
 }
 </style>

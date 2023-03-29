@@ -5,6 +5,7 @@
 </template>
 
 <script lang="ts">
+// Import global APIs & libraries
 import { defineComponent } from 'vue'
 
 export default defineComponent({

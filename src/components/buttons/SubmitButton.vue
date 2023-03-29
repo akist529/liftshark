@@ -1,6 +1,6 @@
 <template>
     <button>
-        <img alt="Back" :src="assetspath('./ui/double_arrow_left.webp')" />
+        <img alt="Use Routine" :src="assetspath('./ui/add_circle.webp')" />
     </button>
 </template>
 
@@ -16,15 +16,9 @@ export default defineComponent({
 </script>
 
 <style scoped lang="scss">
-button {
-    background-color: var(--button-bg-color);
-    padding: 8px 16px;
-    border: none;
-    border-radius: 10px;
-    cursor: pointer;
-
-    display: flex;
-    justify-content: center;
-    align-items: center;
-}
+    button {
+        border: none;
+        background: none;
+        cursor: pointer;
+    }
 </style>

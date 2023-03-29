@@ -80,3 +80,11 @@ export interface Routine {
         exercises?: Entry[]
     }
 }
+
+export interface Workout {
+    id: number,
+    attributes: {
+        date: string,
+        routine: number
+    }
+}

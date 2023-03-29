@@ -20,21 +20,26 @@
           :exercises="exercises"
           :key="routine.id"
           @getUserRoutines="getUserRoutines()"
+          @deleteRoutine="deleteRoutine(id)"
         />
-        <NewButton @clicked="newRoutine()">
+        <NewButton itemAdded="routine" @clicked="newRoutine()">
           <span>New Routine</span>
         </NewButton>
     </div>
 </template>
 
 <script lang="ts">
+// Import global APIs & libraries
 import { defineComponent } from 'vue'
-import NewButton from '@/components/buttons/NewButton.vue'
-import MyRoutine from '@/components/MyRoutine.vue'
-import { fetchImages } from '@/mixins/fetchImages'
-import { Exercise, Routine } from '@/types/index'
 import axios from 'axios'
 import Cookies from 'js-cookie'
+// Import mixins
+import { fetchImages } from '@/mixins/fetchImages'
+// Import types
+import { Exercise, Routine } from '@/types/index'
+// Import components
+import NewButton from '@/components/buttons/NewButton.vue'
+import MyRoutine from '@/components/MyRoutine.vue'
 
 export default defineComponent({
   data () {
@@ -128,6 +133,46 @@ export default defineComponent({
       return this.routines.filter(routine => {
         return routine.attributes.day === this.activeDay
       })
+    },
+    async getRoutine (id) {
+      return await fetch('http://localhost:1337/api/routines' + `/${id && id}`, {
+        method: 'GET',
+        headers: {
+          Authorization: `Bearer ${Cookies.get('token')}`,
+          'Content-Type': 'application/json'
+        }
+      }).then(response => {
+        return response.json()
+      }).then(data => {
+        return data
+      }).catch(error => {
+        console.log(error)
+      })
+    },
+    async deleteRoutine (id: number) {
+      console.log('test')
+
+      const updatedRoutines = this.routines.filter(routine => {
+        return routine.id !== id
+      })
+
+      if (Cookies.get('token')) {
+        await fetch('http://localhost:1337/apis/routines', {
+          method: 'PUT',
+          headers: {
+            Authorization: `Bearer ${Cookies.get('token')}`,
+            'Content-Type': 'application/json'
+          },
+          body: JSON.stringify({
+            data: {
+              updatedRoutines
+            }
+          })
+        })
+      } else {
+        console.log('test')
+        localStorage.setItem('routines', JSON.stringify(updatedRoutines))
+      }
     }
   },
   components: {
@@ -154,7 +199,7 @@ export default defineComponent({
 .RoutineView {
   display: flex;
   flex-direction: column;
-  gap: 10px;
+  gap: 30px;
 
   #day {
     font-size: 18px;

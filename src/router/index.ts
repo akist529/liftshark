@@ -75,4 +75,9 @@ const router = createRouter({
   routes
 })
 
+router.beforeEach((to, from, next) => {
+  document.title = to.name as string
+  next()
+})
+
 export default router

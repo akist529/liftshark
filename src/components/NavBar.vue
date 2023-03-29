@@ -48,7 +48,9 @@
 </template>
 
 <script lang="ts">
+// Import global APIs & libraries
 import { defineComponent } from 'vue'
+// Import mixins
 import { fetchImages } from '@/mixins/fetchImages'
 
 export default defineComponent({
@@ -76,6 +78,9 @@ nav {
     width: 100%;
 
     background: rgb(20, 20, 20);
+
+    position: relative;
+    z-index: 1;
 
     ul {
         display: grid;
@@ -167,6 +172,10 @@ nav {
                 }
 
                 a:hover {
+                    background-color: rgb(40, 40, 40);
+                }
+
+                .router-link-active {
                     background-color: rgb(40, 40, 40);
                 }
             }

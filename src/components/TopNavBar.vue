@@ -1,19 +1,22 @@
 <template>
-  <div class="top-navbar">
+  <nav>
     <ModeButton />
     <LogButton
       :userToken = userToken
       @click="handleLogButton"
     />
-  </div>
+  </nav>
 </template>
 
 <script lang="ts">
+// Import global APIs & libraries
 import { defineComponent } from 'vue'
+import Cookies from 'js-cookie'
+// Import mixins
 import { fetchImages } from '@/mixins/fetchImages'
+// Import components
 import ModeButton from '@/components/buttons/ModeButton.vue'
 import LogButton from '@/components/buttons/LogButton.vue'
-import Cookies from 'js-cookie'
 
 export default defineComponent({
   components: {
@@ -37,7 +40,7 @@ export default defineComponent({
 </script>
 
 <style scoped lang="scss">
-.top-navbar {
+nav {
   grid-row: 1 / 2;
   grid-column: 1 / -1;
 
@@ -49,6 +52,8 @@ export default defineComponent({
   display: flex;
   justify-content: space-between;
   align-items: center;
+  position: relative;
+  z-index: 0;
 
   img {
     filter: invert(1);

@@ -115,6 +115,7 @@ export default defineComponent({
     grid-template-rows: auto 1fr auto;
     height: 100vh;
     overflow: hidden;
+    position: relative;
 
     #router-view {
       grid-row: 2 / 3;
@@ -128,6 +129,9 @@ export default defineComponent({
       overflow-y: scroll;
 
       font-family: var(--content-font);
+
+      position: relative;
+      z-index: 2;
     }
   }
 

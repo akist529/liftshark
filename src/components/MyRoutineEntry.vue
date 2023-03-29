@@ -1,5 +1,5 @@
 <template>
-    <div>
+    <div class="routine-entry">
         <button @click="deleteEntry">DELETE</button>
         <select name="exercise" ref="name" @change="updateEntry()">
             <option v-for="exercise in exercises"
@@ -41,11 +41,14 @@
 </template>
 
 <script lang="ts">
+// Import global APIs & libraries
 import { defineComponent } from 'vue'
 import type { PropType } from 'vue'
-import { fetchData } from '@/mixins/fetchData'
-import { Routine, Entry, Exercise, Set } from '@/types/index'
 import Cookies from 'js-cookie'
+// Import mixins
+import { fetchData } from '@/mixins/fetchData'
+// Import types
+import { Routine, Entry, Exercise, Set } from '@/types/index'
 
 export default defineComponent({
   data () {
@@ -197,3 +200,12 @@ export default defineComponent({
   }
 })
 </script>
+
+<style lang="scss">
+.routine-entry {
+  display: flex;
+  flex-direction: column;
+
+  background-color: rgb(230, 230, 230);
+}
+</style>
