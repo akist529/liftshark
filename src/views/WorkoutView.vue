@@ -31,13 +31,15 @@
           class="ArrowDown"
           ref="routine"
           :style="`background-image: url(${assetspath('./ui/expand_more.webp')}), linear-gradient(to left, var(--button-bg-color) 0px, var(--button-bg-color) 30px, white 30px, white 100%);`">
-            <option
-              v-for="routine of routines"
-              class="routine-option"
-              :value="routine.attributes.name"
-              :key="routine.id"
-              :id="routine.id.toString()"
-            >{{ getOptionName(routine.attributes.name) }}</option>
+            <optgroup v-for="day in ['Sunday', 'Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday']" :key="day" :label="day">
+              <option
+                v-for="routine in routinesOfDay(day)"
+                class="routine-option"
+                :value="routine.attributes.name"
+                :key="routine.id"
+                :id="routine.id.toString()"
+              >{{ getOptionName(routine.attributes.name) }}</option>
+            </optgroup>
         </select>
         <SubmitButton title="Log Routine as Workout" @click="useRoutine()" />
       </div>
@@ -273,6 +275,11 @@ export default defineComponent({
       }
 
       this.getWorkouts()
+    },
+    routinesOfDay (day: string) {
+      return this.routines.filter(routine => {
+        return routine.attributes.day === day
+      })
     }
   },
   created () {
