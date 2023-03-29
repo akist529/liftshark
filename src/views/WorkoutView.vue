@@ -240,6 +240,7 @@ export default defineComponent({
   display: flex;
   flex-direction: column;
   gap: 10px;
+  position: relative;
 
   .routine-select {
     display: flex;

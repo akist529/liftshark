@@ -20,20 +20,23 @@ button {
     position: absolute;
     right: 15px;
     top: 15px;
-    width: 25px;
-    height: 25px;
 
     display: flex;
     justify-content: center;
     align-items: center;
+    padding: 5px;
 
     background: none;
     border: none;
     cursor: pointer;
 
     img {
-        width: 80%;
-        height: 80%;
+        width: 20px;
+        height: 20px;
+    }
+
+    &:hover {
+        background: rgba(0,0,0,0.1);
     }
 }
 </style>

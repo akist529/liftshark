@@ -79,6 +79,9 @@ nav {
 
     background: rgb(20, 20, 20);
 
+    position: relative;
+    z-index: 1;
+
     ul {
         display: grid;
         grid-template-columns: repeat(5, 1fr);
