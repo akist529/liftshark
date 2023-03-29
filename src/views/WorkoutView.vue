@@ -41,9 +41,12 @@
         </select>
         <SubmitButton title="Log Routine as Workout" @click="useRoutine()" />
       </div>
-      <div v-for="workout in workouts" :key="workout.id">
-        <span>{{ getRoutine(workout.attributes.routine) }}</span>
-      </div>
+      <WorkoutLog
+        v-for="workout in workouts"
+        :key="workout.id"
+        :workout="workout"
+        @deleteWorkout="deleteWorkout"
+      />
     </div>
 </template>
 
@@ -59,6 +62,7 @@ import { Routine, Workout } from '@/types/index'
 import DateButton from '@/components/buttons/DateButton.vue'
 import SubmitButton from '@/components/buttons/SubmitButton.vue'
 import CalendarModal from '@/components/CalendarModal.vue'
+import WorkoutLog from '@/components/WorkoutLog.vue'
 
 export default defineComponent({
   data () {
@@ -105,7 +109,8 @@ export default defineComponent({
   components: {
     DateButton,
     SubmitButton,
-    CalendarModal
+    CalendarModal,
+    WorkoutLog
   },
   mixins: [fetchImages],
   methods: {
@@ -244,6 +249,30 @@ export default defineComponent({
       } else {
         return name
       }
+    },
+    async deleteWorkout (id: number) {
+      const filteredWorkouts = this.workouts.filter(workout => {
+        return workout.id !== id
+      })
+
+      if (Cookies.get('token')) {
+        await fetch('http://localhost:1337/apis/workouts', {
+          method: 'PUT',
+          headers: {
+            Authorization: `Bearer ${Cookies.get('token')}`,
+            'Content-Type': 'application/json'
+          },
+          body: JSON.stringify({
+            data: {
+              filteredWorkouts
+            }
+          })
+        })
+      } else {
+        localStorage.setItem('workouts', JSON.stringify(filteredWorkouts))
+      }
+
+      this.getWorkouts()
     }
   },
   created () {

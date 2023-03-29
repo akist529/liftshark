@@ -1,6 +1,6 @@
 <template>
     <button>
-        <img alt="Close" title="Close" :src="assetspath('./ui/close.webp')" />
+        <img alt="Close" :src="assetspath('./ui/close.webp')" />
     </button>
 </template>
 
