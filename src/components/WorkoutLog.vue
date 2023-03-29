@@ -1,6 +1,6 @@
 <template>
     <div class="workout-log">
-        <CloseButton title="Delete Workout" @click="$emit('deleteWorkout', workout.id)" />
+        <DeleteButton title="Delete Workout" @click="$emit('deleteWorkout', workout.id)" />
         <span>{{ routine.attributes.name }}</span>
         <ul class="exercises">
             <li v-for="exercise in routine.attributes.exercises" :key="exercise.id" class="entry">
@@ -22,11 +22,11 @@
     </div>
 </template>
 
-<script lang="ts">
+<script scoped lang="ts">
 import { defineComponent } from 'vue'
 import { Routine } from '@/types/index'
 import Cookies from 'js-cookie'
-import CloseButton from '@/components/buttons/CloseButton.vue'
+import DeleteButton from '@/components/buttons/DeleteButton.vue'
 
 export default defineComponent({
   data () {
@@ -44,7 +44,7 @@ export default defineComponent({
     }
   },
   components: {
-    CloseButton
+    DeleteButton
   },
   props: ['workout'],
   async created () {
@@ -74,6 +74,7 @@ export default defineComponent({
 <style lang="scss">
 .workout-log {
     background-color: rgb(215, 215, 215);
+    border: 3px solid rgb(175, 175, 175);
     padding: 35px 10px 10px;
     position: relative;
 
