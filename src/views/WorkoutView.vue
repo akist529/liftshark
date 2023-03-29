@@ -24,7 +24,7 @@
       @changeMonthForward="changeMonthForward()"
       @setSelectedDate="setSelectedDate"
       />
-      <div class="routine-select">
+      <div v-if="routines.length" class="routine-select">
         <select
           name="routine"
           id="routine"
@@ -37,9 +37,9 @@
               :value="routine.attributes.name"
               :key="routine.id"
               :id="routine.id.toString()"
-            >{{ routine.attributes.name }}</option>
+            >{{ getOptionName(routine.attributes.name) }}</option>
         </select>
-        <SubmitButton @click="useRoutine()" />
+        <SubmitButton title="Log Routine as Workout" @click="useRoutine()" />
       </div>
       <div v-for="workout in workouts" :key="workout.id">
         <span>{{ getRoutine(workout.attributes.routine) }}</span>
@@ -237,6 +237,13 @@ export default defineComponent({
           return routine.attributes.name
         }
       }
+    },
+    getOptionName (name: string) {
+      if (name.length > 19) {
+        return `${name.slice(0, 18)}...`
+      } else {
+        return name
+      }
     }
   },
   created () {
@@ -258,10 +265,12 @@ export default defineComponent({
     display: flex;
     justify-content: center;
     align-items: center;
+    gap: 10px;
 
     #routine {
       font-size: 18px;
       appearance: none;
+      width: 224px;
     }
   }
 }
