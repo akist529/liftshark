@@ -122,10 +122,22 @@ export default defineComponent({
       this.selectedDate += 1
     },
     changeMonthBack () {
+      const lastSeenMonth = this.selectedMonth
+
       this.selectedMonth = ((this.selectedMonth += 12) - 1) % 12
+
+      if (this.selectedMonth > lastSeenMonth) {
+        this.selectedYear--
+      }
     },
     changeMonthForward () {
+      const lastSeenMonth = this.selectedMonth
+
       this.selectedMonth = ((this.selectedMonth += 12) + 1) % 12
+
+      if (this.selectedMonth < lastSeenMonth) {
+        this.selectedYear++
+      }
     },
     setSelectedDate (date) {
       this.selectedDate = date
