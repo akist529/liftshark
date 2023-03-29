@@ -9,11 +9,17 @@
             </ul>
             <hr/>
         </nav>
+        <WeightLog v-if="pageShown === 'Weight'" />
+        <MeasurementLog v-if="pageShown === 'Measurements'" />
+        <PRLog v-if="pageShown === 'PRs'" />
     </div>
 </template>
 
 <script lang="ts">
 import { defineComponent } from 'vue'
+import WeightLog from '@/components/WeightLog.vue'
+import MeasurementLog from '@/components/MeasurementLog.vue'
+import PRLog from '@/components/PRLog.vue'
 
 export default defineComponent({
   data () {
@@ -37,6 +43,11 @@ export default defineComponent({
         return false
       }
     }
+  },
+  components: {
+    WeightLog,
+    MeasurementLog,
+    PRLog
   },
   created () {
     this.pageShown = sessionStorage.getItem('statPageShown') || 'Measurements'
