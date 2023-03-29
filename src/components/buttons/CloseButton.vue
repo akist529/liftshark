@@ -1,6 +1,6 @@
 <template>
     <button>
-        <img alt="Close" :src="assetspath('./ui/close.webp')" />
+        <img alt="Close" title="Close" :src="assetspath('./ui/close.webp')" />
     </button>
 </template>
 
@@ -18,8 +18,8 @@ export default defineComponent({
 <style scoped lang="scss">
 button {
     position: absolute;
-    right: 15px;
-    top: 15px;
+    right: 5px;
+    top: 5px;
 
     display: flex;
     justify-content: center;

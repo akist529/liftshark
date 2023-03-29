@@ -3,9 +3,9 @@
       <div class="calendar-modal">
         <CloseButton @click="$emit('handleCalendar')" />
         <div class="calendar-ctrls">
-          <button class="calendar-btn-left" @click="$emit('changeMonthBack')">
+          <button class="calendar-btn-left" title="Last Month" @click="$emit('changeMonthBack')">
             <span>{{ months[(selectedMonth + 12 - 1) % 12] }}</span>
-            <img alt="Previous Month" :src="assetspath('./ui/chevron_left.svg')" />
+            <img alt="Last Month" :src="assetspath('./ui/chevron_left.svg')" />
           </button>
           <div class="calendar-date">
             <span>{{ selectedDate }}</span>
@@ -15,7 +15,7 @@
               <span>{{ selectedYear }}</span>
             </div>
           </div>
-          <button class="calendar-btn-right" @click="$emit('changeMonthForward')">
+          <button class="calendar-btn-right" title="Next Month" @click="$emit('changeMonthForward')">
             <img alt="Next Month" :src="assetspath('./ui/chevron_right.svg')" />
             <span>{{ months[(selectedMonth + 12 + 1) % 12] }}</span>
           </button>

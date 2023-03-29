@@ -1,13 +1,21 @@
 <template>
     <div class="DateButton">
-        <BackButton @click="$emit('changeDateBack')" />
-        <button class="calendar-btn" @click="$emit('openCalendar')">
+        <button title="Last Month" @click="$emit('changeDateBack')">
+          <img alt="Last Month" :src="assetspath('./ui/chevron_left.svg')" />
+        </button>
+        <button class="calendar-btn" title="Change Date" @click="$emit('openCalendar')">
           <img v-if="dateIsToday()" :src="assetspath('./ui/today.svg')" />
           <img v-else :src="assetspath('./ui/calendar_month.svg')" />
-          <span v-if="dateIsToday()">Today</span>
-          <span v-else>{{ months[selectedMonth] }} {{ selectedDate }}</span>
+          <span id="today" v-if="dateIsToday()">Today</span>
+          <div v-else>
+            <span>{{ months[selectedMonth] }}</span>
+            <hr/>
+            <span>{{ selectedDate }}</span>
+          </div>
         </button>
-        <ForwardButton @click="$emit('changeDateForward')" />
+        <button title="Next Month" @click="$emit('changeDateForward')">
+          <img alt="Next Month" :src="assetspath('./ui/chevron_right.svg')" />
+        </button>
     </div>
 </template>
 
@@ -16,16 +24,9 @@
 import { defineComponent } from 'vue'
 // Import mixins
 import { fetchImages } from '@/mixins/fetchImages'
-// Import components
-import BackButton from '@/components/buttons/BackButton.vue'
-import ForwardButton from '@/components/buttons/ForwardButton.vue'
 
 export default defineComponent({
   props: ['selectedDate', 'selectedMonth', 'selectedYear', 'months', 'date'],
-  components: {
-    BackButton,
-    ForwardButton
-  },
   mixins: [fetchImages],
   methods: {
     dateIsToday () {
@@ -50,14 +51,34 @@ export default defineComponent({
 
   .calendar-btn {
     display: flex;
-    flex-direction: column;
     padding: 5px 10px;
+
+    &:hover {
+      background: rgb(235,235,235);
+    }
+  }
+
+  button {
     background: none;
     border: none;
     cursor: pointer;
 
-    &:hover {
-      background: rgb(235,235,235);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    gap: 5px;
+
+    > div {
+      display: flex;
+      gap: 10px;
+    }
+
+    span {
+      font-size: 32px;
+    }
+
+    #today {
+      font-weight: 700;
     }
   }
 }
