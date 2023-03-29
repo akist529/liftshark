@@ -3,18 +3,20 @@
         <DeleteButton title="Delete Workout" @click="$emit('deleteWorkout', workout.id)" />
         <span>{{ routine.attributes.name }}</span>
         <ul class="exercises">
-            <table v-for="exercise in routine.attributes.exercises" :key="exercise.id" class="entry">
-              <thead id="exercise-name">{{ exercise.name }}</thead>
-              <tr id="exercise-headers">
-                <th>SET</th>
-                <th>REPS</th>
-                <th>WEIGHT</th>
-              </tr>
-              <tr v-for="set in exercise.sets.length" :key="set" class="set">
-                <td>{{ set }}</td>
-                <td>{{ exercise.sets[set - 1].reps }}</td>
-                <td>{{ exercise.sets[set - 1].weight }} lbs.</td>
-              </tr>
+            <table v-for="exercise in routine.attributes.exercises" :key="exercise.id">
+              <thead>{{ exercise.name }}</thead>
+              <tbody>
+                <tr id="exercise-headers">
+                  <th>SET</th>
+                  <th>REPS</th>
+                  <th>WEIGHT</th>
+                </tr>
+                <tr v-for="set in exercise.sets.length" :key="set" class="set">
+                  <td>{{ set }}</td>
+                  <td>{{ exercise.sets[set - 1].reps }}</td>
+                  <td>{{ exercise.sets[set - 1].weight }} lbs.</td>
+                </tr>
+              </tbody>
             </table>
         </ul>
     </div>
@@ -77,33 +79,18 @@ export default defineComponent({
     position: relative;
 
     .exercises {
-        .entry {
-            display: grid;
-            grid-template-columns: repeat(3, 1fr);
-            grid-template-rows: repeat(auto-fill, auto);
-
-            #exercise-name {
-              grid-column: 1 / -1;
-              grid-row: 1 / 2;
-            }
+        table {
+            display: flex;
+            flex-direction: column;
 
             #exercise-headers {
-              grid-column: 1 / -1;
-              grid-row: 2 / 3;
-
               display: grid;
               grid-template-columns: repeat(3, 1fr);
-              grid-template-rows: auto;
-
-              list-style-type: none;
             }
 
             .set {
-              grid-column: 1 / -1;
-
               display: grid;
               grid-template-columns: repeat(3, 1fr);
-              grid-template-rows: auto;
               justify-items: center;
             }
         }
