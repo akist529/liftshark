@@ -71,12 +71,13 @@ export default defineComponent({
 })
 </script>
 
-<style lang="scss">
+<style scoped lang="scss">
 .workout-log {
     background-color: rgb(215, 215, 215);
     border: 3px solid rgb(175, 175, 175);
     padding: 35px 10px 10px;
     position: relative;
+    z-index: 0;
 
     .exercises {
         table {

@@ -1,11 +1,11 @@
 <template>
-  <div class="top-navbar">
+  <nav>
     <ModeButton />
     <LogButton
       :userToken = userToken
       @click="handleLogButton"
     />
-  </div>
+  </nav>
 </template>
 
 <script lang="ts">
@@ -40,7 +40,7 @@ export default defineComponent({
 </script>
 
 <style scoped lang="scss">
-.top-navbar {
+nav {
   grid-row: 1 / 2;
   grid-column: 1 / -1;
 
@@ -53,7 +53,7 @@ export default defineComponent({
   justify-content: space-between;
   align-items: center;
   position: relative;
-  z-index: 1;
+  z-index: 0;
 
   img {
     filter: invert(1);

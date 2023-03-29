@@ -296,6 +296,7 @@ export default defineComponent({
   flex-direction: column;
   gap: 10px;
   position: relative;
+  z-index: 0;
 
   .routine-select {
     display: flex;
