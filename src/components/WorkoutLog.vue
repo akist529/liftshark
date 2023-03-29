@@ -4,8 +4,19 @@
         <span>{{ routine.attributes.name }}</span>
         <ul class="exercises">
             <li v-for="exercise in routine.attributes.exercises" :key="exercise.id" class="entry">
-                <span>{{ exercise.name }}</span>
-                <span>Set Count: {{ exercise.sets.length }}</span>
+                <span id="exercise-name">{{ exercise.name }}</span>
+                <ul id="exercise-headers">
+                  <li>SET</li>
+                  <li>REPS</li>
+                  <li>WEIGHT</li>
+                </ul>
+                <ul id="exercise-sets">
+                  <li v-for="set in exercise.sets.length" :key="set" class="set">
+                    <span>{{ set }}</span>
+                    <span>{{ exercise.sets[set - 1].reps }}</span>
+                    <span>{{ exercise.sets[set - 1].weight }} lbs.</span>
+                  </li>
+                </ul>
             </li>
         </ul>
     </div>
@@ -68,8 +79,40 @@ export default defineComponent({
 
     .exercises {
         .entry {
-            display: flex;
-            flex-direction: column;
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            grid-template-rows: repeat(auto-fill, auto);
+
+            #exercise-name {
+              grid-column: 1 / -1;
+              grid-row: 1 / 2;
+            }
+
+            #exercise-headers {
+              grid-column: 1 / -1;
+              grid-row: 2 / 3;
+
+              display: grid;
+              grid-template-columns: repeat(3, 1fr);
+              grid-template-rows: auto;
+
+              list-style-type: none;
+            }
+
+            #exercise-sets {
+              grid-column: 1 / -1;
+              grid-row: 3 / 4;
+
+              display: grid;
+              grid-template-columns: auto;
+              grid-template-rows: auto;
+
+              .set {
+                display: grid;
+                grid-template-columns: repeat(3, 1fr);
+                grid-template-rows: auto;
+              }
+            }
         }
     }
 }
