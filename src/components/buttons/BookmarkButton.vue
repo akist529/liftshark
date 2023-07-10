@@ -1,18 +1,18 @@
 <template>
-    <button>
-        <img alt="Bookmark" :src="assetspath('./ui/star.webp')" />
-    </button>
+<button>
+    <img
+        alt="Bookmark"
+        :src="assetspath('./ui/star.webp')" />
+</button>
 </template>
 
 <script lang="ts">
-// Import global APIs & libraries
-import { defineComponent } from 'vue'
-// Import mixins
-import { fetchImages } from '@/mixins/fetchImages'
+import { defineComponent } from 'vue';
+import { fetchImages } from '@/mixins/fetchImages';
 
 export default defineComponent({
   mixins: [fetchImages]
-})
+});
 </script>
 
 <style scoped lang="scss">

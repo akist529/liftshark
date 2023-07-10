@@ -1,29 +1,32 @@
 <template>
-    <button>
-        <img alt="Delete" :src="assetspath('./ui/delete.svg')" />
-    </button>
+<button>
+    <img
+        alt="Delete"
+        :src="assetspath('./ui/delete.svg')" />
+</button>
 </template>
 
 <script lang="ts">
-import { defineComponent } from 'vue'
-import { fetchImages } from '@/mixins/fetchImages'
+import { defineComponent } from 'vue';
+import { fetchImages } from '@/mixins/fetchImages';
 
 export default defineComponent({
-  mixins: [fetchImages]
-})
+    mixins: [fetchImages]
+});
 </script>
 
 <style scoped lang="scss">
 button {
-    position: absolute;
-    right: 5px;
-    top: 5px;
-
+    /* Positioning */
     display: flex;
-    justify-content: center;
-    align-items: center;
-    padding: 5px;
+        justify-content: center;
+        align-items: center;
+    position: absolute;
+        right: 5px;
+        top: 5px;
 
+    /* Visual */
+    padding: 5px;
     background: none;
     border: none;
     cursor: pointer;

@@ -1,61 +1,69 @@
 <template>
-    <button>
-        <span v-if="userToken">Log Out</span>
-        <span v-if="!userToken">Log In</span>
-        <div>
-          <img v-if="userToken" alt="Log Out" :src="assetspath('./ui/sidebar/logout.webp')" />
-          <img v-if="!userToken" alt="Log In" :src="assetspath('./ui/sidebar/login.webp')" />
-        </div>
-    </button>
+<button>
+	<span v-if="userToken">Log Out</span>
+	<span v-if="!userToken">Log In</span>
+	<div>
+		<img v-if="userToken"
+			alt="Log Out"
+			:src="assetspath('./ui/sidebar/logout.webp')" />
+		<img v-if="!userToken"
+			alt="Log In"
+			:src="assetspath('./ui/sidebar/login.webp')" />
+	</div>
+</button>
 </template>
 
 <script lang="ts">
-// Import global APIs & libraries
-import { defineComponent } from 'vue'
-import Cookies from 'js-cookie'
-// Import mixins
-import { fetchImages } from '@/mixins/fetchImages'
+import { defineComponent } from 'vue';
+import { fetchImages } from '@/mixins/fetchImages';
+import Cookies from 'js-cookie';
 
 export default defineComponent({
-  data () {
-    return {
-      Cookies
-    }
-  },
-  mixins: [fetchImages],
-  props: {
-    userToken: String
-  }
-})
+	data () {
+		return ({
+			Cookies
+		});
+	},
+	mixins: [fetchImages],
+	props: {
+		userToken: String
+	}
+});
 </script>
 
 <style scoped lang="scss">
 button {
-  display: grid;
-  grid-template-columns: 60px 30px;
-  grid-template-rows: 1fr;
-  justify-items: center;
-  align-items: center;
-  border: none;
-  border-radius: 10px;
-  overflow: hidden;
+	/* Positioning */
+	display: grid;
+		grid-template-columns: 60px 30px;
+		grid-template-rows: 1fr;
+		justify-items: center;
+		align-items: center;
 
-  span {
-    font-family: var(--title-font);
-  }
+	/* Visual */
+	border: none;
+		border-radius: 10px;
+	overflow: hidden;
 
-  div {
-    background-color: var(--button-bg-color);
-    display: flex;
-    justify-content: center;
-    align-items: center;
+	span {
+		font-family: var(--title-font);
+	}
 
-    img {
-      filter: invert(1);
-      width: 100%;
-      height: 100%;
-      padding: 5px;
-    }
-  }
+	div {
+		/* Positioning */
+		display: flex;
+			justify-content: center;
+			align-items: center;
+
+		/* Visual */
+		background-color: var(--button-bg-color);
+
+		img {
+			filter: invert(1);
+			width: 100%;
+			height: 100%;
+			padding: 5px;
+		}
+	}
 }
 </style>

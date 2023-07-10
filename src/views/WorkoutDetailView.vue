@@ -1,3 +1,3 @@
 <template>
-    <h1>Workout Details</h1>
+<h1>Workout Details</h1>
 </template>

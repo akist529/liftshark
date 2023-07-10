@@ -1,30 +1,36 @@
 <template>
-    <button>
-        <img alt="Back" :src="assetspath('./ui/double_arrow_left.webp')" />
-    </button>
+<button>
+    <img
+        alt="Back"
+        :src="assetspath('./ui/double_arrow_left.webp')" />
+</button>
 </template>
 
 <script lang="ts">
-// Import global APIs & libraries
-import { defineComponent } from 'vue'
-// Import mixins
-import { fetchImages } from '@/mixins/fetchImages'
+import { defineComponent } from 'vue';
+import { fetchImages } from '@/mixins/fetchImages';
 
 export default defineComponent({
-  mixins: [fetchImages]
-})
+    mixins: [fetchImages]
+});
 </script>
 
 <style scoped lang="scss">
 button {
+    /* Positioning */
+    display: flex;
+        justify-content: center;
+        align-items: center;
+
+    /* Visual */
     background-color: var(--button-bg-color);
     padding: 8px 16px;
     border: none;
-    border-radius: 10px;
+        border-radius: 10px;
     cursor: pointer;
 
-    display: flex;
-    justify-content: center;
-    align-items: center;
+    img {
+        filter: invert(1);
+    }
 }
 </style>

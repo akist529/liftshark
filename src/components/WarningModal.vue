@@ -1,59 +1,65 @@
 <template>
-  <ModalBackground>
-    <div class="warning-modal">
-        <CloseButton @click="$emit('handleWarningModal')" />
-        <strong>
-            <slot></slot>
-        </strong>
-        <div class="warning-btns">
-          <StrongButton @click="$emit('yes')">YES</StrongButton>
-          <GenericButton @click="$emit('handleWarningModal')">NO</GenericButton>
-        </div>
-    </div>
-  </ModalBackground>
+<ModalBackground>
+	<div class="warning-modal">
+		<CloseButton
+			@click="$emit('handleWarningModal')" />
+		<strong>
+			<slot></slot>
+		</strong>
+		<div class="warning-btns">
+			<StrongButton
+				@click="$emit('yes')"
+			>YES</StrongButton>
+			<GenericButton
+				@click="$emit('handleWarningModal')"
+			>NO</GenericButton>
+		</div>
+	</div>
+</ModalBackground>
 </template>
 
 <script scoped lang="ts">
-// Import global APIs & libraries
-import { defineComponent } from 'vue'
-// Import components
-import ModalBackground from '@/components/ModalBackground.vue'
-import CloseButton from '@/components/buttons/CloseButton.vue'
-import StrongButton from '@/components/buttons/StrongButton.vue'
-import GenericButton from '@/components/buttons/GenericButton.vue'
+import { defineComponent } from 'vue';
+// Local components
+import ModalBackground from '@/components/ModalBackground.vue';
+import CloseButton from '@/components/buttons/CloseButton.vue';
+import StrongButton from '@/components/buttons/StrongButton.vue';
+import GenericButton from '@/components/buttons/GenericButton.vue';
 
 export default defineComponent({
-  components: {
-    ModalBackground,
-    CloseButton,
-    StrongButton,
-    GenericButton
-  }
-})
+	components: {
+		ModalBackground,
+		CloseButton,
+		StrongButton,
+		GenericButton
+	}
+});
 </script>
 
 <style scoped lang="scss">
 .warning-modal {
-  position: fixed;
-  top: 50%;
-  left: 50%;
-  transform: translate(-50%, -50%);
-  width: 80vw;
-  height: 40vh;
-  background-color: rgb(255, 255, 255);
+	/* Positioning */
+	display: flex;
+		flex-direction: column;
+		justify-content: center;
+		align-items: center;
+		gap: 10px;
+	position: fixed;
+		top: 50%;
+		left: 50%;
+	transform: translate(-50%, -50%);
+	width: 80vw;
+	height: 40vh;
 
-  display: flex;
-  flex-direction: column;
-  justify-content: center;
-  align-items: center;
-  gap: 10px;
-  padding: 10px;
+	/* Visual */
+	background-color: rgb(255, 255, 255);
+	padding: 10px;
 
-  .warning-btns {
-    display: flex;
-    justify-content: space-around;
-    align-items: center;
-    width: 100%;
-  }
+	.warning-btns {
+		display: flex;
+			justify-content: space-around;
+			align-items: center;
+		width: 100%;
+	}
 }
 </style>

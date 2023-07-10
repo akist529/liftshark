@@ -1,213 +1,268 @@
 <template>
-  <div class="ExerciseView" ref="view">
-    <h1>Exercises</h1>
-    <div class="page-buttons">
-      <BackButton @click="getPage('previous')" />
-      <ForwardButton @click="getPage('next')" />
-    </div>
-    <LoadIcon v-if="!loaded" />
-    <ul v-if="loaded" class="exercise-list">
-      <MyExercise
-        v-for="exercise in exercises"
-        :key="exercise.id"
-        :exerciseName="getCorrectName(exercise.name)"
-        :muscles="getNames(exercise.muscles, muscles)"
-        :secondaryMuscles="getNames(exercise.muscles_secondary, muscles)"
-        :equipment="getNames(exercise.equipment, equipment)"
-        :image="getImage(exercise.exercise_base)" />
-    </ul>
-    <div class="page-buttons">
-      <BackButton @click="getPage('previous')" />
-      <ForwardButton @click="getPage('next')" />
-    </div>
-    <MyFooter />
-  </div>
+<div>
+	<LoadIcon v-if="!loaded" />
+	<div v-if="loaded" class="Exercise">
+		<div class="exercise-header">
+			<h1>{{ exercise.name }}</h1>
+		</div>
+		<h2 v-if="exercise.muscles.length">Primary Muscles</h2>
+		<ul v-if="exercise.muscles.length">
+			<li :key="muscle" v-for="muscle in exercise.muscles">
+				<figure>
+					<img
+						:alt="getMuscleName(muscle)"
+						:title="getMuscleName(muscle)"
+						:src="assetspath(`./${getFileName(muscle, getMuscleName)}`)" />
+					<figcaption>{{ (getMuscleName(muscle).split(' '))[0] }}</figcaption>
+				</figure>
+			</li>
+		</ul>
+		<h2 v-if="exercise.muscles_secondary.length">Secondary Muscles</h2>
+		<ul v-if="exercise.muscles_secondary.length">
+			<li :key="muscle" v-for="muscle in exercise.muscles_secondary">
+				<figure>
+					<img
+						:alt="getMuscleName(muscle)"
+						:title="getMuscleName(muscle)"
+						:src="assetspath(`./${getFileName(muscle, getMuscleName)}`)" />
+					<figcaption>{{ (getMuscleName(muscle).split(' '))[0] }}</figcaption>
+				</figure>
+			</li>
+		</ul>
+		<h2 v-if="exercise.equipment.length">Equipment</h2>
+		<ul v-if="exercise.equipment.length">
+			<li :key="item" v-for="item in exercise.equipment">
+				<figure>
+					<img
+						:alt="getEquipmentName(item)"
+						:title="getEquipmentName(item)"
+						:src="assetspath(`./${getFileName(item, getEquipmentName)}`)" />
+					<figcaption>{{ getEquipmentName(item) }}</figcaption>
+				</figure>
+			</li>
+		</ul>
+		<p v-if="exercise.description" :innerHTML="exercise.description"></p>
+		<ul v-if="images" class="exercise-pics">
+			<li :key="image.id" v-for="image in images">
+				<img
+					alt="Exercise Example"
+					:src="image.image" />
+			</li>
+		</ul>
+		<div class="exercise-btns">
+			<BackButton
+				class="back-btn"
+				@click="$router.back()" />
+			<BurgerButton class="burger-btn">
+				<BurgerMenuButton>
+					<span>Add to Routine</span>
+					<img
+						alt="Routine"
+						src="@/../public/images/ui/sidebar/routines.webp" />
+				</BurgerMenuButton>
+				<BurgerMenuButton>
+					<span>Add to Workout</span>
+					<img
+						alt="Workout"
+						src="@/../public/images/ui/sidebar/workouts.webp" />
+				</BurgerMenuButton>
+			</BurgerButton>
+			<BookmarkButton
+				class="bookmark-btn" />
+		</div>
+	</div>
+</div>
 </template>
 
 <script lang="ts">
-// Import global APIs & libraries
-import { defineComponent } from 'vue'
-// Import mixins
-import { fetchData } from '@/mixins/fetchData'
-// Import types
-import { Exercise, Muscle, Equipment, Category, Image } from '@/types/index'
-// Import components
-import MyExercise from '@/components/MyExercise.vue'
-import MyFooter from '@/components/MyFooter.vue'
-import BackButton from '@/components/buttons/BackButton.vue'
-import ForwardButton from '@/components/buttons/ForwardButton.vue'
-import LoadIcon from '@/components/LoadIcon.vue'
+import { defineComponent } from 'vue';
+import { fetchData } from '@/mixins/fetchData';
+import { fetchImages } from '@/mixins/fetchImages';
+import { Exercise, Muscle, Equipment, Category, Image } from '@/types/index';
+// Local components
+import BookmarkButton from '@/components/buttons/BookmarkButton.vue';
+import BackButton from '@/components/buttons/BackButton.vue';
+import BurgerButton from '@/components/buttons/BurgerButton.vue';
+import BurgerMenuButton from '@/components/buttons/BurgerMenuButton.vue';
+import LoadIcon from '@/components/LoadIcon.vue';
 
 export default defineComponent({
-  data () {
-    const exercises: Exercise[] = []
-    const muscles: Muscle[] = []
-    const equipment: Equipment[] = []
-    const categories: Category[] = []
-    const images: Image[] = []
-    const offset = 0
+	components: {
+		BookmarkButton,
+		BackButton,
+		BurgerButton,
+		BurgerMenuButton,
+		LoadIcon
+	},
+	mixins: [fetchData, fetchImages],
+	data () {
+		const exercise = {} as Exercise;
+		const muscles: Muscle[] = [];
+		const equipment: Equipment[] = [];
+		const categories: Category[] = [];
+		const images: Image[] = [];
 
-    return {
-      exercises,
-      muscles,
-      equipment,
-      categories,
-      images,
-      offset,
-      loaded: false
-    }
-  },
-  methods: {
-    getImage: function (id: number) {
-      let imageURL = ''
+		return ({
+			exercise,
+			muscles,
+			equipment,
+			categories,
+			images,
+			loaded: false
+		});
+	},
+	methods: {
+		async getExerciseData () {
+			this.getResults(`https://wger.de/api/v2/exercise/?name=${this.getDisplayName()}&language=2`, 'name')
+			.then(data => {
+				if (data) this.exercise = data[0] as Exercise;
+			});
 
-      this.images.forEach(item => {
-        if (item.exercise_base === id) {
-          imageURL = item.image
-        }
-      })
+			await this.getResults('https://wger.de/api/v2/muscle?limit=999', 'name')
+			.then(data => {
+				if (data) this.muscles = data;
+			});
 
-      return imageURL
-    },
-    getPage: async function (direction) {
-      this.changeLoadStatus()
+			await this.getResults('https://wger.de/api/v2/equipment?limit=999', 'name')
+			.then(data => {
+				if (data) this.equipment = data;
+			});
 
-      if (direction === 'next') {
-        this.offset += 10
-      } else if (direction === 'previous') {
-        this.offset -= 10
-      }
+			// eslint-disable-next-line
+			await this.getResults(`https://wger.de/api/v2/exerciseimage/?limit=999&exercise_base=${this.exercise.exercise_base}`, 'id')
+			.then(data => {
+				if (data) {
+					for (const image of data.filter(image => image.exercise_base === this.exercise.exercise_base)) {
+						this.images.push(image);
+					}
+				}
+			});
 
-      if (this.offset < 0) {
-        this.offset = 0
-      }
+			this.loaded = true;
+		},
+		getDisplayName () {
+			const displayName: string = (this.$route.params.id as string).split('-').map(word => (word[0].toUpperCase() + word.slice(1))).join(' ');
+			return displayName;
+		},
+		getMuscleName (item: number) {
+			for (const muscle of this.muscles) {
+				if (item === muscle.id) {
+					if (muscle.name_en) return muscle.name_en;
+						else return muscle.name;
+				}
+			}
 
-      await this.getResults(`https://wger.de/api/v2/exercise/?limit=10&offset=${this.offset}&language=2`, 'name')
-        .then(data => {
-          if (data === null) {
-            return
-          }
+			return 'test';
+		},
+		getEquipmentName (item: number) {
+			for (const piece of this.equipment) {
+				if (item === piece.id) return piece.name;
+			}
 
-          if (data.length > 0) {
-            this.exercises = data
-          } else {
-            this.offset -= 10
-          }
-        }).then(() => {
-          (this.$refs.view as HTMLDivElement).scrollTo({ top: 0, behavior: 'smooth' })
-        })
+			return '';
+		},
+		getFileName (item: number, callback) {
+			const name = callback(item);
 
-      this.changeLoadStatus()
-    },
-    getNames: function (arr, data) {
-      const names: string[] = []
-
-      arr.forEach(item => {
-        data.forEach(entry => {
-          if (item === entry.id) {
-            names.push((() => {
-              if (data === this.muscles) {
-                if (entry.name_en) {
-                  return entry.name_en
-                } else {
-                  return entry.name
-                }
-              } else if (data === this.equipment) {
-                return entry.name
-              } else {
-                return ''
-              }
-            })())
-          }
-        })
-      })
-
-      return names
-    },
-    getCorrectName (name: string) {
-      const splitName = name.split(' ')
-      const correctNameArray: string[] = []
-
-      for (const word of splitName) {
-        const correctWord = word[0].toUpperCase() + word.substring(1)
-        correctNameArray.push(correctWord)
-      }
-
-      const correctName = correctNameArray.join(' ')
-      return correctName
-    },
-    changeLoadStatus () {
-      this.loaded = !this.loaded
-    }
-  },
-  mixins: [fetchData],
-  components: {
-    MyExercise,
-    MyFooter,
-    BackButton,
-    ForwardButton,
-    LoadIcon
-  },
-  async created () {
-    this.getResults('https://wger.de/api/v2/exercise/?limit=10&language=2', 'name')
-      .then(data => {
-        if (data) {
-          this.exercises = data
-        }
-      })
-    await this.getResults('https://wger.de/api/v2/muscle?limit=999', 'name')
-      .then(data => {
-        if (data) {
-          this.muscles = data
-        }
-      })
-    await this.getResults('https://wger.de/api/v2/equipment?limit=999', 'name')
-      .then(data => {
-        if (data) {
-          this.equipment = data
-        }
-      })
-    await this.getResults('https://wger.de/api/v2/exercisecategory?limit=999', 'name')
-      .then(data => {
-        if (data) {
-          this.categories = data
-        }
-      })
-    await this.getResults('https://wger.de/api/v2/exerciseimage?limit=999', 'id')
-      .then(data => {
-        if (data) {
-          this.images = data
-        }
-      })
-
-    this.changeLoadStatus()
-  }
-})
+			if (name === 'Obliquus externus abdominis') {
+				return 'ui/exercises/obliques.webp';
+			} else if (name === 'Soleus') {
+				return 'ui/exercises/calves.webp';
+			} else if (name === 'SZ-Bar') {
+				return 'ui/exercises/ez-bar.webp';
+			} else {
+				return `ui/exercises/${name.toLowerCase().replaceAll(' ', '-').replaceAll(/[()]/g, '')}.webp`;
+			}
+		}
+	},
+	created () {
+		this.getExerciseData();
+	}
+});
 </script>
 
 <style scoped lang="scss">
-.ExerciseView {
-  display: flex;
-  flex-direction: column;
-  gap: 10px;
-  font-family: var(--content-font);
+.Exercise {
+	/* Positioning */
+	display: flex;
+		flex-direction: column;
+		gap: 10px;
+	position: relative;
+	width: 100%;
 
-  h1 {
-    font-family: var(--title-font);
-    font-weight: 700;
-  }
+	/* Visual */
+	padding-bottom: 50px;
+	font-family: var(--content-font);
 
-  .page-buttons {
-    display: flex;
-    justify-content: space-evenly;
-    width: 100%;
-  }
+	h1 {
+		font-family: var(--title-font);
+		font-weight: 700;
+		font-size: 6vw;
+		text-align: center;
+	}
 
-  .exercise-list {
-    display: grid;
-    grid-template-rows: repeat(auto-fill, auto);
-    grid-template-columns: auto;
-    gap: 20px;
-  }
+	h2 {
+		font-weight: 500;
+		text-align: center;
+	}
+
+	ul {
+		/* Positioning */
+		display: flex;
+			flex-wrap: wrap;
+			justify-content: center;
+			align-items: center;
+			gap: 10px;
+
+		/* Visual */
+		list-style-type: none;
+		font-weight: 300;
+
+		li {
+			figure {
+				display: flex;
+					flex-direction: column;
+					align-items: center;
+			}
+		}
+	}
+
+	.add-buttons {
+		display: flex;
+			justify-content: space-evenly;
+		width: 100%;
+	}
+
+	.exercise-pics {
+		/* Positioning */
+		display: flex;
+			flex-direction: column;
+			justify-content: center;
+			align-items: center;
+
+		/* Visual */
+		list-style-type: none;
+
+		li {
+			img {
+				max-width: 250px;
+			}
+		}
+	}
+
+	.exercise-btns {
+		display: flex;
+			justify-content: space-evenly;
+			align-items: flex-end;
+		position: fixed;
+			bottom: 80px;
+			left: 0;
+			right: 0;
+
+		img {
+			filter: invert(1);
+			width: 40px;
+		}
+	}
 }
 </style>

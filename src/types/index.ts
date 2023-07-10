@@ -19,7 +19,7 @@ export interface Exercise {
     variations: number[]
     // eslint-disable-next-line camelcase
     author_history: string[]
-  }
+}
 
 export interface Muscle {
     id: number
