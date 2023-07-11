@@ -1,75 +1,52 @@
 <template>
-<div>
-	<LoadIcon v-if="!loaded" />
-	<div v-if="loaded" class="Exercise">
-		<div class="exercise-header">
-			<h1>{{ exercise.name }}</h1>
-		</div>
-		<h2 v-if="exercise.muscles.length">Primary Muscles</h2>
-		<ul v-if="exercise.muscles.length">
-			<li :key="muscle" v-for="muscle in exercise.muscles">
-				<figure>
-					<img
-						:alt="getMuscleName(muscle)"
-						:title="getMuscleName(muscle)"
-						:src="assetspath(`./${getFileName(muscle, getMuscleName)}`)" />
-					<figcaption>{{ (getMuscleName(muscle).split(' '))[0] }}</figcaption>
-				</figure>
-			</li>
-		</ul>
-		<h2 v-if="exercise.muscles_secondary.length">Secondary Muscles</h2>
-		<ul v-if="exercise.muscles_secondary.length">
-			<li :key="muscle" v-for="muscle in exercise.muscles_secondary">
-				<figure>
-					<img
-						:alt="getMuscleName(muscle)"
-						:title="getMuscleName(muscle)"
-						:src="assetspath(`./${getFileName(muscle, getMuscleName)}`)" />
-					<figcaption>{{ (getMuscleName(muscle).split(' '))[0] }}</figcaption>
-				</figure>
-			</li>
-		</ul>
-		<h2 v-if="exercise.equipment.length">Equipment</h2>
-		<ul v-if="exercise.equipment.length">
-			<li :key="item" v-for="item in exercise.equipment">
-				<figure>
-					<img
-						:alt="getEquipmentName(item)"
-						:title="getEquipmentName(item)"
-						:src="assetspath(`./${getFileName(item, getEquipmentName)}`)" />
-					<figcaption>{{ getEquipmentName(item) }}</figcaption>
-				</figure>
-			</li>
-		</ul>
-		<p v-if="exercise.description" :innerHTML="exercise.description"></p>
-		<ul v-if="images" class="exercise-pics">
-			<li :key="image.id" v-for="image in images">
+<LoadIcon v-if="!loaded && !error" />
+<h1 v-if="error">Error!</h1>
+<div v-if="loaded" class="ExerciseView">
+	<h1>{{ exercise.name }}</h1>
+	<h2 v-if="exercise.muscles.length">Primary Muscles</h2>
+	<ul v-if="exercise.muscles.length">
+		<li v-for="muscle in exercise.muscles" :key="muscle">
+			<span :style="getImage('muscles', getSlug(getMuscleName(muscle)))"></span>
+			{{ getMuscleName(muscle) }}
+		</li>
+	</ul>
+	<h2 v-if="exercise.muscles_secondary.length">Secondary Muscles</h2>
+	<ul v-if="exercise.muscles_secondary.length">
+		<li v-for="muscle in exercise.muscles_secondary" :key="muscle">
+			<span :style="getImage('muscles', getSlug(getMuscleName(muscle)))"></span>
+			{{ getMuscleName(muscle) }}
+		</li>
+	</ul>
+	<h2 v-if="exercise.equipment.length">Equipment</h2>
+	<ul v-if="exercise.equipment.length">
+		<li v-for="item in exercise.equipment" :key="item">
+			<span :style="getImage('equipment', getSlug(getEquipmentName(item)))"></span>
+			{{ getEquipmentName(item) }}
+		</li>
+	</ul>
+	<p v-if="exercise.description" :innerHTML="exercise.description"></p>
+	<ul v-if="images" class="exercise-pics">
+		<li v-for="image in images" :key="image.id">
+			<figure>
 				<img
 					alt="Exercise Example"
 					:src="image.image" />
-			</li>
-		</ul>
-		<div class="exercise-btns">
-			<BackButton
-				class="back-btn"
-				@click="$router.back()" />
-			<BurgerButton class="burger-btn">
-				<BurgerMenuButton>
-					<span>Add to Routine</span>
-					<img
-						alt="Routine"
-						src="@/../public/images/ui/sidebar/routines.webp" />
-				</BurgerMenuButton>
-				<BurgerMenuButton>
-					<span>Add to Workout</span>
-					<img
-						alt="Workout"
-						src="@/../public/images/ui/sidebar/workouts.webp" />
-				</BurgerMenuButton>
-			</BurgerButton>
-			<BookmarkButton
-				class="bookmark-btn" />
+				<figcaption>Example of {{ exercise.name }}</figcaption>
+			</figure>
+		</li>
+	</ul>
+	<div class="exercise-btns">
+		<BackButton
+			class="back-btn"
+			@click="$router.back()" />
+		<div>
+			<BurgerButton
+				:menuOpen="menuOpen"
+				@setMenuOpen="setMenuOpen" />
+			<BurgerMenu v-if="menuOpen" />
 		</div>
+		<BookmarkButton
+			class="bookmark-btn" />
 	</div>
 </div>
 </template>
@@ -83,16 +60,16 @@ import { Exercise, Muscle, Equipment, Category, Image } from '@/types/index';
 import BookmarkButton from '@/components/buttons/BookmarkButton.vue';
 import BackButton from '@/components/buttons/BackButton.vue';
 import BurgerButton from '@/components/buttons/BurgerButton.vue';
-import BurgerMenuButton from '@/components/buttons/BurgerMenuButton.vue';
 import LoadIcon from '@/components/LoadIcon.vue';
+import BurgerMenu from '@/components/ui/ExerciseView/BurgerMenu.vue';
 
 export default defineComponent({
 	components: {
 		BookmarkButton,
 		BackButton,
 		BurgerButton,
-		BurgerMenuButton,
-		LoadIcon
+		LoadIcon,
+		BurgerMenu
 	},
 	mixins: [fetchData, fetchImages],
 	data () {
@@ -101,6 +78,9 @@ export default defineComponent({
 		const equipment: Equipment[] = [];
 		const categories: Category[] = [];
 		const images: Image[] = [];
+		const menuOpen = false;
+		const routerName = this.$route.params.id as string;
+		const error = false;
 
 		return ({
 			exercise,
@@ -108,90 +88,199 @@ export default defineComponent({
 			equipment,
 			categories,
 			images,
-			loaded: false
+			loaded: false,
+			menuOpen,
+			routerName,
+			error
 		});
 	},
 	methods: {
-		async getExerciseData () {
-			this.getResults(`https://wger.de/api/v2/exercise/?name=${this.getDisplayName()}&language=2`, 'name')
-			.then(data => {
-				if (data) this.exercise = data[0] as Exercise;
-			});
-
-			await this.getResults('https://wger.de/api/v2/muscle?limit=999', 'name')
-			.then(data => {
-				if (data) this.muscles = data;
-			});
-
-			await this.getResults('https://wger.de/api/v2/equipment?limit=999', 'name')
-			.then(data => {
-				if (data) this.equipment = data;
-			});
-
-			// eslint-disable-next-line
-			await this.getResults(`https://wger.de/api/v2/exerciseimage/?limit=999&exercise_base=${this.exercise.exercise_base}`, 'id')
-			.then(data => {
-				if (data) {
-					for (const image of data.filter(image => image.exercise_base === this.exercise.exercise_base)) {
-						this.images.push(image);
-					}
-				}
-			});
-
-			this.loaded = true;
-		},
-		getDisplayName () {
-			const displayName: string = (this.$route.params.id as string).split('-').map(word => (word[0].toUpperCase() + word.slice(1))).join(' ');
-			return displayName;
-		},
 		getMuscleName (item: number) {
-			for (const muscle of this.muscles) {
-				if (item === muscle.id) {
-					if (muscle.name_en) return muscle.name_en;
-						else return muscle.name;
-				}
-			}
+			const muscle = this.muscles.find((muscle: Muscle) => muscle.id === item);
 
-			return 'test';
+			if (!muscle) return '';
+				else if (muscle.name_en) {
+					return muscle.name_en;
+				} else return muscle.name;
 		},
 		getEquipmentName (item: number) {
-			for (const piece of this.equipment) {
-				if (item === piece.id) return piece.name;
-			}
+			const equipment = this.equipment.find((piece: Equipment) => piece.id === item);
 
-			return '';
+			if (!equipment) return '';
+				else return equipment.name;
 		},
-		getFileName (item: number, callback) {
-			const name = callback(item);
-
-			if (name === 'Obliquus externus abdominis') {
-				return 'ui/exercises/obliques.webp';
-			} else if (name === 'Soleus') {
-				return 'ui/exercises/calves.webp';
-			} else if (name === 'SZ-Bar') {
-				return 'ui/exercises/ez-bar.webp';
-			} else {
-				return `ui/exercises/${name.toLowerCase().replaceAll(' ', '-').replaceAll(/[()]/g, '')}.webp`;
-			}
+		setMenuOpen () {
+			this.menuOpen = !this.menuOpen;
+		},
+		getSlug (name: string) {
+			return name.split(' ').join('-').replaceAll('(', '').replaceAll(')', '').toLowerCase();
+		},
+		getImage (folder: string, name: string) {
+			return { 'background-image': `url('/images/${folder}/${this.getSlug(name)}.webp')` };
 		}
 	},
-	created () {
-		this.getExerciseData();
+	computed: {
+		displayName: function () {
+			const displayName = this.routerName.split('-').map(word => {
+				return word[0].toUpperCase() + word.slice(1);
+			}).join(' ');
+
+			return displayName;
+		}
+	},
+	async created () {
+		// eslint-disable-next-line no-var
+		var exerciseSuccess = false;
+		const slug = this.displayName.split(' ').join('+');
+		let i = 0;
+		console.log(slug);
+
+		await this.getResults(`https://wger.de/api/v2/exercise/?name=${slug}&language=2`, 'name')
+				.then(data => {
+					if (data && data.length) {
+						this.exercise = data[0] as Exercise;
+						exerciseSuccess = true;
+					}
+				}).catch(error => {
+					console.log(error);
+				});
+
+		if (!exerciseSuccess) {
+			const slugArr = slug.split('+');
+
+			for (let i = 1; i < slugArr.length; i++) {
+				slugArr[i] = slugArr[i][0].toLowerCase() + slugArr[i].slice(1);
+			}
+
+			const newSlug = slugArr.join('+');
+			console.log(newSlug);
+
+			await this.getResults(`https://wger.de/api/v2/exercise/?name=${newSlug}&language=2`, 'name')
+				.then(data => {
+					if (data && data.length) {
+						this.exercise = data[0] as Exercise;
+						exerciseSuccess = true;
+					}
+				}).catch(error => {
+					console.log(error);
+				});
+		}
+
+		if (!exerciseSuccess) {
+			i = 0;
+
+			do {
+				const slugArr = slug.split('');
+
+				if (slugArr[i] === slug.charAt(i).toUpperCase()) {
+					slugArr[i] = slug.charAt(i).toLowerCase();
+				} else {
+					slugArr[i] = slug.charAt(i).toUpperCase();
+				}
+
+				if (slugArr[i] === '+') {
+					slugArr[i] = '-';
+				}
+
+				const newSlug = slugArr.join('');
+				console.log(newSlug);
+
+				await this.getResults(`https://wger.de/api/v2/exercise/?name=${newSlug}&language=2`, 'name')
+					.then(data => {
+						if (data && data.length) {
+							this.exercise = data[0] as Exercise;
+							exerciseSuccess = true;
+						}
+					}).catch(error => {
+						console.log(error);
+					});
+
+				i++;
+			} while (!exerciseSuccess && i < slug.length);
+		}
+
+		if (!exerciseSuccess) {
+			i = 0;
+
+			do {
+				const slugArr = slug.toLowerCase().split('');
+
+				if (slugArr[i] === slug.charAt(i).toUpperCase()) {
+					slugArr[i] = slug.charAt(i).toLowerCase();
+				} else {
+					slugArr[i] = slug.charAt(i).toUpperCase();
+				}
+
+				if (slugArr[i] === '+') {
+					slugArr[i] = '-';
+				}
+
+				const newSlug = slugArr.join('');
+				console.log(newSlug);
+
+				await this.getResults(`https://wger.de/api/v2/exercise/?name=${newSlug}&language=2`, 'name')
+					.then(data => {
+						if (data && data.length) {
+							this.exercise = data[0] as Exercise;
+							exerciseSuccess = true;
+						}
+					}).catch(error => {
+						console.log(error);
+					});
+
+				i++;
+			} while (!exerciseSuccess && i < slug.length);
+		}
+
+		if (this.exercise === undefined) {
+			this.error = true;
+			return;
+		}
+
+		await this.getResults('https://wger.de/api/v2/muscle?limit=999', 'name')
+			.then(data => {
+				if (data) this.muscles = data;
+					else this.error = true;
+			});
+
+		await this.getResults('https://wger.de/api/v2/equipment?limit=999', 'name')
+			.then(data => {
+				if (data) this.equipment = data;
+					else this.error = true;
+			});
+
+		// eslint-disable-next-line
+		await this.getResults(`https://wger.de/api/v2/exerciseimage/?limit=999&exercise_base=${this.exercise.exercise_base}`, 'id')
+			.then(data => {
+				if (data) {
+					const filteredData = data.filter(image => image.exercise_base === this.exercise.exercise_base);
+
+					for (const image of filteredData) {
+						this.images.push(image);
+					}
+				} else this.error = true;
+			});
+
+		if (!this.error) this.loaded = true;
 	}
 });
 </script>
 
 <style scoped lang="scss">
-.Exercise {
+.ExerciseView {
 	/* Positioning */
 	display: flex;
 		flex-direction: column;
+		justify-content: space-between;
 		gap: 10px;
 	position: relative;
 	width: 100%;
+	height: calc(100vh - 120px);
+		min-height: calc(100vh - 120px);
+	overflow: scroll;
 
 	/* Visual */
-	padding-bottom: 50px;
+	padding: 10px;
 	font-family: var(--content-font);
 
 	h1 {
@@ -199,6 +288,7 @@ export default defineComponent({
 		font-weight: 700;
 		font-size: 6vw;
 		text-align: center;
+		text-transform: uppercase;
 	}
 
 	h2 {
@@ -219,10 +309,18 @@ export default defineComponent({
 		font-weight: 300;
 
 		li {
-			figure {
-				display: flex;
-					flex-direction: column;
-					align-items: center;
+			display: flex;
+			flex-direction: column;
+			justify-content: center;
+			align-items: center;
+
+			span {
+				display: inline-block;
+				background-size: contain;
+				background-repeat: no-repeat;
+				width: 32px;
+				height: 40px;
+				content: '';
 			}
 		}
 	}
@@ -254,15 +352,21 @@ export default defineComponent({
 		display: flex;
 			justify-content: space-evenly;
 			align-items: flex-end;
-		position: fixed;
-			bottom: 80px;
-			left: 0;
-			right: 0;
 
 		img {
 			filter: invert(1);
 			width: 40px;
 		}
+	}
+
+	.abs {
+		display: inline-block;
+		background-image: url('/public/images/ui/exercises/abs.webp');
+		background-size: contain;
+		background-repeat: no-repeat;
+		width: 32px;
+		height: 32px;
+		content: '';
 	}
 }
 </style>

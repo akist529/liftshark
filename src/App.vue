@@ -110,25 +110,25 @@ export default defineComponent({
 	display: grid;
 		grid-template-columns: 1fr;
 		grid-template-rows: auto 1fr auto;
-	height: 100vh;
 	overflow: hidden;
 	position: relative;
+	height: 100vh;
 
 	#router-view {
+		/* Positioning */
 		grid-row: 2 / 3;
 		grid-column: 1 / -1;
-
 		display: flex;
 			flex-direction: column;
 			align-items: center;
-		padding: 20px;
 		overflow-x: hidden;
 		overflow-y: scroll;
-
-		font-family: var(--content-font);
-
 		position: relative;
 			z-index: 2;
+
+		/* Visual */
+		font-family: var(--content-font);
+		padding: 20px;
 	}
 }
 

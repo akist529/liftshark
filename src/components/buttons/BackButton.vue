@@ -1,22 +1,9 @@
 <template>
-<button>
-    <img
-        alt="Back"
-        :src="assetspath('./ui/double_arrow_left.webp')" />
-</button>
+<button class="BackButton"></button>
 </template>
 
-<script lang="ts">
-import { defineComponent } from 'vue';
-import { fetchImages } from '@/mixins/fetchImages';
-
-export default defineComponent({
-    mixins: [fetchImages]
-});
-</script>
-
 <style scoped lang="scss">
-button {
+.BackButton {
     /* Positioning */
     display: flex;
         justify-content: center;
@@ -29,7 +16,14 @@ button {
         border-radius: 10px;
     cursor: pointer;
 
-    img {
+    // Icon
+    &::after {
+        background-image: url('/public/images/icons/double_arrow_left.svg');
+            background-size: contain;
+            background-repeat: no-repeat;
+        width: 32px;
+        height: 32px;
+        content: '';
         filter: invert(1);
     }
 }

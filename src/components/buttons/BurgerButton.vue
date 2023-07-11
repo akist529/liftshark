@@ -1,14 +1,8 @@
 <template>
-<div class="burger-menu">
-	<div v-if="open" class="burger-menu-items">
-        <slot></slot>
-    </div>
-    <button @click="setMenuOpen">
-        <img
-          alt="Hamburger"
-          :src="assetspath('./ui/menu.webp')" />
-    </button>
-</div>
+<button
+	class="BurgerButton menuOpen"
+	@click="$emit('setMenuOpen')"
+></button>
 </template>
 
 <script lang="ts">
@@ -16,41 +10,44 @@ import { defineComponent } from 'vue';
 import { fetchImages } from '@/mixins/fetchImages';
 
 export default defineComponent({
-  data () {
-    return {
-      open: false
-    }
-  },
-  methods: {
-    setMenuOpen () {
-      this.open = !this.open
-    }
-  },
-  mixins: [fetchImages]
+  mixins: [fetchImages],
+  props: ['menuOpen']
 });
 </script>
 
 <style scoped lang="scss">
-.burger-menu {
+.BurgerButton {
 	/* Positioning */
 	display: flex;
-		flex-direction: column;
 		justify-content: center;
 		align-items: center;
 	width: 35vw;
 		max-width: 200px;
+	padding: 15px 10px;
+	background-color: rgb(20, 20, 20);
+	cursor: pointer;
+	border: none;
+		border-radius: 10px;
 
-	.burger-menu-items {
-		display: grid;
+	&::after {
+		background-size: contain;
+            background-repeat: no-repeat;
+        width: 64px;
+        height: 44px;
+        content: '';
+		filter: invert(1);
 	}
+}
 
-	button {
-		padding: 10px;
+.menuOpen {
+	&::after {
+		background-image: url('/public/images/icons/menu.svg');
+	}
+}
 
-		img {
-			width: 90px;
-			height: 30px;
-		}
+.menuClosed {
+	&::after {
+		background-image: url('/public/images/icons/menu_open.svg');
 	}
 }
 </style>
