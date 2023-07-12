@@ -1,0 +1,38 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<svg
+   height="40"
+   viewBox="0 96 720 800"
+   width="36"
+   version="1.1"
+   id="svg35"
+   sodipodi:docname="calendar_month.svg"
+   inkscape:version="1.2.2 (b0a8486, 2022-12-01)"
+   xmlns:inkscape="http://www.inkscape.org/namespaces/inkscape"
+   xmlns:sodipodi="http://sodipodi.sourceforge.net/DTD/sodipodi-0.dtd"
+   xmlns="http://www.w3.org/2000/svg"
+   xmlns:svg="http://www.w3.org/2000/svg">
+  <defs
+     id="defs39" />
+  <sodipodi:namedview
+     id="namedview37"
+     pagecolor="#ffffff"
+     bordercolor="#000000"
+     borderopacity="0.25"
+     inkscape:showpageshadow="2"
+     inkscape:pageopacity="0.0"
+     inkscape:pagecheckerboard="0"
+     inkscape:deskcolor="#d1d1d1"
+     showgrid="false"
+     inkscape:zoom="12.583333"
+     inkscape:cx="17.960265"
+     inkscape:cy="20.02649"
+     inkscape:window-width="1920"
+     inkscape:window-height="928"
+     inkscape:window-x="0"
+     inkscape:window-y="25"
+     inkscape:window-maximized="1"
+     inkscape:current-layer="svg35" />
+  <path
+     d="M 60,896 Q 36,896 18,878 0,860 0,836 V 216 q 0,-24 18,-42 18,-18 42,-18 h 65 V 96 h 65 v 60 H 530 V 96 h 65 v 60 h 65 q 24,0 42,18 18,18 18,42 v 620 q 0,24 -18,42 -18,18 -42,18 z m 0,-60 H 660 V 406 H 60 Z M 60,346 H 660 V 216 H 60 Z m 0,0 V 216 Z M 360,576 Q 343,576 331.5,564.5 320,553 320,536 320,519 331.5,507.5 343,496 360,496 q 17,0 28.5,11.5 Q 400,519 400,536 400,553 388.5,564.5 377,576 360,576 Z m -160,0 Q 183,576 171.5,564.5 160,553 160,536 160,519 171.5,507.5 183,496 200,496 q 17,0 28.5,11.5 Q 240,519 240,536 240,553 228.5,564.5 217,576 200,576 Z m 320,0 Q 503,576 491.5,564.5 480,553 480,536 480,519 491.5,507.5 503,496 520,496 q 17,0 28.5,11.5 Q 560,519 560,536 560,553 548.5,564.5 537,576 520,576 Z M 360,736 Q 343,736 331.5,724.5 320,713 320,696 320,679 331.5,667.5 343,656 360,656 q 17,0 28.5,11.5 Q 400,679 400,696 400,713 388.5,724.5 377,736 360,736 Z m -160,0 Q 183,736 171.5,724.5 160,713 160,696 160,679 171.5,667.5 183,656 200,656 q 17,0 28.5,11.5 Q 240,679 240,696 240,713 228.5,724.5 217,736 200,736 Z m 320,0 Q 503,736 491.5,724.5 480,713 480,696 480,679 491.5,667.5 503,656 520,656 q 17,0 28.5,11.5 Q 560,679 560,696 560,713 548.5,724.5 537,736 520,736 Z"
+     id="path33" />
+</svg>

@@ -1,5 +1,5 @@
 <template>
-<div class="routine-entries">
+<div class="MyRoutine">
 	<DeleteRoutineButton
 		@click="$emit('deleteRoutine, this.routine.id')" />
 	<label for="name">Routine Name</label>
@@ -12,11 +12,11 @@
 		:entry="entry"
 		:exercises="exercises"
 		@getEntries="getEntries()" />
-	<NewButton
+	<AddButton
 		itemAdded="exercise"
 		@clicked="newEntry()">
 		<slot>Add Exercise</slot>
-	</NewButton>
+	</AddButton>
 </div>
 </template>
 
@@ -25,9 +25,9 @@ import { defineComponent, PropType } from 'vue';
 import Cookies from 'js-cookie';
 import { Routine, Entry, Exercise } from '@/types/index';
 // Local components
-import MyRoutineEntry from '@/components/MyRoutineEntry.vue';
-import NewButton from '@/components/buttons/NewButton.vue';
-import DeleteRoutineButton from '@/components/buttons/DeleteRoutineButton.vue';
+import MyRoutineEntry from '@/components/ui/RoutinesView/MyRoutine/MyRoutineEntry.vue';
+import AddButton from '@/components/buttons/AddButton.vue';
+import DeleteRoutineButton from './MyRoutine/DeleteRoutineButton.vue';
 
 export default defineComponent({
 	data () {
@@ -41,7 +41,7 @@ export default defineComponent({
 	},
 	components: {
 		MyRoutineEntry,
-		NewButton,
+		AddButton,
 		DeleteRoutineButton
 	},
 	props: {
@@ -208,7 +208,7 @@ export default defineComponent({
 </script>
 
 <style lang="scss">
-.routine-entries {
+.MyRoutine {
 	/* Positioning */
 	display: flex;
 		flex-direction: column;

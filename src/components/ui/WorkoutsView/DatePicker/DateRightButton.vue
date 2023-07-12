@@ -1,36 +1,31 @@
 <template>
-<button class="menu-btn">
-    <slot></slot>
-    <span :style="{ 'background-image': image }"></span>
-</button>
+<button title="Next Month" class="DateRightButton" @click="$emit('changeDateForward')"></button>
 </template>
 
 <script lang="ts">
 import { defineComponent } from 'vue';
+import { fetchImages } from '../../../../mixins/fetchImages';
 
 export default defineComponent({
-    props: ['image']
+    mixins: [fetchImages]
 });
 </script>
 
 <style scoped lang="scss">
-button {
+.DateRightButton {
     /* Positioning */
     display: flex;
         justify-content: center;
         align-items: center;
+        gap: 5px;
 
     /* Visual */
-    background-color: var(--button-bg-color);
-    color: white;
-    padding: 5px;
-    width: 35vw;
-        min-width: 140px;
-    cursor: pointer;
+    background: none;
     border: none;
-    border-radius: 10px;
+    cursor: pointer;
 
-    span {
+    &::after {
+        background-image: url('/public/images/icons/chevron_right.svg');
         background-size: contain;
         background-repeat: no-repeat;
         width: 32px;

@@ -1,12 +1,12 @@
 <template>
-<div class="my-stats">
+<main class="my-stats">
     <h1>My Statistics</h1>
     <nav>
         <ul>
             <li v-for="page in statPages" :key="page">
                 <button
-                    @click="setPageShown(page)"
                     :class="isPageShown(page) ? 'page-active' : 'page-inactive'"
+                    @click="setPageShown(page)"
                 >{{ page }}</button>
             </li>
         </ul>
@@ -15,7 +15,7 @@
     <WeightLog v-if="pageShown === 'Weight'" />
     <MeasurementLog v-if="pageShown === 'Measurements'" />
     <PRLog v-if="pageShown === 'PRs'" />
-</div>
+</main>
 </template>
 
 <script lang="ts">
@@ -61,43 +61,41 @@ export default defineComponent({
     display: flex;
 		flex-direction: column;
 
-    nav {
-        ul {
-			/* Positioning */
-            display: grid;
-				grid-template-columns: repeat(3, 1fr);
-				justify-items: center;
-				align-items: center;
-			width: 300px;
+    nav ul {
+        /* Positioning */
+        display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            justify-items: center;
+            align-items: center;
+        width: 300px;
+        position: relative;
+
+        /* Visual */
+        list-style-type: none;
+        font-size: 16px;
+        background: rgb(215, 215, 215);
+        border: 3px solid rgb(175, 175, 175);
+
+        li {
             position: relative;
+            width: 100%;
 
-			/* Visual */
-            list-style-type: none;
-            font-size: 16px;
-            background: rgb(215, 215, 215);
-            border: 3px solid rgb(175, 175, 175);
-
-            li {
+            button {
+                /* Positioning */
                 position: relative;
                 width: 100%;
 
-                button {
-					/* Positioning */
-                    position: relative;
-                    width: 100%;
+                /* Visual */
+                background: none;
+                border: none;
+                cursor: pointer;
+                padding: 5px;
+            }
 
-					/* Visual */
-                    background: none;
-                    border: none;
-                    cursor: pointer;
-                    padding: 5px;
-                }
-
-                .page-active {
-                    font-size: 16px;
-                    font-weight: 700;
-                    background: rgb(195,195,195);
-                }
+            .page-active {
+                font-size: 16px;
+                font-weight: 700;
+                background: rgb(195,195,195);
             }
         }
     }

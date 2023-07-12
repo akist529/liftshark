@@ -1,8 +1,8 @@
 import { createRouter, createWebHistory, RouteRecordRaw } from 'vue-router';
 import DashboardView from '@/views/DashboardView.vue';
-import WorkoutView from '@/views/WorkoutView.vue';
+import WorkoutsView from '@/views/WorkoutsView.vue';
 import WorkoutDetailView from '@/views/WorkoutDetailView.vue';
-import RoutineView from '@/views/RoutineView.vue';
+import RoutinesView from '@/views/RoutinesView.vue';
 import RoutineDetailView from '@/views/RoutineDetailView.vue';
 import StatsView from '@/views/StatsView.vue';
 import WeightView from '@/views/WeightView.vue';
@@ -14,13 +14,13 @@ import PageErrorView from '@/views/PageErrorView.vue';
 const routes: Array<RouteRecordRaw> = [
 	{
 		path: '/',
-		name: 'dashboard',
+		name: 'Dashboard - Gym Tracker',
 		component: DashboardView
 	},
 	{
 		path: '/workouts',
-		name: 'workouts',
-		component: WorkoutView
+		name: 'Workouts - Gym Tracker',
+		component: WorkoutsView
 	},
 	{
 		path: '/workouts/:date',
@@ -29,22 +29,22 @@ const routes: Array<RouteRecordRaw> = [
 	},
 	{
 		path: '/routines',
-		name: 'routines',
-		component: RoutineView
+		name: 'Routines - Gym Tracker',
+		component: RoutinesView
 	},
 	{
 		path: '/routines/:id',
-		name: 'routineDetail',
+		name: 'Routine Detail - Gym Tracker',
 		component: RoutineDetailView
 	},
 	{
 		path: '/stats',
-		name: 'stats',
+		name: 'Stats - Gym Tracker',
 		component: StatsView
 	},
 	{
 		path: '/stats/weight',
-		name: 'weight',
+		name: 'Weight - Gym Tracker',
 		component: WeightView
 	},
 	{
@@ -54,18 +54,18 @@ const routes: Array<RouteRecordRaw> = [
 	},
 	{
 		path: '/exercises',
-		name: 'exercises',
+		name: 'Exercise List - Gym Tracker',
 		component: ExercisesView
 	},
 	{
 		path: '/exercise/:id',
-		name: 'exercise',
+		name: 'Exercise - Gym Tracker',
 		component: ExerciseView,
 		props: true
 	},
 	{
 		path: '/:catchAll(.*)*',
-		name: 'pageError',
+		name: '404 - Page Not Found - Gym Tracker',
 		component: PageErrorView
 	}
 ];

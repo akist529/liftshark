@@ -1,12 +1,12 @@
 <template>
-<button type="button" @click="$emit('clicked')">
+<button class="AddButton" type="button" @click="$emit('clicked')">
     <div>
         <img
             :alt="itemAdded"
-            :src="assetspath(`./ui/${itemAdded}.svg`)" />
+            :src="`/public/images/icons/${itemAdded}.svg`" />
         <img
             alt="Add"
-            :src="assetspath('./ui/add.webp')" />
+            src='/public/images/icons/add.svg' />
     </div>
     <slot></slot>
 </button>
@@ -23,7 +23,7 @@ export default defineComponent({
 </script>
 
 <style scoped lang="scss">
-button {
+.AddRoutineButton {
     /* Positioning */
     display: grid;
         grid-template-columns: auto 1fr;

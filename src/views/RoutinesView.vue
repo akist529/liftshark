@@ -1,29 +1,16 @@
 <template>
-<div class="RoutineView">
+<div class="RoutinesView">
 	<h1>My Routines</h1>
-	<select
-		name="day"
-		id="day"
-		class="ArrowDown"
-		ref="day"
-		:style="`background-image: url(${assetspath('./ui/expand_more.webp')}), linear-gradient(to left, var(--button-bg-color) 0px, var(--button-bg-color) 30px, white 30px, white 100%);`"
-		@change="updateActiveDay">
-		<option v-for="day of weekdays"
-			:value="day"
-			:key="day"
-			:selected="day === activeDay"
-		>{{ day }}</option>
-	</select>
+	<SelectDay @change="updateActiveDay" />
 	<MyRoutine v-for="routine in filterRoutines()"
 		:routine="routine"
 		:exercises="exercises"
 		:key="routine.id"
 		@getUserRoutines="getUserRoutines()"
-		@deleteRoutine="deleteRoutine(id)"
-	/>
-	<NewButton itemAdded="routine" @clicked="newRoutine()">
+		@deleteRoutine="deleteRoutine(id)" />
+	<AddButton itemAdded="routine" @clicked="newRoutine()">
 		<span>New Routine</span>
-	</NewButton>
+	</AddButton>
 </div>
 </template>
 
@@ -34,8 +21,9 @@ import Cookies from 'js-cookie';
 import { fetchImages } from '@/mixins/fetchImages';
 import { Exercise, Routine } from '@/types/index';
 // Local components
-import NewButton from '@/components/buttons/NewButton.vue';
-import MyRoutine from '@/components/MyRoutine.vue';
+import AddButton from '@/components/buttons/AddButton.vue';
+import MyRoutine from '@/components/ui/RoutinesView/MyRoutine.vue';
+import SelectDay from '@/components/ui/RoutinesView/SelectDay.vue';
 
 export default defineComponent({
 	data () {
@@ -51,6 +39,12 @@ export default defineComponent({
 			routines,
 			exercises,
 			userToken
+		});
+	},
+	provide () {
+		return ({
+			weekdays: this.weekdays,
+			activeDay: this.activeDay
 		});
 	},
 	watch: {
@@ -172,8 +166,9 @@ export default defineComponent({
 		}
 	},
 	components: {
-		NewButton,
-		MyRoutine
+		AddButton,
+		MyRoutine,
+		SelectDay
 	},
 	mixins: [fetchImages],
 	async created () {
@@ -192,7 +187,7 @@ export default defineComponent({
 </script>
 
 <style scoped lang="scss">
-.RoutineView {
+.RoutinesView {
 	display: flex;
 		flex-direction: column;
 		gap: 30px;

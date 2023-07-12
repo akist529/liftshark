@@ -1,26 +1,26 @@
 <template>
 <LoadIcon v-if="!loaded && !error" />
 <h1 v-if="error">Error!</h1>
-<div v-if="loaded" class="ExerciseView">
+<article v-if="loaded" class="ExerciseView">
 	<h1>{{ exercise.name }}</h1>
 	<h2 v-if="exercise.muscles.length">Primary Muscles</h2>
 	<ul v-if="exercise.muscles.length">
 		<li v-for="muscle in exercise.muscles" :key="muscle">
-			<span :style="getImage('muscles', getSlug(getMuscleName(muscle)))"></span>
+			<span :style="getLocalImage('muscles', getSlug(getMuscleName(muscle)))"></span>
 			{{ getMuscleName(muscle) }}
 		</li>
 	</ul>
 	<h2 v-if="exercise.muscles_secondary.length">Secondary Muscles</h2>
 	<ul v-if="exercise.muscles_secondary.length">
 		<li v-for="muscle in exercise.muscles_secondary" :key="muscle">
-			<span :style="getImage('muscles', getSlug(getMuscleName(muscle)))"></span>
+			<span :style="getLocalImage('muscles', getSlug(getMuscleName(muscle)))"></span>
 			{{ getMuscleName(muscle) }}
 		</li>
 	</ul>
 	<h2 v-if="exercise.equipment.length">Equipment</h2>
 	<ul v-if="exercise.equipment.length">
 		<li v-for="item in exercise.equipment" :key="item">
-			<span :style="getImage('equipment', getSlug(getEquipmentName(item)))"></span>
+			<span :style="getLocalImage('equipment', getSlug(getEquipmentName(item)))"></span>
 			{{ getEquipmentName(item) }}
 		</li>
 	</ul>
@@ -35,26 +35,30 @@
 			</figure>
 		</li>
 	</ul>
-	<div class="exercise-btns">
+	<BurgerMenu v-if="menuOpen" />
+	<footer class="exercise-btns">
 		<BackButton
 			class="back-btn"
 			@click="$router.back()" />
-		<div>
+		<div class="burger-column">
 			<BurgerButton
 				:menuOpen="menuOpen"
 				@setMenuOpen="setMenuOpen" />
-			<BurgerMenu v-if="menuOpen" />
 		</div>
 		<BookmarkButton
 			class="bookmark-btn" />
-	</div>
-</div>
+	</footer>
+</article>
 </template>
 
 <script lang="ts">
 import { defineComponent } from 'vue';
 import { fetchData } from '@/mixins/fetchData';
 import { fetchImages } from '@/mixins/fetchImages';
+import { fetchMuscles } from '@/mixins/fetchMuscles';
+import { fetchEquipment } from '@/mixins/fetchEquipment';
+import { fetchExerciseImages } from '@/mixins/fetchExerciseImages';
+import { fetchExerciseData } from '@/mixins/fetchExerciseData';
 import { Exercise, Muscle, Equipment, Category, Image } from '@/types/index';
 // Local components
 import BookmarkButton from '@/components/buttons/BookmarkButton.vue';
@@ -71,11 +75,9 @@ export default defineComponent({
 		LoadIcon,
 		BurgerMenu
 	},
-	mixins: [fetchData, fetchImages],
+	mixins: [fetchData, fetchImages, fetchMuscles, fetchEquipment, fetchExerciseImages, fetchExerciseData],
 	data () {
 		const exercise = {} as Exercise;
-		const muscles: Muscle[] = [];
-		const equipment: Equipment[] = [];
 		const categories: Category[] = [];
 		const images: Image[] = [];
 		const menuOpen = false;
@@ -84,8 +86,6 @@ export default defineComponent({
 
 		return ({
 			exercise,
-			muscles,
-			equipment,
 			categories,
 			images,
 			loaded: false,
@@ -115,7 +115,7 @@ export default defineComponent({
 		getSlug (name: string) {
 			return name.split(' ').join('-').replaceAll('(', '').replaceAll(')', '').toLowerCase();
 		},
-		getImage (folder: string, name: string) {
+		getLocalImage (folder: string, name: string) {
 			return { 'background-image': `url('/images/${folder}/${this.getSlug(name)}.webp')` };
 		}
 	},
@@ -129,23 +129,16 @@ export default defineComponent({
 		}
 	},
 	async created () {
-		// eslint-disable-next-line no-var
-		var exerciseSuccess = false;
 		const slug = this.displayName.split(' ').join('+');
-		let i = 0;
-		console.log(slug);
 
-		await this.getResults(`https://wger.de/api/v2/exercise/?name=${slug}&language=2`, 'name')
-				.then(data => {
-					if (data && data.length) {
-						this.exercise = data[0] as Exercise;
-						exerciseSuccess = true;
-					}
-				}).catch(error => {
-					console.log(error);
-				});
+		// Attempt to fetch exercise data with default slug
+		const exerciseData = await this.getExerciseData(slug);
+			if (exerciseData) {
+				this.exercise = exerciseData;
+			}
 
-		if (!exerciseSuccess) {
+		// Attempt to fetch exercise data with lowercase slug
+		if (!Object.keys(this.exercise).length) {
 			const slugArr = slug.split('+');
 
 			for (let i = 1; i < slugArr.length; i++) {
@@ -153,21 +146,14 @@ export default defineComponent({
 			}
 
 			const newSlug = slugArr.join('+');
-			console.log(newSlug);
 
-			await this.getResults(`https://wger.de/api/v2/exercise/?name=${newSlug}&language=2`, 'name')
-				.then(data => {
-					if (data && data.length) {
-						this.exercise = data[0] as Exercise;
-						exerciseSuccess = true;
-					}
-				}).catch(error => {
-					console.log(error);
-				});
+			const exerciseData = await this.getExerciseData(newSlug);
+				if (exerciseData) this.exercise = exerciseData;
 		}
 
-		if (!exerciseSuccess) {
-			i = 0;
+		// Attempt to fetch exercise data by turning each letter to opposite case
+		if (!Object.keys(this.exercise).length) {
+			let i = 0;
 
 			do {
 				const slugArr = slug.split('');
@@ -178,29 +164,19 @@ export default defineComponent({
 					slugArr[i] = slug.charAt(i).toUpperCase();
 				}
 
-				if (slugArr[i] === '+') {
-					slugArr[i] = '-';
-				}
-
+				if (slugArr[i] === '+') slugArr[i] = '-';
 				const newSlug = slugArr.join('');
-				console.log(newSlug);
 
-				await this.getResults(`https://wger.de/api/v2/exercise/?name=${newSlug}&language=2`, 'name')
-					.then(data => {
-						if (data && data.length) {
-							this.exercise = data[0] as Exercise;
-							exerciseSuccess = true;
-						}
-					}).catch(error => {
-						console.log(error);
-					});
+				const exerciseData = await this.getExerciseData(newSlug);
+					if (exerciseData) this.exercise = exerciseData;
 
 				i++;
-			} while (!exerciseSuccess && i < slug.length);
+			} while (!Object.keys(this.exercise).length && i < slug.length);
 		}
 
-		if (!exerciseSuccess) {
-			i = 0;
+		// Attempt to fetch exercise data by turning each letter of lowercase string to opposite case
+		if (!Object.keys(this.exercise).length) {
+			let i = 0;
 
 			do {
 				const slugArr = slug.toLowerCase().split('');
@@ -211,57 +187,32 @@ export default defineComponent({
 					slugArr[i] = slug.charAt(i).toUpperCase();
 				}
 
-				if (slugArr[i] === '+') {
-					slugArr[i] = '-';
-				}
-
+				if (slugArr[i] === '+') slugArr[i] = '-';
 				const newSlug = slugArr.join('');
-				console.log(newSlug);
 
-				await this.getResults(`https://wger.de/api/v2/exercise/?name=${newSlug}&language=2`, 'name')
-					.then(data => {
-						if (data && data.length) {
-							this.exercise = data[0] as Exercise;
-							exerciseSuccess = true;
-						}
-					}).catch(error => {
-						console.log(error);
-					});
+				const exerciseData = await this.getExerciseData(newSlug);
+					if (exerciseData) this.exercise = exerciseData;
 
 				i++;
-			} while (!exerciseSuccess && i < slug.length);
+			} while (!Object.keys(this.exercise).length && i < slug.length);
 		}
 
-		if (this.exercise === undefined) {
+		// If no data found, return error
+		if (!Object.keys(this.exercise).length) {
 			this.error = true;
 			return;
 		}
 
-		await this.getResults('https://wger.de/api/v2/muscle?limit=999', 'name')
-			.then(data => {
-				if (data) this.muscles = data;
-					else this.error = true;
-			});
+		const imageData = await this.getExerciseImages(this.exercise.exercise_base);
+			if (imageData) {
+				this.images = imageData;
+			}
 
-		await this.getResults('https://wger.de/api/v2/equipment?limit=999', 'name')
-			.then(data => {
-				if (data) this.equipment = data;
-					else this.error = true;
-			});
-
-		// eslint-disable-next-line
-		await this.getResults(`https://wger.de/api/v2/exerciseimage/?limit=999&exercise_base=${this.exercise.exercise_base}`, 'id')
-			.then(data => {
-				if (data) {
-					const filteredData = data.filter(image => image.exercise_base === this.exercise.exercise_base);
-
-					for (const image of filteredData) {
-						this.images.push(image);
-					}
-				} else this.error = true;
-			});
-
+		// If successfully loaded, remove load state
 		if (!this.error) this.loaded = true;
+	},
+	beforeMount () {
+		document.title = `${this.displayName} - Gym Tracker`;
 	}
 });
 </script>
@@ -271,7 +222,7 @@ export default defineComponent({
 	/* Positioning */
 	display: flex;
 		flex-direction: column;
-		justify-content: space-between;
+		justify-content: flex-start;
 		gap: 10px;
 	position: relative;
 	width: 100%;
@@ -281,6 +232,7 @@ export default defineComponent({
 
 	/* Visual */
 	padding: 10px;
+	padding-bottom: 100px;
 	font-family: var(--content-font);
 
 	h1 {
@@ -349,9 +301,17 @@ export default defineComponent({
 	}
 
 	.exercise-btns {
+		/* Positioning */
 		display: flex;
-			justify-content: space-evenly;
-			align-items: flex-end;
+			justify-content: space-between;
+		position: fixed;
+			left: 0;
+			right: 0;
+			bottom: 70px;
+
+		/* Visual */
+		background: linear-gradient(to top, rgba(0,0,0,0.6), rgba(0,0,0,0));
+		padding: 10px;
 
 		img {
 			filter: invert(1);

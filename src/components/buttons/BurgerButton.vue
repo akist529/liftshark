@@ -1,6 +1,6 @@
 <template>
 <button
-	class="BurgerButton menuOpen"
+	:class="menuOpen ? 'BurgerButton menuClosed' : 'BurgerButton menuOpen'"
 	@click="$emit('setMenuOpen')"
 ></button>
 </template>
