@@ -22,6 +22,7 @@
 <script lang="ts">
 import { defineComponent } from 'vue';
 import Cookies from 'js-cookie';
+import { useRoutineStore } from '@/stores/routineStore';
 // Local components
 import NavBar from '@/components/NavBar.vue';
 import TopNavBar from '@/components/TopNavBar.vue';
@@ -41,12 +42,14 @@ export default defineComponent({
 		const userToken: string = Cookies.get('token');
 		const loginModalOpen: boolean = JSON.parse(sessionStorage.getItem('loginModalOpen') || 'false');
 		const warningModalOpen: boolean = JSON.parse(sessionStorage.getItem('warningModalOpen') || 'false');
+		const taskStore = useRoutineStore();
 
 		return ({
 			windowWidth,
 			userToken,
 			loginModalOpen,
-			warningModalOpen
+			warningModalOpen,
+			taskStore
 		});
 	},
 	mounted () {

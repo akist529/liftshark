@@ -11,6 +11,7 @@
     "axios": "^1.2.2",
     "core-js": "^3.8.3",
     "js-cookie": "^3.0.1",
+    "pinia": "^2.1.4",
     "vue": "^3.2.13",
     "vue-meta": "^2.4.0",
     "vue-reactive-provide": "^0.3.0",

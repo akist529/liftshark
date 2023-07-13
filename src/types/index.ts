@@ -88,3 +88,12 @@ export interface Workout {
         routine: number
     }
 }
+
+export interface Stat {
+    id: number,
+    attributes: {
+        date: string,
+        type: string,
+        stat: number
+    }
+}
