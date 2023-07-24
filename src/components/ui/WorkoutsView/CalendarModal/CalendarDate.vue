@@ -1,29 +1,24 @@
 <template>
-<div class="CalendarDate">
-    <span id="date">{{ selectedDate }}</span>
+<th class="CalendarDate">
+    <span id="date">{{ workoutStore.selectedDate }}</span>
     <hr/>
     <div>
-        <span>{{ months[selectedMonth] }}</span>
-        <span>{{ selectedYear }}</span>
+        <span>{{ workoutStore.months[workoutStore.selectedMonth] }}</span>
+        <span>{{ workoutStore.selectedYear }}</span>
     </div>
-</div>
+</th>
 </template>
 
 <script lang="ts">
-import { defineComponent, inject } from 'vue';
+import { defineComponent } from 'vue';
+import { useWorkoutStore } from '@/stores/workoutStore';
 
 export default defineComponent({
     data () {
-        const months: string[] = inject('months') || [];
-        const selectedYear: number = inject('selectedYear') || 0;
-		const selectedMonth: number = inject('selectedMonth') || 0;
-		const selectedDate: number = inject('selectedDate') || 0;
+        const workoutStore = useWorkoutStore();
 
         return ({
-            months,
-            selectedYear,
-            selectedMonth,
-            selectedDate
+            workoutStore
         });
     }
 });

@@ -97,3 +97,10 @@ export interface Stat {
         stat: number
     }
 }
+
+export interface ExerciseData {
+    count: number,
+    next: string,
+    previous: string,
+    results: Exercise[]
+}

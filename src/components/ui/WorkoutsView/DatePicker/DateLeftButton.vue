@@ -1,13 +1,24 @@
 <template>
-<button title="Last Month" class="DateLeftButton" @click="$emit('changeDateBack')"></button>
+<button
+    title="Last Month"
+    class="DateLeftButton"
+    @click="workoutStore.changeDateBack"
+></button>
 </template>
 
 <script lang="ts">
 import { defineComponent } from 'vue';
-import { fetchImages } from '../../../../mixins/fetchImages';
+// Pinia stores
+import { useWorkoutStore } from '@/stores/workoutStore';
 
 export default defineComponent({
-    mixins: [fetchImages]
+    data () {
+        const workoutStore = useWorkoutStore();
+
+        return ({
+            workoutStore
+        });
+    }
 });
 </script>
 
@@ -26,8 +37,8 @@ export default defineComponent({
 
     &::after {
         background-image: url('/public/images/icons/chevron_left.svg');
-        background-size: contain;
-        background-repeat: no-repeat;
+            background-size: contain;
+            background-repeat: no-repeat;
         width: 32px;
         height: 32px;
         content: '';

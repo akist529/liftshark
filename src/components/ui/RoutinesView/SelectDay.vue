@@ -3,8 +3,9 @@
     name="day"
     id="day"
     class="SelectDay"
-    ref="day">
-    <option v-for="day of this.weekdays"
+    ref="day"
+    @change="updateActiveDay()">
+    <option v-for="day of routineStore.weekdays"
         :value="day"
         :key="day"
         :selected="isSelected(day)"
@@ -14,12 +15,22 @@
 
 <script lang="ts">
 import { defineComponent } from 'vue';
+import { useRoutineStore } from '@/stores/routineStore';
 
 export default defineComponent({
-    inject: ['weekdays', 'activeDay'],
+    data () {
+        const routineStore = useRoutineStore();
+
+        return ({
+            routineStore
+        });
+    },
     methods: {
         isSelected (day: string) {
-            return day === this.activeDay;
+            return day === this.routineStore.activeDay;
+        },
+        updateActiveDay () {
+            this.routineStore.updateActiveDay((this.$refs.day as HTMLSelectElement).value);
         }
     }
 });
@@ -35,5 +46,6 @@ export default defineComponent({
 	width: 150px;
     font-size: 18px;
 	appearance: none;
+    cursor: pointer;
 }
 </style>

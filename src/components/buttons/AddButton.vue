@@ -1,12 +1,7 @@
 <template>
 <button class="AddButton" type="button" @click="$emit('clicked')">
-    <div>
-        <img
-            :alt="itemAdded"
-            :src="`/public/images/icons/${itemAdded}.svg`" />
-        <img
-            alt="Add"
-            src='/public/images/icons/add.svg' />
+    <div class="icons">
+        <span :style="{ backgroundImage: `url(images/icons/${itemAdded}.svg)` }"></span>
     </div>
     <slot></slot>
 </button>
@@ -23,7 +18,7 @@ export default defineComponent({
 </script>
 
 <style scoped lang="scss">
-.AddRoutineButton {
+.AddButton {
     /* Positioning */
     display: grid;
         grid-template-columns: auto 1fr;
@@ -33,13 +28,25 @@ export default defineComponent({
     /* Visual */
     width: 200px;
     padding: 5px 10px;
+    cursor: pointer;
 
-    div {
+    .icons {
         display: flex;
+            justify-content: center;
+            align-items: center;
             gap: 5px;
 
-        img {
-            height: 20px;
+        span,
+        &::after {
+            content: '';
+            width: 32px;
+            height: 32px;
+            background-size: contain;
+            background-repeat: no-repeat;
+        }
+
+        &::after {
+            background-image: url('/public/images/icons/add.svg');
         }
     }
 }

@@ -1,5 +1,5 @@
 <template>
-<button class="DateModalButton" title="Change Date" @click="$emit('openCalendar')">
+<button class="DateModalButton" title="Change Date" @click="workoutStore.openCalendar">
     <span v-if="dateIsToday"
         id="img-today"></span>
     <span v-else
@@ -7,30 +7,32 @@
     <span v-if="dateIsToday"
         id="today">Today</span>
     <div v-else>
-        <span>{{ months[selectedMonth] }}</span>
+        <span>{{ workoutStore.months[workoutStore.selectedMonth] }}</span>
         <hr/>
-        <span>{{ selectedDate }}</span>
+        <span>{{ workoutStore.selectedDate }}</span>
     </div>
 </button>
 </template>
 
 <script lang="ts">
 import { defineComponent } from 'vue';
-import { fetchImages } from '../../../../mixins/fetchImages';
+import { useWorkoutStore } from '@/stores/workoutStore';
 
 export default defineComponent({
     data () {
+        const workoutStore = useWorkoutStore();
+
         return ({
-            date: new Date()
+            date: new Date(),
+            workoutStore
         });
     },
-    mixins: [fetchImages],
-    inject: ['months', 'selectedYear', 'selectedMonth', 'selectedDate'],
     computed: {
         dateIsToday () {
-            const dateSelected = `${this.selectedYear}-${this.selectedMonth}-${this.selectedDate}`;
+            const dateSelected = `${this.workoutStore.selectedYear}-${this.workoutStore.selectedMonth}-${this.workoutStore.selectedDate}`;
 			const actualDate = `${this.date.getFullYear()}-${this.date.getMonth()}-${this.date.getDate()}`;
-			if (actualDate === dateSelected) {
+
+            if (actualDate === dateSelected) {
 				return true;
 			} else return false;
         }

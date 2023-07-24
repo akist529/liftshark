@@ -22,12 +22,16 @@
 <script lang="ts">
 import { defineComponent } from 'vue';
 import Cookies from 'js-cookie';
-import { useRoutineStore } from '@/stores/routineStore';
 // Local components
 import NavBar from '@/components/NavBar.vue';
 import TopNavBar from '@/components/TopNavBar.vue';
 import LoginModal from '@/components/LoginModal.vue';
 import WarningModal from '@/components/WarningModal.vue';
+// Pinia stores
+import { useExerciseStore } from './stores/exerciseStore';
+import { useRoutineStore } from '@/stores/routineStore';
+import { useStatStore } from './stores/statStore';
+import { useWorkoutStore } from './stores/workoutStore';
 
 export default defineComponent({
 	name: 'App',
@@ -42,14 +46,21 @@ export default defineComponent({
 		const userToken: string = Cookies.get('token');
 		const loginModalOpen: boolean = JSON.parse(sessionStorage.getItem('loginModalOpen') || 'false');
 		const warningModalOpen: boolean = JSON.parse(sessionStorage.getItem('warningModalOpen') || 'false');
-		const taskStore = useRoutineStore();
+
+		const exerciseStore = useExerciseStore();
+		const routineStore = useRoutineStore();
+		const statStore = useStatStore();
+		const workoutStore = useWorkoutStore();
 
 		return ({
 			windowWidth,
 			userToken,
 			loginModalOpen,
 			warningModalOpen,
-			taskStore
+			exerciseStore,
+			routineStore,
+			statStore,
+			workoutStore
 		});
 	},
 	mounted () {
@@ -82,6 +93,11 @@ export default defineComponent({
 		}
 	},
 	created () {
+		this.exerciseStore.getFavorited();
+		this.routineStore.getRoutineData();
+		this.statStore.getStats();
+		this.workoutStore.getWorkouts();
+
 		window.setInterval(() => {
 			this.updateUserToken();
 			this.updateLoginModal();

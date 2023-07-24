@@ -1,8 +1,8 @@
 <template>
-<div class="workout-log">
+<div v-if="routine" class="workout-log">
 	<DeleteButton
 		title="Delete Workout"
-		@click="$emit('deleteWorkout', workout.id)" />
+		@click="workoutStore.deleteWorkout(workout.id)" />
 	<span>{{ routine.attributes.name }}</span>
 	<ul class="exercises">
 		<table v-for="exercise in routine.attributes.exercises" :key="exercise.id">
@@ -26,50 +26,28 @@
 
 <script scoped lang="ts">
 import { defineComponent } from 'vue';
-import Cookies from 'js-cookie';
-import { Routine } from '@/types/index';
+// Pinia stores
+import { useRoutineStore } from '@/stores/routineStore';
+import { useWorkoutStore } from '@/stores/workoutStore';
+// Local components
 import DeleteButton from '@/components/buttons/DeleteButton.vue';
 
 export default defineComponent({
 	data () {
-		const routine: Routine = {
-			id: 0,
-			attributes: {
-				name: '',
-				day: '',
-				exercises: []
-			}
-		}
+		const workoutStore = useWorkoutStore();
+		const routineStore = useRoutineStore();
+		const routine = routineStore.getRoutineById(this.workout.attributes.routine);
 
 		return ({
-			routine
+			routine,
+			routineStore,
+			workoutStore
 		});
 	},
 	components: {
 		DeleteButton
 	},
-	props: ['workout'],
-	async created () {
-		if (Cookies.get('token')) {
-			await fetch(`http://localhost:1337/apis/routines/${this.workout.attributes.routine}`, {
-			method: 'GET',
-			headers: {
-				Authorization: `Bearer ${Cookies.get('token')}`,
-				'Content-Type': 'application/json'
-			}
-			}).then(response => {
-				return response.json()
-			}).then(data => {
-				this.routine = data.data
-			});
-		} else {
-			for (let i = 0; i < JSON.parse(localStorage.getItem('routines') || '[]').length; i++) {
-				if (JSON.parse(localStorage.getItem('routines') || '[]')[i].id === this.workout.attributes.routine) {
-					this.routine = JSON.parse(localStorage.getItem('routines') || '[]')[i];
-				}
-			}
-		}
-	}
+	props: ['workout']
 });
 </script>
 

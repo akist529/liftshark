@@ -1,17 +1,30 @@
 <template>
-<div class="MyRoutine">
+<div :class="routineHidden ? 'MyRoutine hidden' : 'MyRoutine'">
+	<button
+		id="routine-hide"
+		:style="{ backgroundImage: `url(images/icons/expand_${routineHidden ? 'more' : 'less'}.svg)` }"
+		@click="routineHidden = !routineHidden"
+	></button>
 	<DeleteRoutineButton
-		@click="$emit('deleteRoutine, this.routine.id')" />
-	<label for="name">Routine Name</label>
-	<input v-model="name"
-		id="name"
-		@change="updateRoutineName()" />
-	<MyRoutineEntry v-for="entry in entries"
-		:key="entry.id"
-		:routine="routine"
-		:entry="entry"
-		:exercises="exercises"
-		@getEntries="getEntries()" />
+		@click="routineStore.deleteRoutine(routine?.id || 0)" />
+	<div class="routine-name">
+		<span v-if="!editNameOpen" id="span-name">{{ name }}</span>
+		<input v-if="editNameOpen" v-model="name"
+			id="input-name"
+			class="hidden"
+			@change="updateRoutine()" />
+		<button
+			id="edit-name"
+			:style="{ backgroundImage: `url(/images/icons/${editNameOpen ? 'done' : 'edit'}.svg)` }"
+			@click="editNameOpen = !editNameOpen"
+		></button>
+	</div>
+	<ul v-for="entry in routine?.attributes.exercises" :key="entry.id">
+		<MyRoutineEntry
+			:routine="routine"
+			:entry="entry"
+			:exercises="exercises" />
+	</ul>
 	<AddButton
 		itemAdded="exercise"
 		@clicked="newEntry()">
@@ -22,8 +35,8 @@
 
 <script lang="ts">
 import { defineComponent, PropType } from 'vue';
-import Cookies from 'js-cookie';
-import { Routine, Entry, Exercise } from '@/types/index';
+import { Routine, Exercise } from '@/types/index';
+import { useRoutineStore } from '@/stores/routineStore';
 // Local components
 import MyRoutineEntry from '@/components/ui/RoutinesView/MyRoutine/MyRoutineEntry.vue';
 import AddButton from '@/components/buttons/AddButton.vue';
@@ -31,29 +44,22 @@ import DeleteRoutineButton from './MyRoutine/DeleteRoutineButton.vue';
 
 export default defineComponent({
 	data () {
-		const entries: Entry[] = [];
+		const routineStore = useRoutineStore();
 		const name = this.routine?.attributes.name || 'New Routine';
+		const editNameOpen = false;
+		const routineHidden = false;
 
 		return ({
-			entries,
-			name
+			routineStore,
+			name,
+			editNameOpen,
+			routineHidden
 		});
 	},
-	components: {
-		MyRoutineEntry,
-		AddButton,
-		DeleteRoutineButton
-	},
-	props: {
-		routine: Object as PropType<Routine>,
-		exercises: Array as PropType<Exercise[]>
-	},
 	methods: {
-		async newEntry () {
-			const newEntries: Entry[] = this.entries || [];
-
-			newEntries.push({
-				id: this.entries.length,
+		newEntry () {
+			const newEntry = ({
+				id: this.routine?.attributes.exercises?.length || 0,
 				name: '2 Handed Kettlebell Swing',
 				sets: [
 					{
@@ -64,145 +70,32 @@ export default defineComponent({
 				]
 			});
 
-			if (Cookies.get('token')) {
-				await fetch(`http://localhost:1337/api/routines/${this.routine?.id}`, {
-					method: 'PUT',
-					headers: {
-						Authorization: `Bearer ${Cookies.get('token')}`,
-						'Content-Type': 'application/json'
-					},
-					body: JSON.stringify({
-						data: {
-							day: this.routine?.attributes.day,
-							exercises: newEntries
-						}
-					})
-				}).then(response => {
-					console.log(response);
-				}).catch(error => {
-					console.log(error);
-				});
-			} else {
-				const prevRoutines = JSON.parse(localStorage.getItem('routines') || '[]');
+			const entries = this.routine?.attributes.exercises || [];
+			entries?.push(newEntry);
 
-				for (let i = 0; i < prevRoutines.length; i++) {
-					if (prevRoutines[i].id === this.routine?.id) {
-						prevRoutines[i].attributes.exercises = newEntries;
-					}
-				}
-
-				localStorage.setItem('routines', JSON.stringify(prevRoutines));
-			}
-
-			await this.getEntries();
+			this.routineStore.updateRoutine(
+				this.routine?.id || 0,
+				this.name || '',
+				this.routine?.attributes.day || this.routineStore.activeDay,
+				entries);
 		},
-		async getEntries () {
-			if (Cookies.get('token')) {
-				await fetch(`http://localhost:1337/api/routines/${this.routine?.id}`, {
-					method: 'GET',
-					headers: {
-						Authorization: `Bearer ${Cookies.get('token')}`,
-						'Content-Type': 'application/json'
-					}
-				}).then(response => {
-					return response.json();
-				}).then(data => {
-					this.entries = data.data.attributes.exercises || [];
-				}).catch(error => {
-					console.log(error);
-				});
-			} else {
-				JSON.parse(localStorage.getItem('routines') || '[]').forEach(routine => {
-					if (routine.id === this.routine?.id) {
-						this.entries = routine.attributes.exercises || [];
-					}
-				});
-			}
-
-			this.$emit('getUserRoutines');
-		},
-		async getSetCount (entryID: number) {
-			let keyLength = 0;
-
-			if (Cookies.get('token')) {
-				keyLength = await fetch(`http://localhost:1337/api/routines/${this.routine?.id}`, {
-					method: 'GET',
-					headers: {
-						Authorization: `Bearer ${Cookies.get('token')}`,
-						'Content-Type': 'application/json'
-					}
-			}).then(response => {
-				return response.json();
-			}).then(data => {
-				if (data.data.attributes.exercises.length) {
-					for (const entry of data.data.attributes.exercises) {
-						if (entry.id === entryID) {
-							return entry.sets.length || 0;
-						}
-					}
-				} else {
-					return 0;
-				}
-			}).catch(error => {
-				console.log(error);
-			});
-			} else {
-				const currentStorage = JSON.parse(localStorage.getItem('routines') || '[]');
-
-				for (let i = 0; i < currentStorage.length; i++) {
-					if (currentStorage[i].id === this.routine?.id) {
-						for (const entry of (currentStorage[i].attributes.exercises || [])) {
-							if (entry.id === entryID) {
-								keyLength = entry.sets.length;
-							}
-						}
-					}
-				}
-			}
-
-			return keyLength;
-		},
-		async updateRoutineName () {
-			if (Cookies.get('token')) {
-				await fetch(`http://localhost:1337/api/routines/${this.routine?.id}`, {
-					method: 'PUT',
-					headers: {
-						Authorization: `Bearer ${Cookies.get('token')}`,
-						'Content-Type': 'application/json'
-					},
-					body: JSON.stringify({
-						data: {
-							day: this.routine?.attributes.day,
-							name: this.name,
-							exercise: this.routine?.attributes.exercises
-						}
-					})
-				});
-			} else {
-				const oldRoutines: Routine[] = JSON.parse(localStorage.getItem('routines') || '[]');
-				const newRoutines: Routine[] = [];
-
-				for (const routine of oldRoutines) {
-					if (routine.id === this.routine?.id) {
-						newRoutines.push({
-							id: routine.id,
-							attributes: {
-								day: this.routine?.attributes.day,
-								name: this.name,
-								exercises: this.routine?.attributes.exercises
-							}
-						});
-					} else {
-						newRoutines.push(routine);
-					}
-				}
-
-				localStorage.setItem('routines', JSON.stringify(newRoutines));
-			}
+		updateRoutine () {
+			this.routineStore.updateRoutine(
+				this.routine?.id || 0,
+				this.name || '',
+				this.routine?.attributes.day || this.routineStore.activeDay,
+				this.routine?.attributes.exercises || []
+			);
 		}
 	},
-	async created () {
-		await this.getEntries();
+	components: {
+		MyRoutineEntry,
+		AddButton,
+		DeleteRoutineButton
+	},
+	props: {
+		routine: Object as PropType<Routine>,
+		exercises: Array as PropType<Exercise[]>
 	}
 });
 </script>
@@ -212,13 +105,76 @@ export default defineComponent({
 	/* Positioning */
 	display: flex;
 		flex-direction: column;
-		justify-content: center;
 		align-items: center;
 		gap: 10px;
 	position: relative;
+	height: auto;
 
 	/* Visual */
 	padding: 20px;
 	background-color: rgb(206, 206, 206);
+	border-radius: 10px;
+	border: 2px solid rgb(126, 126, 126);
+
+	#routine-hide {
+		display: flex;
+			justify-content: center;
+			align-items: center;
+		background: none;
+		border: none;
+		cursor: pointer;
+		position: absolute;
+			top: 10px;
+			left: 10px;
+		padding: 5px;
+		content: '';
+		width: 32px;
+		height: 32px;
+		background-size: contain;
+		background-repeat: no-repeat;
+
+		&:hover {
+			filter: invert(39%) sepia(19%) saturate(0%) hue-rotate(175deg) brightness(98%) contrast(111%);
+		}
+	}
+
+	.routine-name {
+		display: flex;
+			justify-content: center;
+			align-items: center;
+			gap: 10px;
+
+		#input-name {
+			width: auto;
+			text-align: center;
+		}
+
+		#edit-name {
+			content: '';
+			width: 16px;
+			height: 16px;
+			background: none;
+				background-size: contain;
+				background-repeat: no-repeat;
+			border: none;
+			cursor: pointer;
+
+			&:hover {
+				filter: invert(39%) sepia(19%) saturate(0%) hue-rotate(175deg) brightness(98%) contrast(111%);
+			}
+		}
+	}
+
+	ul {
+		display: flex;
+			flex-direction: column;
+			justify-content: center;
+			align-items: center;
+			gap: 10px;
+	}
+}
+
+.hidden {
+	overflow: hidden;
 }
 </style>

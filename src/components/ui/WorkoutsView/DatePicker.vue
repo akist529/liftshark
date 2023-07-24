@@ -1,12 +1,9 @@
 <template>
-<div class="DatePicker">
-	<DateLeftButton
-        @changeDateBack="$emit('changeDateBack')" />
-	<DateModalButton
-        @openCalendar="$emit('openCalendar')" />
-	<DateRightButton
-        @changeDateForward="$emit('changeDateForward')" />
-</div>
+<header class="DatePicker">
+	<DateLeftButton />
+	<DateModalButton />
+	<DateRightButton />
+</header>
 </template>
 
 <script lang="ts">

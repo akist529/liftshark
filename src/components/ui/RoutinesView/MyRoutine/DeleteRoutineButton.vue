@@ -1,34 +1,34 @@
 <template>
-<button>
-	<img
-		alt="Delete Routine"
-		:src="assetspath('./ui/close.svg')" />
-</button>
+<button class="DeleteRoutineButton"></button>
 </template>
 
-<script lang="ts">
-import { defineComponent } from 'vue';
-import { fetchImages } from '@/mixins/fetchImages';
-
-export default defineComponent({
-	mixins: [fetchImages]
-});
-</script>
-
 <style scoped lang="scss">
-	button {
-		/* Positioning */
-		display: flex;
-			justify-content: center;
-			align-items: center;
-		width: 32px;
-		height: 32px;
-		position: absolute;
-			top: 0;
-			right: 0;
+.DeleteRoutineButton {
+	/* Positioning */
+	display: flex;
+		justify-content: center;
+		align-items: center;
+	position: absolute;
+		top: 5px;
+		right: 5px;
 
-		img {
-			width: 24px;
-		}
+	/* Visual */
+	background: none;
+	border: none;
+	cursor: pointer;
+	padding: 5px;
+
+	&::after {
+		content: '';
+		width: 24px;
+		height: 24px;
+		background-image: url('/public/images/icons/close.svg');
+		background-size: contain;
+		background-repeat: no-repeat;
+	}
+
+	&:hover {
+		filter: invert(16%) sepia(84%) saturate(5402%) hue-rotate(1deg) brightness(98%) contrast(126%);
+	}
 }
 </style>

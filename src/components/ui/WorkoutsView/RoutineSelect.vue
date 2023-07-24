@@ -1,6 +1,19 @@
 <template>
 <div class="RoutineSelect">
-    <SelectRoutine />
+    <select
+		name="routine"
+		id="routine"
+		ref="routine"
+		v-model="routineId">
+		<optgroup v-for="day in routineStore.recordedDays" :key="day" :label="day">
+			<option v-for="routine in routinesOfDay(day)"
+				class="routine-option"
+				:value="routine.id"
+				:key="routine.id"
+				:id="routine.id.toString()"
+			>{{ getOptionName(routine.attributes.name) }}</option>
+		</optgroup>
+	</select>
     <SubmitButton
         title="Log Routine as Workout"
         @click="useRoutine()" />
@@ -9,63 +22,36 @@
 
 <script lang="ts">
 import { defineComponent } from 'vue';
-import Cookies from 'js-cookie';
-import { Workout } from '@/types/index';
-// Mixins
-import { fetchRoutines } from '@/mixins/fetchRoutines';
-import { fetchWorkouts } from '@/mixins/fetchWorkouts';
+// Pinia stores
+import { useWorkoutStore } from '@/stores/workoutStore';
+import { useRoutineStore } from '@/stores/routineStore';
 // Local components
 import SubmitButton from '@/components/buttons/SubmitButton.vue';
-import SelectRoutine from '@/components/ui/WorkoutsView/RoutineSelect/SelectRoutine.vue';
 
 export default defineComponent({
-    mixins: [fetchRoutines, fetchWorkouts],
-    inject: ['selectedYear', 'selectedMonth', 'selectedDate'],
+	data () {
+		const workoutStore = useWorkoutStore();
+		const routineStore = useRoutineStore();
+		const routineId = 0;
+
+		return ({
+			workoutStore,
+			routineStore,
+			routineId
+		});
+	},
     components: {
-        SubmitButton,
-		SelectRoutine
+        SubmitButton
     },
     methods: {
         async useRoutine () {
-			for (const routine of document.querySelectorAll('.routine-option')) {
-				if ((routine as HTMLOptionElement).selected) {
-					if (Cookies.get('token')) {
-						await fetch('http://localhost:1337/api/workouts', {
-							method: 'POST',
-							headers: {
-								Authorization: `Bearer ${Cookies.get('token')}`,
-								'Content-Type': 'application/json'
-							},
-							body: JSON.stringify({
-								data: {
-									date: new Date(this.selectedYear as number, this.selectedMonth as number, this.selectedDate as number, 0).toISOString().split('T')[0],
-									routine: Number((routine as HTMLOptionElement).id)
-								}
-							})
-						}).then(response => {
-							console.log(response);
-						}).catch(error => {
-							console.log(error);
-						});
-					} else {
-						const workouts: Workout[] = JSON.parse(localStorage.getItem('workouts') || '[]');
-						workouts.push({
-							id: JSON.parse(localStorage.getItem('workouts') || '[]').length,
-							attributes: {
-							date: new Date(this.selectedYear as number, this.selectedMonth as number, this.selectedDate as number, 0).toISOString().split('T')[0],
-							routine: Number((routine as HTMLOptionElement).id)
-							}
-						});
-
-						localStorage.setItem('workouts', JSON.stringify(workouts));
-					}
-				}
-			}
-
-			this.fetchWorkouts(this.selectedYear as number, this.selectedMonth as number, this.selectedDate as number);
+			this.workoutStore.addWorkout({
+				date: new Date(this.workoutStore.selectedYear as number, this.workoutStore.selectedMonth as number, this.workoutStore.selectedDate as number, 0).toISOString().split('T')[0],
+				routine: this.routineId
+			});
 		},
         routinesOfDay (day: string) {
-			return this.routines.filter(routine => {
+			return this.routineStore.routines.filter(routine => {
 				return routine.attributes.day === day;
 			});
 		},
@@ -84,17 +70,16 @@ export default defineComponent({
 		align-items: center;
 		gap: 10px;
 
-	.ArrowDown {
-		background-repeat: no-repeat, repeat;
+	select {
+		background-image: url('/public/images/icons/expand_more.svg'),
+			linear-gradient(to left, var(--button-bg-color) 0px, var(--button-bg-color) 30px, white 30px, white 100%);
+			background-repeat: no-repeat, repeat;
 			background-position: right 10px top 50%, 0 0;
 			background-size: .65em auto, 100%;
 		padding: 0 5px;
-		width: 150px;
-	}
-
-	#routine {
 		font-size: 18px;
 		appearance: none;
+		cursor: pointer;
 		width: 224px;
 	}
 }

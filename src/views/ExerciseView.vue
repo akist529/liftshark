@@ -1,37 +1,37 @@
 <template>
-<LoadIcon v-if="!loaded && !error" />
-<h1 v-if="error">Error!</h1>
-<article v-if="loaded" class="ExerciseView">
-	<h1>{{ exercise.name }}</h1>
-	<h2 v-if="exercise.muscles.length">Primary Muscles</h2>
-	<ul v-if="exercise.muscles.length">
-		<li v-for="muscle in exercise.muscles" :key="muscle">
+<LoadIcon v-if="!isLoaded && !isError" />
+<h1 v-if="isError">Error!</h1>
+<article v-if="isLoaded && !isError && exercise.data && muscles.data && equipment.data" class="ExerciseView">
+	<h1>{{ exercise.data.name }}</h1>
+	<h2 v-if="exercise.data.muscles.length">Primary Muscles</h2>
+	<ul v-if="exercise.data.muscles.length">
+		<li v-for="muscle in exercise.data.muscles" :key="muscle">
 			<span :style="getLocalImage('muscles', getSlug(getMuscleName(muscle)))"></span>
 			{{ getMuscleName(muscle) }}
 		</li>
 	</ul>
-	<h2 v-if="exercise.muscles_secondary.length">Secondary Muscles</h2>
-	<ul v-if="exercise.muscles_secondary.length">
-		<li v-for="muscle in exercise.muscles_secondary" :key="muscle">
+	<h2 v-if="exercise.data.muscles_secondary.length">Secondary Muscles</h2>
+	<ul v-if="exercise.data.muscles_secondary.length">
+		<li v-for="muscle in exercise.data.muscles_secondary" :key="muscle">
 			<span :style="getLocalImage('muscles', getSlug(getMuscleName(muscle)))"></span>
 			{{ getMuscleName(muscle) }}
 		</li>
 	</ul>
-	<h2 v-if="exercise.equipment.length">Equipment</h2>
-	<ul v-if="exercise.equipment.length">
-		<li v-for="item in exercise.equipment" :key="item">
+	<h2 v-if="exercise.data.equipment.length">Equipment</h2>
+	<ul v-if="exercise.data.equipment.length">
+		<li v-for="item in exercise.data.equipment" :key="item">
 			<span :style="getLocalImage('equipment', getSlug(getEquipmentName(item)))"></span>
 			{{ getEquipmentName(item) }}
 		</li>
 	</ul>
-	<p v-if="exercise.description" :innerHTML="exercise.description"></p>
-	<ul v-if="images" class="exercise-pics">
-		<li v-for="image in images" :key="image.id">
+	<p v-if="exercise.data.description" :innerHTML="exercise.data.description"></p>
+	<ul v-if="images.isSuccess && images.data.results.length" class="exercise-pics">
+		<li v-for="image in images.data.results" :key="image.id">
 			<figure>
 				<img
 					alt="Exercise Example"
 					:src="image.image" />
-				<figcaption>Example of {{ exercise.name }}</figcaption>
+				<figcaption>Example of {{ exercise.data.name }}</figcaption>
 			</figure>
 		</li>
 	</ul>
@@ -46,20 +46,17 @@
 				@setMenuOpen="setMenuOpen" />
 		</div>
 		<BookmarkButton
-			class="bookmark-btn" />
+			class="bookmark-btn"
+			:exerciseId="exercise.data.id" />
 	</footer>
 </article>
 </template>
 
 <script lang="ts">
 import { defineComponent } from 'vue';
-import { fetchData } from '@/mixins/fetchData';
+import { useQuery } from 'vue-query';
 import { fetchImages } from '@/mixins/fetchImages';
-import { fetchMuscles } from '@/mixins/fetchMuscles';
-import { fetchEquipment } from '@/mixins/fetchEquipment';
-import { fetchExerciseImages } from '@/mixins/fetchExerciseImages';
-import { fetchExerciseData } from '@/mixins/fetchExerciseData';
-import { Exercise, Muscle, Equipment, Category, Image } from '@/types/index';
+import { Muscle, Equipment, Category, Exercise } from '@/types/index';
 // Local components
 import BookmarkButton from '@/components/buttons/BookmarkButton.vue';
 import BackButton from '@/components/buttons/BackButton.vue';
@@ -67,7 +64,132 @@ import BurgerButton from '@/components/buttons/BurgerButton.vue';
 import LoadIcon from '@/components/LoadIcon.vue';
 import BurgerMenu from '@/components/ui/ExerciseView/BurgerMenu.vue';
 
+const getData = async (url: string): Promise<any> => {
+	return await fetch(url)
+		.then(res => res.json())
+		.catch(err => console.log(err));
+}
+
+const getExerciseData = async (slug: string): Promise<Exercise | undefined> => {
+	let slugArr = slug.split('-');
+
+	for (let i = 0; i < slugArr.length; i++) {
+		slugArr[i] = slugArr[i][0].toUpperCase() + slugArr[i].slice(1);
+	}
+
+	let newSlug = slugArr.join('+');
+
+	// Attempt to fetch exercise data with default slug (all first letters uppercase)
+	let exercise = await fetch(`https://wger.de/api/v2/exercise/?name=${newSlug}&language=2`)
+		.then(res => res.json())
+		.then(data => data.results[0])
+		.catch(err => console.log(err));
+
+	if (exercise) return exercise;
+
+	// Attempt to fetch exercise data with lowercase slug (all first letters lowercase)
+	slugArr = slug.split('-');
+
+	for (let i = 1; i < slugArr.length; i++) {
+		slugArr[i] = slugArr[i][0].toLowerCase() + slugArr[i].slice(1);
+	}
+
+	newSlug = slugArr.join('+');
+
+	exercise = await fetch(`https://wger.de/api/v2/exercise/?name=${newSlug}&language=2`)
+		.then(res => res.json())
+		.then(data => data.results[0])
+		.catch(err => console.log(err));
+
+	if (exercise) return exercise;
+
+	// Attempt to fetch exercise data by changing case for each first letter of each word
+	for (let i = 0; i < slugArr.length; i++) {
+		slugArr = slug.split('-');
+
+		for (let i = 0; i < slugArr.length; i++) {
+			slugArr[i] = slugArr[i][0].toUpperCase() + slugArr[i].slice(1);
+		}
+
+		slugArr[i] = slugArr[i][0].toLowerCase() + slugArr[i].slice(1);
+		newSlug = slugArr.join('+');
+
+		exercise = await fetch(`https://wger.de/api/v2/exercise/?name=${newSlug}&language=2`)
+			.then(res => res.json())
+			.then(data => data.results[0])
+			.catch(err => console.log(err));
+
+		if (exercise) return exercise;
+	}
+
+	// Attempt to fetch exercise data by turning each letter to opposite case
+	for (let i = 0; i < slug.length; i++) {
+		const slugArr = slug.replaceAll('-', '+').split('');
+
+		if (slugArr[i] === slug.charAt(i).toUpperCase()) {
+			slugArr[i] = slug.charAt(i).toLowerCase();
+		} else {
+			slugArr[i] = slug.charAt(i).toUpperCase();
+		}
+
+		if (slugArr[i] === '+') slugArr[i] = '-';
+		newSlug = slugArr.join('');
+
+		exercise = await fetch(`https://wger.de/api/v2/exercise/?name=${newSlug}&language=2`)
+			.then(res => res.json())
+			.then(data => data.results[0])
+			.catch(err => console.log(err));
+
+		if (exercise) return exercise;
+	}
+
+	// Attempt to fetch exercise data by turning each letter of lowercase string to opposite case
+	for (let i = 0; i < slug.length; i++) {
+		const slugArr = slug.toLowerCase().replaceAll('-', '+').split('');
+
+		if (slugArr[i] === slug.charAt(i).toUpperCase()) {
+			slugArr[i] = slug.charAt(i).toLowerCase();
+		} else {
+			slugArr[i] = slug.charAt(i).toUpperCase();
+		}
+
+		if (slugArr[i] === '+') slugArr[i] = '-';
+		newSlug = slugArr.join('');
+
+		exercise = await fetch(`https://wger.de/api/v2/exercise/?name=${newSlug}&language=2`)
+			.then(res => res.json())
+			.then(data => data.results[0])
+			.catch(err => console.log(err));
+
+		if (exercise) return exercise;
+	}
+}
+
 export default defineComponent({
+	data () {
+		const categories: Category[] = [];
+		const menuOpen = false;
+		const routerName = this.$route.params.id as string;
+		const exerciseBase = 0;
+		const error = true;
+
+		const exercise = useQuery('exercise', () => getExerciseData(this.$route.params.id as string));
+		const muscles = useQuery('muscles', () => getData('https://wger.de/api/v2/muscle?limit=999'));
+		const equipment = useQuery('equipment', () => getData('https://wger.de/api/v2/equipment?limit=999'));
+		const images = useQuery(['images', this.exerciseBase], () => getData(`https://wger.de/api/v2/exerciseimage/?limit=999&exercise_base=${this.exerciseBase}`), { enabled: false });
+
+		return ({
+			exercise,
+			categories,
+			menuOpen,
+			routerName,
+			muscles,
+			equipment,
+			images,
+			exerciseBase,
+			error
+		});
+	},
 	components: {
 		BookmarkButton,
 		BackButton,
@@ -75,28 +197,10 @@ export default defineComponent({
 		LoadIcon,
 		BurgerMenu
 	},
-	mixins: [fetchData, fetchImages, fetchMuscles, fetchEquipment, fetchExerciseImages, fetchExerciseData],
-	data () {
-		const exercise = {} as Exercise;
-		const categories: Category[] = [];
-		const images: Image[] = [];
-		const menuOpen = false;
-		const routerName = this.$route.params.id as string;
-		const error = false;
-
-		return ({
-			exercise,
-			categories,
-			images,
-			loaded: false,
-			menuOpen,
-			routerName,
-			error
-		});
-	},
+	mixins: [fetchImages],
 	methods: {
 		getMuscleName (item: number) {
-			const muscle = this.muscles.find((muscle: Muscle) => muscle.id === item);
+			const muscle = this.muscles.data.results.find((muscle: Muscle) => muscle.id === item);
 
 			if (!muscle) return '';
 				else if (muscle.name_en) {
@@ -104,7 +208,7 @@ export default defineComponent({
 				} else return muscle.name;
 		},
 		getEquipmentName (item: number) {
-			const equipment = this.equipment.find((piece: Equipment) => piece.id === item);
+			const equipment = this.equipment.data.results.find((piece: Equipment) => piece.id === item);
 
 			if (!equipment) return '';
 				else return equipment.name;
@@ -126,90 +230,28 @@ export default defineComponent({
 			}).join(' ');
 
 			return displayName;
+		},
+		isLoaded () {
+			if (this.exercise.isLoading || this.muscles.isLoading || this.equipment.isLoading) {
+				return false;
+			} else return true;
+		},
+		isError () {
+			if (this.exercise.isError || this.muscles.isError || this.equipment.isError) {
+				return true;
+			} else return false;
 		}
 	},
-	async created () {
-		const slug = this.displayName.split(' ').join('+');
-
-		// Attempt to fetch exercise data with default slug
-		const exerciseData = await this.getExerciseData(slug);
-			if (exerciseData) {
-				this.exercise = exerciseData;
-			}
-
-		// Attempt to fetch exercise data with lowercase slug
-		if (!Object.keys(this.exercise).length) {
-			const slugArr = slug.split('+');
-
-			for (let i = 1; i < slugArr.length; i++) {
-				slugArr[i] = slugArr[i][0].toLowerCase() + slugArr[i].slice(1);
-			}
-
-			const newSlug = slugArr.join('+');
-
-			const exerciseData = await this.getExerciseData(newSlug);
-				if (exerciseData) this.exercise = exerciseData;
-		}
-
-		// Attempt to fetch exercise data by turning each letter to opposite case
-		if (!Object.keys(this.exercise).length) {
-			let i = 0;
-
-			do {
-				const slugArr = slug.split('');
-
-				if (slugArr[i] === slug.charAt(i).toUpperCase()) {
-					slugArr[i] = slug.charAt(i).toLowerCase();
-				} else {
-					slugArr[i] = slug.charAt(i).toUpperCase();
+	watch: {
+		exercise: {
+			deep: true,
+			handler () {
+				if (this.exercise.isSuccess && this.exercise.data) {
+					this.exerciseBase = this.exercise.data.exercise_base || 0;
+					this.images.refetch();
 				}
-
-				if (slugArr[i] === '+') slugArr[i] = '-';
-				const newSlug = slugArr.join('');
-
-				const exerciseData = await this.getExerciseData(newSlug);
-					if (exerciseData) this.exercise = exerciseData;
-
-				i++;
-			} while (!Object.keys(this.exercise).length && i < slug.length);
-		}
-
-		// Attempt to fetch exercise data by turning each letter of lowercase string to opposite case
-		if (!Object.keys(this.exercise).length) {
-			let i = 0;
-
-			do {
-				const slugArr = slug.toLowerCase().split('');
-
-				if (slugArr[i] === slug.charAt(i).toUpperCase()) {
-					slugArr[i] = slug.charAt(i).toLowerCase();
-				} else {
-					slugArr[i] = slug.charAt(i).toUpperCase();
-				}
-
-				if (slugArr[i] === '+') slugArr[i] = '-';
-				const newSlug = slugArr.join('');
-
-				const exerciseData = await this.getExerciseData(newSlug);
-					if (exerciseData) this.exercise = exerciseData;
-
-				i++;
-			} while (!Object.keys(this.exercise).length && i < slug.length);
-		}
-
-		// If no data found, return error
-		if (!Object.keys(this.exercise).length) {
-			this.error = true;
-			return;
-		}
-
-		const imageData = await this.getExerciseImages(this.exercise.exercise_base);
-			if (imageData) {
-				this.images = imageData;
 			}
-
-		// If successfully loaded, remove load state
-		if (!this.error) this.loaded = true;
+		}
 	},
 	beforeMount () {
 		document.title = `${this.displayName} - Gym Tracker`;

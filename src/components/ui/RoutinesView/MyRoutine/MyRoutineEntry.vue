@@ -1,66 +1,73 @@
 <template>
-<div class="routine-entry">
-	<button @click="deleteEntry">DELETE</button>
-	<select name="exercise" ref="name" @change="updateEntry()">
-		<option v-for="exercise in exercises"
-			:value="exercise.name"
-			:key="exercise.name"
-			:selected="exercise.name === entry?.name? true : false"
-		>{{ exercise.name }}</option>
-	</select>
-	<input
-		id="setCount"
-		type="number"
-		min="1"
-		max="6"
-		v-model="setCount"
-		@change="updateEntry()"
-		ref="setCount"
-	/><span> sets</span>
-	<div v-for="set in entry?.sets" :key="set.id">
-		<input
+<li class="routine-entry">
+	<div class="entry-header">
+		<select name="exercise" ref="name" @change="updateEntry()">
+			<option v-for="exercise in exercises"
+				:value="exercise.name"
+				:key="exercise.name"
+				:selected="exercise.name === entry?.name? true : false"
+			>{{ exercise.name }}</option>
+		</select>
+		<div class="entry-setcount">
+			<input
+			id="setCount"
+			type="number"
+			min="1"
+			max="6"
+			v-model="setCount"
+			@change="updateEntry()"
+			ref="setCount"
+			/><span> sets</span>
+		</div>
+		<button class="entry-delete" @click="deleteEntry"></button>
+	</div>
+	<div v-for="set in entry?.sets" :key="set.id" class="entry-set">
+		<div class="set-reps">
+			<input
 			type="number"
 			min="1"
 			max="100"
 			:value="set.reps || 1"
 			:ref="`repCount-${set.id}`"
 			@change="updateEntry()" />
-		<span> reps</span>
-		<input
+			<span> reps</span>
+		</div>
+		<div class="set-weight">
+			<input
 			type="number"
 			min="1"
 			max="500"
 			:value="set.weight || 1"
 			:ref="`weight-${set.id}`"
 			@change="updateEntry()" />
-		<span> lbs.</span>
+			<span> lbs.</span>
+		</div>
 	</div>
-</div>
+</li>
 </template>
 
 <script lang="ts">
 import { defineComponent } from 'vue';
 import type { PropType } from 'vue';
 import Cookies from 'js-cookie';
-import { fetchData } from '@/mixins/fetchData';
-import { Routine, Entry, Exercise, Set } from '@/types/index';
+import { Routine, Entry, Set, Exercise } from '@/types/index';
+import { useRoutineStore } from '@/stores/routineStore';
 
 export default defineComponent({
 	data () {
 		const setCount = this.entry?.sets.length;
+		const routineStore = useRoutineStore();
 
 		return ({
-			setCount
+			setCount,
+			routineStore
 		});
 	},
 	props: {
 		routine: Object as PropType<Routine>,
 		entry: Object as PropType<Entry>,
-		exercises: {
-			type: Array as PropType<Exercise[]>
-		}
+		exercises: Array as PropType<Exercise[]>
 	},
-	mixins: [fetchData],
 	watch: {
 		setCount (newSetCount) {
 			if (newSetCount < 1) {
@@ -71,50 +78,15 @@ export default defineComponent({
 		}
 	},
 	methods: {
-		filterEntries () {
-			const filteredEntries: Entry[] = [];
-
-			this.routine?.attributes.exercises?.forEach(exercise => {
-				if (exercise.id !== this.entry?.id) {
-					filteredEntries.push(exercise);
-				}
-			});
-
-			return filteredEntries;
-		},
 		async deleteEntry () {
-			if (Cookies.get('token')) {
-				await fetch(`http://localhost:1337/api/routines/${this.routine?.id}`, {
-					method: 'PUT',
-					headers: {
-						Authorization: `Bearer ${Cookies.get('token')}`,
-						'Content-Type': 'application/json'
-					},
-					body: JSON.stringify({
-						data: {
-							day: this.routine?.attributes?.day,
-							exercises: this.filterEntries()
-						}
-					})
-				}).then(response => {
-					console.log('ENTRY DELETED:', response);
-				}).catch(error => {
-					console.log('ENTRY DELETE FAILED:', error);
-				});
-			} else {
-				const routines = JSON.parse(localStorage.getItem('routines') || '[]');
-				const newEntries = this.filterEntries();
+			const entries = this.routine?.attributes.exercises?.filter((entry: Entry) => entry.id !== this.entry?.id);
 
-				for (let i = 0; i < routines.length; i++) {
-					if (routines[i].id === this.routine?.id) {
-						routines[i].attributes.exercises = newEntries;
-					}
-				}
-
-				localStorage.setItem('routines', JSON.stringify(routines));
-			}
-
-			this.$emit('getEntries');
+			this.routineStore.updateRoutine(
+				this.routine?.id || 0,
+				this.routine?.attributes.name || '',
+				this.routine?.attributes.day || this.routineStore.activeDay,
+				entries || []
+			);
 		},
 		async updateEntry () {
 			const updatedEntries: Entry[] = [];
@@ -201,8 +173,74 @@ export default defineComponent({
 	/* Positioning */
 	display: flex;
 		flex-direction: column;
+		gap: 10px;
 
 	/* Visual */
+	padding: 10px;
+	border: 2px solid rgb(161, 161, 161);
+	border-radius: 10px;
 	background-color: rgb(230, 230, 230);
+
+	.entry-header {
+		display: grid;
+		grid-template-columns: 1fr auto auto;
+		gap: 10px;
+
+		select {
+			text-overflow: ellipsis;
+			cursor: pointer;
+		}
+
+		.entry-setcount {
+			display: flex;
+				justify-content: center;
+				align-items: center;
+				gap: 5px;
+
+			input {
+				width: 32px;
+				text-align: center;
+			}
+		}
+
+		.entry-delete {
+			background: none;
+			border: none;
+			cursor: pointer;
+
+			&::after {
+				display: block;
+				content: '';
+				width: 16px;
+				height: 16px;
+				background-image: url('/public/images/icons/delete.svg');
+				background-size: contain;
+				background-repeat: no-repeat;
+			}
+
+			&:hover {
+				filter: invert(16%) sepia(84%) saturate(5402%) hue-rotate(1deg) brightness(98%) contrast(126%);
+			}
+		}
+	}
+
+	.entry-set {
+		display: flex;
+			justify-content: space-around;
+			align-items: center;
+
+		input {
+			width: 48px;
+			text-align: center;
+		}
+
+		.set-reps,
+		.set-weight {
+			display: flex;
+				justify-content: center;
+				align-items: center;
+				gap: 10px;
+		}
+	}
 }
 </style>

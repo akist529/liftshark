@@ -1,35 +1,43 @@
 <template>
-<div class="CalendarModal">
-	<CloseButton @click="$emit('handleCalendar')" />
-	<div class="calendar-ctrls">
-		<PrevMonthButton @changeMonthBack="changeToLastMonth" />
-		<CalendarDate />
-		<NextMonthButton @changeMonthForward="changeToNextMonth" />
-	</div>
-	<div class="calendar-btns">
-		<button v-for="day in firstDayInMonth"
-			:key="day"
-			class="prev-month"
-			@click="changeToLastMonth(day)"
-		>{{ lastDateInPreviousMonth - (firstDayInMonth - day) }}</button>
-		<button v-for="day in daysInMonth"
-			:key="day"
-			:class="(day === selectedDate) ? 'active-day' : ''"
-			@click="$emit('setSelectedDate', day)"
-		>{{ day }}</button>
-		<button v-for="day in (42 - (daysInMonth + firstDayInMonth))"
-			:key="day"
-			class="next-month"
-			@click="changeToNextMonth(day)"
-		>{{ day }}</button>
-	</div>
-</div>
+<dialog open class="CalendarModal">
+	<CloseButton @click="workoutStore.closeCalendar" />
+	<table>
+		<thead>
+			<tr>
+				<PrevMonthButton
+					@click="workoutStore.changeMonthBack" />
+				<CalendarDate />
+				<NextMonthButton
+					@click="workoutStore.changeMonthForward" />
+			</tr>
+		</thead>
+		<tbody>
+			<button v-for="day in workoutStore.firstDateInMonth"
+				:key="day"
+				class="prev-month"
+				@click="changeToLastMonth(day)"
+			>{{ workoutStore.lastDateInPreviousMonth - (workoutStore.firstDateInMonth - day) }}</button>
+			<button v-for="day in workoutStore.daysInMonth"
+				:key="day"
+				:class="(day === workoutStore.selectedDate) ? 'active-day' : ''"
+				@click="workoutStore.setSelectedDate(day)"
+			>{{ day }}</button>
+			<button v-for="day in (42 - (workoutStore.daysInMonth + workoutStore.firstDateInMonth))"
+				:key="day"
+				class="next-month"
+				@click="changeToNextMonth(day)"
+			>{{ day }}</button>
+		</tbody>
+	</table>
+</dialog>
 </template>
 
 <script lang="ts">
-import { defineComponent, inject } from 'vue';
+import { defineComponent } from 'vue';
 // Mixins
 import { fetchImages } from '@/mixins/fetchImages';
+// Pinia stores
+import { useWorkoutStore } from '@/stores/workoutStore';
 // Local components
 import CloseButton from '@/components/buttons/CloseButton.vue';
 import PrevMonthButton from '@/components/ui/WorkoutsView/CalendarModal/PrevMonthButton.vue';
@@ -38,25 +46,10 @@ import CalendarDate from '@/components/ui/WorkoutsView/CalendarModal/CalendarDat
 
 export default defineComponent({
 	data () {
-		// Injected data
-		const selectedYear: number = inject<any>('selectedYear');
-		const selectedMonth: number = inject<any>('selectedMonth') || 0;
-		const selectedDate: number = inject<any>('selectedDate') || 0;
-		const date: Date = inject('date') || new Date();
-		const months: string[] = inject('months') || [];
-
-		const firstDayInMonth = new Date(selectedYear, selectedMonth, 1).getDay();
-		console.log(selectedYear);
-		const lastDateInPreviousMonth = new Date(selectedYear, selectedMonth, 0).getDate();
+		const workoutStore = useWorkoutStore();
 
 		return ({
-			selectedYear,
-			selectedMonth,
-			selectedDate,
-			date,
-			months,
-			firstDayInMonth,
-			lastDateInPreviousMonth
+			workoutStore
 		});
 	},
 	components: {
@@ -65,18 +58,7 @@ export default defineComponent({
 		NextMonthButton,
 		CalendarDate
 	},
-	watch: {
-		selectedMonth () {
-			this.firstDayInMonth = this.getFirstDayInMonth();
-			this.lastDateInPreviousMonth = this.getLastDateInPreviousMonth();
-		}
-	},
 	mixins: [fetchImages],
-	computed: {
-		daysInMonth () {
-			return new Date(this.selectedYear as number, this.selectedMonth as number, 0).getDate();
-		}
-	},
 	methods: {
 		getFirstDayInMonth () {
 			const date = new Date(this.selectedYear as number, this.selectedMonth as number, 1);
@@ -87,12 +69,13 @@ export default defineComponent({
 			return date.getDate();
 		},
 		changeToLastMonth (day: number) {
-			this.$emit('setSelectedDate', this.lastDateInPreviousMonth - (this.firstDayInMonth - day));
-			this.$emit('changeMonthBack');
+			const date = this.workoutStore.lastDateInPreviousMonth - (this.workoutStore.firstDateInMonth - day);
+			this.workoutStore.setSelectedDate(date);
+			this.workoutStore.changeMonthBack();
 		},
 		changeToNextMonth (day: number) {
-			this.$emit('setSelectedDate', day);
-			this.$emit('changeMonthForward');
+			this.workoutStore.setSelectedDate(day);
+			this.workoutStore.changeMonthForward();
 		}
 	}
 });
@@ -119,14 +102,14 @@ export default defineComponent({
 	border: 3px solid rgba(0,0,0,0.2);
 	padding: 10px;
 
-	.calendar-ctrls {
+	thead tr {
 		display: flex;
 			justify-content: space-between;
 			align-items: center;
 		width: 100%;
 	}
 
-	.calendar-btns {
+	tbody {
 		/* Positioning */
 		display: grid;
 			grid-template-columns: repeat(7, 40px);

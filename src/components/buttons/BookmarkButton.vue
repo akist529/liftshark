@@ -1,6 +1,36 @@
 <template>
-<button class="BookmarkButton not-favorited"></button>
+<button
+    :class="`BookmarkButton ${favorited ? 'favorited' : 'not-favorited'}`"
+    @click="favorited ? removeFromFavorites(id) : addToFavorites(id)"
+></button>
 </template>
+
+<script lang="ts">
+import { defineComponent } from 'vue';
+import { useExerciseStore } from '@/stores/exerciseStore';
+
+export default defineComponent({
+    data () {
+        const exerciseStore = useExerciseStore();
+
+        return ({
+            favoriteExercises: exerciseStore.favorited,
+            addToFavorites: exerciseStore.addToFavorites,
+            removeFromFavorites: exerciseStore.removeFromFavorites,
+            id: this.exerciseId as number
+        });
+    },
+    props: ['exerciseId'],
+    computed: {
+        favorited () {
+            const isFavorited = this.favoriteExercises.find((id: number) => id === this.exerciseId);
+
+            if (isFavorited) return true;
+                else return false;
+        }
+    }
+});
+</script>
 
 <style scoped lang="scss">
 .BookmarkButton {

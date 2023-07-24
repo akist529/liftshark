@@ -1,27 +1,28 @@
 <template>
-<button class="NextMonthButton" title="Next Month" @click="$emit('changeMonthForward')">
-    <span>{{ months[(selectedMonth + 12 + 1) % 12] }}</span>
-</button>
+<th class="NextMonthButton">
+    <button title="Next Month" @click="workoutStore.changeMonthForward">
+        <span>{{ workoutStore.months[(workoutStore.selectedMonth + 12 + 1) % 12] }}</span>
+    </button>
+</th>
 </template>
 
 <script lang="ts">
-import { defineComponent, inject } from 'vue';
+import { defineComponent } from 'vue';
+import { useWorkoutStore } from '@/stores/workoutStore';
 
 export default defineComponent({
     data () {
-        const months: string[] = inject('months') || [];
-        const selectedMonth: number = inject('selectedMonth') || 0;
+        const workoutStore = useWorkoutStore();
 
         return ({
-            months,
-            selectedMonth
+            workoutStore
         });
     }
 });
 </script>
 
 <style scoped lang="scss">
-.NextMonthButton {
+th button {
     /* Positioning */
     display: flex;
         justify-content: center;

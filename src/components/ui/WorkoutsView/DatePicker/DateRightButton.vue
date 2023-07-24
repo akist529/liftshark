@@ -1,13 +1,23 @@
 <template>
-<button title="Next Month" class="DateRightButton" @click="$emit('changeDateForward')"></button>
+<button
+    title="Next Month"
+    class="DateRightButton"
+    @click="workoutStore.changeDateForward"
+></button>
 </template>
 
 <script lang="ts">
 import { defineComponent } from 'vue';
-import { fetchImages } from '../../../../mixins/fetchImages';
+import { useWorkoutStore } from '@/stores/workoutStore';
 
 export default defineComponent({
-    mixins: [fetchImages]
+    data () {
+        const workoutStore = useWorkoutStore();
+
+        return ({
+            workoutStore
+        });
+    }
 });
 </script>
 

@@ -1,100 +1,93 @@
 <template>
 <main class="ExercisesView" ref="view">
 	<h1>Exercises</h1>
-	<nav class="page-buttons">
-		<BackButton
-			@click="getPage('previous')" />
-		<ForwardButton
-			@click="getPage('next')" />
-	</nav>
-	<h1 v-if="error">Error!</h1>
-	<LoadIcon v-if="!loaded" />
-	<ul v-if="loaded" class="exercise-list">
-		<MyExercise v-for="exercise in exercises"
+	<ExerciseNavBar v-if="isSuccess && data"
+		:data="data"
+		:refetch="refetch" />
+	<h1 v-if="error || isError">Error!</h1>
+	<LoadIcon v-if="isLoading || isFetching" />
+	<ul v-if="isSuccess && data" class="exercise-list">
+		<MyExercise v-for="exercise in data.results"
 			:key="exercise.id"
 			:exercise="exercise" />
 	</ul>
-	<nav class="page-buttons">
-		<BackButton
-			@click="getPage('previous')" />
-		<ForwardButton
-			@click="getPage('next')" />
-	</nav>
+	<ExerciseNavBar v-if="isSuccess && data"
+		:data="data"
+		:refetch="refetch" />
 	<MyFooter />
 </main>
 </template>
 
 <script lang="ts">
 import { defineComponent } from 'vue';
-import { Exercise } from '@/types/index';
-// Mixins
-import { fetchData } from '@/mixins/fetchData';
+import { useQuery } from 'vue-query';
+import { useExerciseStore } from '@/stores/exerciseStore';
+import { ExerciseData } from '@/types/index';
 // Local components
 import MyExercise from '@/components/ui/ExercisesView/MyExercise.vue';
 import MyFooter from '@/components/ui/ExercisesView/MyFooter.vue';
-import BackButton from '@/components/buttons/BackButton.vue';
-import ForwardButton from '@/components/buttons/ForwardButton.vue';
 import LoadIcon from '@/components/LoadIcon.vue';
+import ExerciseNavBar from '@/components/ui/ExercisesView/ExerciseNavBar.vue';
+
+const getData = async (url: string): Promise<ExerciseData> => {
+	return await fetch(url)
+		.then(res => res.json())
+		.catch(err => console.log(err));
+}
 
 export default defineComponent({
 	data () {
-		const exercises: Exercise[] = [];
+		const exerciseStore = useExerciseStore();
+		const url = exerciseStore.url;
+		const count = exerciseStore.count;
+
+		const { error, isError, isLoading, isFetching, isSuccess, data, refetch } = useQuery(['exercises', exerciseStore.url], () => getData(exerciseStore.url));
 
 		return ({
-			exercises,
-			offset: 0,
-			loaded: false,
-			error: false
+			exerciseStore,
+			url,
+			count,
+			error,
+			isError,
+			isLoading,
+			isFetching,
+			isSuccess,
+			data,
+			refetch
 		});
 	},
 	methods: {
-		getPage: async function (direction: string) {
-			this.loaded = false;
-
-			if (direction === 'next') {
-				this.offset += 10;
-			} else this.offset -= 10;
-
-			if (this.offset < 0) this.offset = 0;
-
-			await this.getResults(`https://wger.de/api/v2/exercise/?limit=10&offset=${this.offset}&language=2`, 'name')
-				.then(data => {
-					if (data === null) return;
-
-					if (data.length > 0) this.exercises = data;
-						else this.offset -= 10;
-
-					(this.$refs.view as HTMLDivElement).scrollTo({ top: 0, behavior: 'smooth' });
-				}).catch(error => {
-					console.log(error);
-				});
-
-			this.loaded = true;
+		nextPage () {
+			if (this.data && this.data.next !== null) {
+				this.exerciseStore.updateUrl(this.data.next);
+			}
+		},
+		previousPage () {
+			if (this.data && this.data.previous !== null) {
+				this.exerciseStore.updateUrl(this.data.previous);
+			}
+		},
+		goToPage (page: number) {
+			const offset = (page - 1) * 20;
+			this.exerciseStore.updateUrl(`https://wger.de/api/v2/exercise/?limit=20&offset=${offset}&language=2`);
 		}
 	},
-	mixins: [fetchData],
+	watch: {
+		exerciseStore: {
+			deep: true,
+			handler () {
+				this.refetch();
+				(this.$refs.view as HTMLDivElement).scrollTo({ top: 0, behavior: 'smooth' });
+			}
+		}
+	},
 	components: {
 		MyExercise,
 		MyFooter,
-		BackButton,
-		ForwardButton,
-		LoadIcon
-	},
-	async created () {
-		this.getResults('https://wger.de/api/v2/exercise/?limit=10&language=2', 'name')
-			.then(data => {
-				if (data && data.length) {
-					this.exercises = data;
-					this.loaded = true;
-					this.error = false;
-				}
-			}).catch(error => {
-				console.log(error);
-				this.loaded = true;
-				this.error = true;
-			});
+		LoadIcon,
+		ExerciseNavBar
 	}
-})
+});
 </script>
 
 <style scoped lang="scss">
@@ -110,12 +103,6 @@ export default defineComponent({
 	h1 {
 		font-family: var(--title-font);
 			font-weight: 700;
-	}
-
-	.page-buttons {
-		display: flex;
-			justify-content: space-evenly;
-		width: 100%;
 	}
 
 	.exercise-list {

@@ -1,63 +1,202 @@
 import { defineStore } from 'pinia';
-import { Routine } from '@/types/index';
+import { Routine, Entry } from '@/types/index';
+import Cookies from 'js-cookie';
+
+const token: string = Cookies.get('token');
 
 export const useRoutineStore = defineStore('routineStore', {
     state: () => ({
-        routines: <Routine[]>[]
+        routines: <Routine[]>[],
+        activeDay: 'Sunday',
+        weekdays: ['Sunday', 'Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday'],
+        loading: false
     }),
     getters: {
-        routines: (state) => {
-            return state.routines;
+        recordedDays: (state) => {
+            return state.weekdays.filter((day: string) => {
+                return state.routines.find((routine: Routine) => routine.attributes.day === day);
+            })
         },
-        sunday: (state) => {
+        activeDayRoutines: (state) => {
+            return state.routines.filter((routine: Routine) => {
+                return routine.attributes.day === state.activeDay;
+            });
+        },
+        getSunday: (state) => {
             return state.routines.filter((routine: Routine) => {
                 return routine.attributes.day === 'Sunday';
             });
         },
-        monday: (state) => {
+        getMonday: (state) => {
             return state.routines.filter((routine: Routine) => {
                 return routine.attributes.day === 'Monday';
             });
         },
-        tuesday: (state) => {
+        getTuesday: (state) => {
             return state.routines.filter((routine: Routine) => {
                 return routine.attributes.day === 'Tuesday';
             });
         },
-        wednesday: (state) => {
+        getWednesday: (state) => {
             return state.routines.filter((routine: Routine) => {
                 return routine.attributes.day === 'Wednesday';
             });
         },
-        thursday: (state) => {
+        getThursday: (state) => {
             return state.routines.filter((routine: Routine) => {
                 return routine.attributes.day === 'Thursday';
             });
         },
-        friday: (state) => {
+        getFriday: (state) => {
             return state.routines.filter((routine: Routine) => {
                 return routine.attributes.day === 'Friday';
             });
         },
-        saturday: (state) => {
+        getSaturday: (state) => {
             return state.routines.filter((routine: Routine) => {
                 return routine.attributes.day === 'Saturday';
             });
         }
     },
     actions: {
-        addRoutine (routine: Routine) {
-            this.routines.push(routine);
+        async addRoutine () {
+            if (token) {
+				await fetch('http://localhost:1337/api/routines', {
+					method: 'POST',
+					headers: {
+                        Authorization: `Bearer ${Cookies.get('token')}`,
+                        'Content-Type': 'application/json'
+					},
+					body: JSON.stringify({
+                        data: {
+                            name: 'New Routine',
+                            day: this.activeDay,
+                            exercises: []
+                        }
+					})
+				}).then(response => {
+					console.log(response);
+				}).catch(error => {
+					console.log(error);
+				});
+			} else {
+				const localRoutines: Routine[] = JSON.parse(localStorage.getItem('routines') || '[]');
+
+				localRoutines.push({
+					id: JSON.parse(localStorage.getItem('routines') || '[]').length,
+					attributes: {
+						name: 'New Routine',
+						day: this.activeDay,
+						exercises: []
+					}
+				});
+
+				localStorage.setItem('routines', JSON.stringify(localRoutines));
+            }
+
+            this.getRoutineData();
         },
-        deleteRoutine (idToDelete: number) {
-            this.routines = this.routines.filter((routine: Routine) => {
+        async updateRoutine (id: number, name: string, day: string, exercises: Entry[]) {
+            const routine = this.routines.find((routine: Routine) => routine.id === id);
+
+            if (routine) {
+                if (Cookies.get('token')) {
+                    await fetch(`http://localhost:1337/api/routines/${id}`, {
+                        method: 'PUT',
+                        headers: {
+                            Authorization: `Bearer ${Cookies.get('token')}`,
+                            'Content-Type': 'application/json'
+                        },
+                        body: JSON.stringify({
+                            data: {
+                                name: name,
+                                day: day,
+                                exercises: exercises
+                            }
+                        })
+                    }).then(response => {
+                        console.log(response);
+                    }).catch(error => {
+                        console.log(error);
+                    });
+                } else {
+                    const routines = this.routines;
+
+                    for (let i = 0; i < routines.length; i++) {
+                        if (routines[i].id === id) {
+                            routines[i].attributes = ({
+                                name: name,
+                                day: day,
+                                exercises: exercises
+                            });
+                        }
+                    }
+
+                    localStorage.setItem('routines', JSON.stringify(routines));
+                }
+            }
+        },
+        async deleteRoutine (idToDelete: number) {
+            const updatedRoutines = this.routines.filter((routine: Routine) => {
                 return routine.id !== idToDelete;
             });
+
+            this.routines = updatedRoutines;
+
+            if (token) {
+				await fetch('http://localhost:1337/apis/routines', {
+					method: 'PUT',
+					headers: {
+						Authorization: `Bearer ${Cookies.get('token')}`,
+						'Content-Type': 'application/json'
+					},
+					body: JSON.stringify({
+                        data: {
+                            updatedRoutines
+                        }
+					})
+				});
+			} else {
+				localStorage.setItem('routines', JSON.stringify(updatedRoutines));
+			}
+
+            this.getRoutineData();
         },
-        updateRoutine (updatedRoutine: Routine) {
-            const filteredRoutines = this.routines.filter((routine: Routine) => routine.id !== updatedRoutine.id);
-            filteredRoutines.push(updatedRoutine);
-            this.routines = filteredRoutines;
+        updateActiveDay (day: string) {
+            this.activeDay = day;
+        },
+        async getRoutineData () {
+            this.loading = true;
+
+            const activeDay = this.weekdays[new Date().getDay()];
+            this.activeDay = activeDay;
+
+            if (token) {
+				await fetch('http://localhost:1337/api/routines', {
+					method: 'GET',
+					headers: {
+						Authorization: `Bearer ${Cookies.get('token')}`,
+						'Content-Type': 'application/json'
+					}
+					}).then(response => {
+						return response.json();
+					}).then(data => {
+						this.routines = data.data;
+					}).catch(error => {
+						console.log(error);
+					});
+            } else {
+                const localRoutines: Routine[] = JSON.parse(localStorage.getItem('routines') || '[]');
+                this.routines = localRoutines;
+            }
+
+            this.loading = false;
+        },
+        getRoutineById (id: number) {
+            const routine = this.routines.find((routine: Routine) => routine.id === id);
+
+            if (routine) return routine;
+                else return null;
         }
     }
 });

@@ -1,27 +1,28 @@
 <template>
-<button class="PrevMonthButton" title="Previous Month" @click="$emit('changeMonthBack')">
-    <span>{{ months[(selectedMonth + 12 - 1) % 12] }}</span>
-</button>
+<th class="PrevMonthButton">
+    <button title="Previous Month" @click="workoutStore.changeMonthBack">
+        <span>{{ workoutStore.months[(workoutStore.selectedMonth + 12 - 1) % 12] }}</span>
+    </button>
+</th>
 </template>
 
 <script lang="ts">
-import { defineComponent, inject } from 'vue';
+import { defineComponent } from 'vue';
+import { useWorkoutStore } from '@/stores/workoutStore';
 
 export default defineComponent({
     data () {
-        const months: string[] = inject('months') || [];
-        const selectedMonth: number = inject('selectedMonth') || 0;
+        const workoutStore = useWorkoutStore();
 
         return ({
-            months,
-            selectedMonth
+            workoutStore
         });
     }
 });
 </script>
 
 <style scoped lang="scss">
-.PrevMonthButton {
+th button {
     /* Positioning */
     display: flex;
         justify-content: center;
