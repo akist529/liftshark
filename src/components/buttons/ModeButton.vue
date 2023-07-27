@@ -1,12 +1,19 @@
 <template>
 <button class="ModeButton" @click="modeStore.toggleDarkMode">
-	<span id="light-mode" :class="modeStore.darkMode ? 'inactive' : 'active'"></span>
+	<span
+		id="light-mode"
+		:class="modeStore.darkMode ? 'inactive' : 'active'"
+	></span>
 	<SliderButton />
-	<span id="dark-mode" :class="modeStore.darkMode ? 'active' : 'inactive'"></span>
+	<span
+		id="dark-mode"
+		:class="modeStore.darkMode ? 'active' : 'inactive'"
+	></span>
 </button>
 </template>
 
 <script lang="ts">
+// Vue imports
 import { defineComponent } from 'vue';
 // Pinia stores
 import { useModeStore } from '@/stores/modeStore';
@@ -54,8 +61,9 @@ export default defineComponent({
 		width: 25px;
 		height: 25px;
 		background-image: url('/public/images/icons/light_mode.svg');
-		background-repeat: no-repeat;
-		background-size: contain;
+			background-repeat: no-repeat;
+			background-size: contain;
+			background-position: center;
 	}
 
 	#dark-mode {
@@ -64,8 +72,9 @@ export default defineComponent({
 		width: 25px;
 		height: 25px;
 		background-image: url('/public/images/icons/dark_mode.svg');
-		background-repeat: no-repeat;
-		background-size: contain;
+			background-repeat: no-repeat;
+			background-size: contain;
+			background-position: center;
 	}
 }
 

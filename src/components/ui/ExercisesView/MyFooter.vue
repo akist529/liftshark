@@ -12,8 +12,8 @@
 footer {
     /* Positioning */
     display: flex;
-    flex-direction: column;
-    gap: 5px;
+        flex-direction: column;
+        gap: 5px;
     grid-row: 2 / 3;
     grid-column: 1 / -1;
     margin: 0 auto;

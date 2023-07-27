@@ -8,9 +8,9 @@
 .WeightLog {
     h1 {
         display: flex;
-        justify-content: center;
-        align-items: center;
-        gap: 10px;
+            justify-content: center;
+            align-items: center;
+            gap: 10px;
 
         &::after {
             display: inline-block;
@@ -20,6 +20,7 @@
             background-image: url('/public/images/icons/heart.webp');
                 background-repeat: no-repeat;
                 background-size: contain;
+                background-position: center;
         }
     }
 }

@@ -123,7 +123,7 @@ export default defineComponent({
 
             .page-active {
                 font-size: 16px;
-                font-weight: 700;
+                    font-weight: 700;
                 background: rgb(195,195,195);
             }
         }

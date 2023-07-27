@@ -18,10 +18,15 @@
 </template>
 
 <script lang="ts">
+// Vue imports
 import { defineComponent } from 'vue';
+// Vue Query imports
 import { useQuery } from 'vue-query';
+// Third-party libraries
 import Cookies from 'js-cookie';
+// Type interfaces
 import { ExerciseData, Routine } from '@/types/index';
+// Pinia stores
 import { useRoutineStore } from '@/stores/routineStore';
 // Local components
 import AddButton from '@/components/buttons/AddButton.vue';
@@ -96,6 +101,7 @@ export default defineComponent({
 			background-image: url('/public/images/icons/report.webp');
 				background-repeat: no-repeat;
 				background-size: contain;
+				background-position: center;
 		}
 	}
 

@@ -7,6 +7,7 @@
 </template>
 
 <script lang="ts">
+// Vue imports
 import { defineComponent } from 'vue';
 // Pinia stores
 import { useWorkoutStore } from '@/stores/workoutStore';
@@ -39,6 +40,7 @@ export default defineComponent({
         background-image: url('/public/images/icons/chevron_left.svg');
             background-size: contain;
             background-repeat: no-repeat;
+            background-position: center;
         width: 32px;
         height: 32px;
         content: '';

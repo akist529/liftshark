@@ -1,6 +1,7 @@
 <template>
 <dialog open class="CalendarModal">
-	<CloseButton @click="workoutStore.closeCalendar" />
+	<CloseButton
+		@click="workoutStore.closeCalendar" />
 	<table>
 		<thead>
 			<tr>
@@ -42,9 +43,8 @@
 </template>
 
 <script lang="ts">
+// Vue imports
 import { defineComponent } from 'vue';
-// Mixins
-import { fetchImages } from '@/mixins/fetchImages';
 // Pinia stores
 import { useWorkoutStore } from '@/stores/workoutStore';
 // Local components
@@ -67,7 +67,6 @@ export default defineComponent({
 		NextMonthButton,
 		CalendarDate
 	},
-	mixins: [fetchImages],
 	methods: {
 		changeToLastMonth (day: number) {
 			const date = this.workoutStore.lastDateInPreviousMonth - (this.workoutStore.firstDayInMonth - day);

@@ -16,8 +16,11 @@
 </template>
 
 <script lang="ts">
+// Vue imports
 import { defineComponent, PropType } from 'vue';
+// Type interfaces
 import { Workout } from '@/types/index';
+// Pinia stores
 import { useRoutineStore } from '@/stores/routineStore';
 
 export default defineComponent({
@@ -29,7 +32,10 @@ export default defineComponent({
         });
     },
     props: {
-        workout: Object as PropType<Workout>
+        workout: {
+            type: Object as PropType<Workout>,
+            required: true
+        }
     },
     computed: {
         routine () {

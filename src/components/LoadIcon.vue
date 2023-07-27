@@ -1,5 +1,5 @@
 <template>
-<div class="loading-icon">
+<div class="LoadIcon">
 	<img v-if="firstFrameShown"
 		alt="Loading..."
 		:src="assetspath('./ui/loading-0.webp')" />
@@ -11,7 +11,9 @@
 </template>
 
 <script lang="ts">
+// Vue imports
 import { defineComponent } from 'vue';
+// Mixins
 import { fetchImages } from '@/mixins/fetchImages';
 
 export default defineComponent({
@@ -35,7 +37,7 @@ export default defineComponent({
 </script>
 
 <style scoped lang="scss">
-.loading-icon {
+.LoadIcon {
 	display: flex;
 		flex-direction: column;
 		justify-content: center;

@@ -1,5 +1,7 @@
 <template>
-<button class="CloseButton"></button>
+<button
+    class="CloseButton"
+></button>
 </template>
 
 <style scoped lang="scss">
@@ -32,8 +34,9 @@
         width: 20px;
         height: 20px;
         background-image: url('/public/images/icons/close.svg');
-        background-repeat: no-repeat;
-        background-size: contain;
+            background-repeat: no-repeat;
+            background-size: contain;
+            background-position: center;
     }
 }
 

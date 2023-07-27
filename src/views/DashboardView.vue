@@ -5,7 +5,10 @@
         <h1 v-if="isMorning">Good morning, Alex!</h1>
         <h1 v-else-if="isNoon">Good afternoon, Alex!</h1>
         <h1 v-else>Good evening, Alex!</h1>
-        <span class="icon" :style="{backgroundImage: `url(${icon})`}"></span>
+        <span
+            class="icon"
+            :style="{backgroundImage: `url(${icon})`}"
+        ></span>
     </header>
     <div v-if="workoutStore.activeWorkouts.length">
         <h2 v-if="workoutStore.activeWorkouts.length > 1">Today's Workouts</h2>
@@ -34,8 +37,11 @@
 </template>
 
 <script lang="ts">
+// Vue imports
 import { defineComponent } from 'vue';
+// Vue Query imports
 import { useQuery } from 'vue-query';
+// Type interfaces
 import { ExerciseData } from '@/types/index';
 // Pinia stores
 import { useRoutineStore } from '@/stores/routineStore';
@@ -100,19 +106,20 @@ export default defineComponent({
 
     header {
         display: flex;
-        justify-content: center;
-        align-items: center;
-        gap: 10px;
+            justify-content: center;
+            align-items: center;
+            gap: 10px;
 
         .icon {
             display: inline-flex;
-            justify-content: center;
-            align-items: center;
+                justify-content: center;
+                align-items: center;
             content: '';
             width: 64px;
             height: 64px;
             background-repeat: no-repeat;
-            background-size: contain;
+                background-size: contain;
+                background-position: center;
         }
     }
 
@@ -130,6 +137,7 @@ export default defineComponent({
             background-image: url('/public/images/icons/diary.webp');
                 background-repeat: no-repeat;
                 background-size: contain;
+                background-position: center;
         }
     }
 }

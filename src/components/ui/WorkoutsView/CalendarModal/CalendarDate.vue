@@ -1,6 +1,8 @@
 <template>
 <th class="CalendarDate">
-    <span id="date">{{ workoutStore.selectedDate }}</span>
+    <span
+        id="date"
+    >{{ workoutStore.selectedDate }}</span>
     <hr/>
     <div>
         <span>{{ workoutStore.months[workoutStore.selectedMonth] }}</span>
@@ -10,7 +12,9 @@
 </template>
 
 <script lang="ts">
+// Vue imports
 import { defineComponent } from 'vue';
+// Pinia stores
 import { useWorkoutStore } from '@/stores/workoutStore';
 
 export default defineComponent({

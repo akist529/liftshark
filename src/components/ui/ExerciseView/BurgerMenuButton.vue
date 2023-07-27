@@ -1,20 +1,28 @@
 <template>
-<button class="menu-btn">
+<button class="BurgerMenuButton">
     <slot></slot>
-    <span :style="{ 'background-image': image }"></span>
+    <span
+        :style="{ 'background-image': image }"
+    ></span>
 </button>
 </template>
 
 <script lang="ts">
-import { defineComponent } from 'vue';
+// Vue imports
+import { defineComponent, PropType } from 'vue';
 
 export default defineComponent({
-    props: ['image']
+    props: {
+        image: {
+            type: Object as PropType<string>,
+            required: true
+        }
+    }
 });
 </script>
 
 <style scoped lang="scss">
-button {
+.BurgerMenuButton {
     /* Positioning */
     display: flex;
         justify-content: center;
@@ -28,11 +36,12 @@ button {
         min-width: 140px;
     cursor: pointer;
     border: none;
-    border-radius: 10px;
+        border-radius: 10px;
 
     span {
         background-size: contain;
-        background-repeat: no-repeat;
+            background-repeat: no-repeat;
+            background-position: center;
         width: 32px;
         height: 32px;
         content: '';

@@ -1,10 +1,13 @@
 <template>
 <div class="SliderButton">
-	<div :class="modeStore.darkMode ? 'slider dark' : 'slider light'"></div>
+	<div
+        :class="modeStore.darkMode ? 'slider dark' : 'slider light'"
+    ></div>
 </div>
 </template>
 
 <script lang="ts">
+// Vue imports
 import { defineComponent } from 'vue';
 // Pinia stores
 import { useModeStore } from '@/stores/modeStore';

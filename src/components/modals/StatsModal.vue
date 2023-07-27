@@ -1,7 +1,8 @@
 <template>
 <ModalBackground>
 <dialog class="StatsModal">
-    <CloseButton @click="statStore.toggleModal" />
+    <CloseButton
+		@click="statStore.toggleModal" />
 </dialog>
 </ModalBackground>
 </template>

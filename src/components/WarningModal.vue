@@ -19,6 +19,7 @@
 </template>
 
 <script scoped lang="ts">
+// Vue imports
 import { defineComponent } from 'vue';
 // Pinia stores
 import { useLoginStore } from '@/stores/loginStore';

@@ -5,7 +5,9 @@
 </template>
 
 <script lang="ts">
-import { defineComponent } from 'vue';
+// Vue imports
+import { defineComponent, PropType } from 'vue';
+// Pinia stores
 import { useExerciseStore } from '../../../../stores/exerciseStore';
 
 export default defineComponent({
@@ -16,7 +18,12 @@ export default defineComponent({
             exerciseStore: exerciseStore
         });
     },
-    props: ['page'],
+    props: {
+        page: {
+            type: Number as PropType<number>,
+            required: true
+        }
+    },
     computed: {
         isSelectedPage () {
             if (!this.exerciseStore.url) return false;
@@ -38,13 +45,13 @@ export default defineComponent({
 <style scoped lang="scss">
 .ExerciseNavButton {
     padding: 10px;
-    border-radius: 50%;
     font-weight: 700;
     border: none;
+        border-radius: 50%;
     cursor: pointer;
     display: flex;
-    justify-content: center;
-    align-items: center;
+        justify-content: center;
+        align-items: center;
 }
 
 .active {

@@ -1,7 +1,8 @@
 <template>
 <ModalBackground>
 <dialog class="WorkoutModal">
-    <CloseButton @click="workoutStore.toggleWorkoutModal" />
+    <CloseButton
+		@click="workoutStore.toggleWorkoutModal" />
     <h1>Add New Workout</h1>
 </dialog>
 </ModalBackground>

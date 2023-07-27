@@ -4,43 +4,64 @@
     <ul>
         <li>
             <router-link class="link" to="/">
-                <span class="icon" :style="{backgroundImage: `url(/images/icons/home.svg)`}"></span>
+                <span
+                    class="icon"
+                    :style="{backgroundImage: `url(/images/icons/home.svg)`}"
+                ></span>
                 <span>Home</span>
             </router-link>
         </li>
         <li>
             <router-link class="link" to="/workouts">
-                <span class="icon" :style="{backgroundImage: `url(/images/icons/menu_book.svg)`}"></span>
+                <span
+                    class="icon"
+                    :style="{backgroundImage: `url(/images/icons/menu_book.svg)`}"
+                ></span>
                 <span>Workouts</span>
             </router-link>
         </li>
         <li>
             <router-link class="link" to="/routines">
-                <span class="icon" :style="{backgroundImage: `url(/images/icons/routine.svg)`}"></span>
+                <span
+                    class="icon"
+                    :style="{backgroundImage: `url(/images/icons/routine.svg)`}"
+                ></span>
                 <span>Routines</span>
             </router-link>
         </li>
         <li v-if="windowWidth < 600">
             <router-link class="link" to="/stats">
-                <span class="icon" :style="{backgroundImage: `url(/images/icons/conditions.svg)`}"></span>
+                <span
+                    class="icon"
+                    :style="{backgroundImage: `url(/images/icons/conditions.svg)`}"
+                ></span>
                 <span>Stats</span>
             </router-link>
         </li>
         <li v-if="windowWidth >= 600">
             <router-link class="link" to="/stats/measurements">
-                <span class="icon" :style="{backgroundImage: `url(/images/icons/body_fat.svg)`}"></span>
+                <span
+                    class="icon"
+                    :style="{backgroundImage: `url(/images/icons/body_fat.svg)`}"
+                ></span>
                 <span>Measurements</span>
             </router-link>
         </li>
         <li v-if="windowWidth >= 600">
             <router-link class="link" to="/stats/weight">
-                <span class="icon" :style="{backgroundImage: `url(/images/icons/scale.svg)`}"></span>
+                <span
+                    class="icon"
+                    :style="{backgroundImage: `url(/images/icons/scale.svg)`}"
+                ></span>
                 <span>Weight</span>
             </router-link>
         </li>
         <li>
             <router-link class="link" to="/exercises">
-                <span class="icon" :style="{backgroundImage: `url(/images/icons/fitness_center.svg)`}"></span>
+                <span
+                    class="icon"
+                    :style="{backgroundImage: `url(/images/icons/fitness_center.svg)`}"
+                ></span>
                 <span>Exercises</span>
             </router-link>
         </li>
@@ -49,6 +70,7 @@
 </template>
 
 <script lang="ts">
+// Vue imports
 import { defineComponent } from 'vue';
 // Local components
 import ModeButton from './buttons/ModeButton.vue';
@@ -122,7 +144,8 @@ export default defineComponent({
                     width: 30px;
                     height: 30px;
                     background-repeat: no-repeat;
-                    background-size: contain;
+                        background-size: contain;
+                        background-position: center;
                     filter: invert(0.25);
                 }
             }

@@ -6,21 +6,27 @@
 	<h2 v-if="exercise.data.muscles.length">Primary Muscles</h2>
 	<ul v-if="exercise.data.muscles.length">
 		<li v-for="muscle in exercise.data.muscles" :key="muscle">
-			<span :style="getLocalImage('muscles', getSlug(getMuscleName(muscle)))"></span>
+			<span
+				:style="getLocalImage('muscles', getSlug(getMuscleName(muscle)))"
+			></span>
 			{{ getMuscleName(muscle) }}
 		</li>
 	</ul>
 	<h2 v-if="exercise.data.muscles_secondary.length">Secondary Muscles</h2>
 	<ul v-if="exercise.data.muscles_secondary.length">
 		<li v-for="muscle in exercise.data.muscles_secondary" :key="muscle">
-			<span :style="getLocalImage('muscles', getSlug(getMuscleName(muscle)))"></span>
+			<span
+				:style="getLocalImage('muscles', getSlug(getMuscleName(muscle)))"
+			></span>
 			{{ getMuscleName(muscle) }}
 		</li>
 	</ul>
 	<h2 v-if="exercise.data.equipment.length">Equipment</h2>
 	<ul v-if="exercise.data.equipment.length">
 		<li v-for="item in exercise.data.equipment" :key="item">
-			<span :style="getLocalImage('equipment', getSlug(getEquipmentName(item)))"></span>
+			<span
+				:style="getLocalImage('equipment', getSlug(getEquipmentName(item)))"
+			></span>
 			{{ getEquipmentName(item) }}
 		</li>
 	</ul>
@@ -53,9 +59,13 @@
 </template>
 
 <script lang="ts">
+// Vue imports
 import { defineComponent } from 'vue';
+// Vue Query imports
 import { useQuery } from 'vue-query';
+// Mixins
 import { fetchImages } from '@/mixins/fetchImages';
+// Type interfaces
 import { Muscle, Equipment, Category, Exercise } from '@/types/index';
 // Local components
 import BookmarkButton from '@/components/buttons/BookmarkButton.vue';
@@ -274,15 +284,15 @@ export default defineComponent({
 
 	/* Visual */
 	padding: 10px;
-	padding-bottom: 100px;
+		padding-bottom: 100px;
 	font-family: var(--content-font);
 
 	h1 {
 		font-family: var(--title-font);
-		font-weight: 700;
-		font-size: 6vw;
+			font-weight: 700;
+			font-size: 6vw;
 		text-align: center;
-		text-transform: uppercase;
+			text-transform: uppercase;
 	}
 
 	h2 {
@@ -304,14 +314,15 @@ export default defineComponent({
 
 		li {
 			display: flex;
-			flex-direction: column;
-			justify-content: center;
-			align-items: center;
+				flex-direction: column;
+				justify-content: center;
+				align-items: center;
 
 			span {
 				display: inline-block;
 				background-size: contain;
-				background-repeat: no-repeat;
+					background-repeat: no-repeat;
+					background-position: center;
 				width: 32px;
 				height: 40px;
 				content: '';
@@ -363,8 +374,9 @@ export default defineComponent({
 	.abs {
 		display: inline-block;
 		background-image: url('/public/images/ui/exercises/abs.webp');
-		background-size: contain;
-		background-repeat: no-repeat;
+			background-size: contain;
+			background-repeat: no-repeat;
+			background-position: center;
 		width: 32px;
 		height: 32px;
 		content: '';

@@ -2,25 +2,23 @@
 <button class="LogButton">
 	<span>Log {{ userToken ? 'Out' : 'In' }}</span>
 	<div class="icon-bg">
-		<span class="icon" :style="{backgroundImage: `url(/images/icons/${userToken ? 'logout' : 'login'}.svg)`}"></span>
+		<span
+			class="icon"
+			:style="{backgroundImage: `url(/images/icons/${userToken ? 'logout' : 'login'}.svg)`}"
+		></span>
 	</div>
 </button>
 </template>
 
 <script lang="ts">
-import { defineComponent } from 'vue';
-import { fetchImages } from '@/mixins/fetchImages';
-import Cookies from 'js-cookie';
+// Vue imports
+import { defineComponent, PropType } from 'vue';
 
 export default defineComponent({
-	data () {
-		return ({
-			Cookies
-		});
-	},
-	mixins: [fetchImages],
 	props: {
-		userToken: String
+		userToken: {
+			type: Object as PropType<string>
+		}
 	}
 });
 </script>
@@ -56,7 +54,8 @@ export default defineComponent({
 			width: 20px;
 			height: 20px;
 			background-repeat: no-repeat;
-			background-size: contain;
+				background-size: contain;
+				background-position: center;
 		}
 	}
 }

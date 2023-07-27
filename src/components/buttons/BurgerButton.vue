@@ -6,12 +6,16 @@
 </template>
 
 <script lang="ts">
-import { defineComponent } from 'vue';
-import { fetchImages } from '@/mixins/fetchImages';
+// Vue imports
+import { defineComponent, PropType } from 'vue';
 
 export default defineComponent({
-  mixins: [fetchImages],
-  props: ['menuOpen']
+	props: {
+		menuOpen: {
+			type: Object as PropType<boolean>,
+			required: true
+		}
+	}
 });
 </script>
 
@@ -32,6 +36,7 @@ export default defineComponent({
 	&::after {
 		background-size: contain;
             background-repeat: no-repeat;
+			background-position: center;
         width: 64px;
         height: 44px;
         content: '';

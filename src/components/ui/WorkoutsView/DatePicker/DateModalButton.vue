@@ -15,7 +15,9 @@
 </template>
 
 <script lang="ts">
+// Vue imports
 import { defineComponent } from 'vue';
+// Pinia stores
 import { useWorkoutStore } from '@/stores/workoutStore';
 
 export default defineComponent({
@@ -70,8 +72,9 @@ export default defineComponent({
 
     #img-today {
         background-image: url('/public/images/icons/today.svg');
-        background-size: contain;
-        background-repeat: no-repeat;
+            background-size: contain;
+            background-repeat: no-repeat;
+            background-position: center;
         width: 40px;
         height: 40px;
         content: '';
@@ -79,8 +82,9 @@ export default defineComponent({
 
     #img-month {
         background-image: url('/public/images/icons/month.svg');
-        background-size: contain;
-        background-repeat: no-repeat;
+            background-size: contain;
+            background-repeat: no-repeat;
+            background-position: center;
         width: 40px;
         height: 40px;
         content: '';

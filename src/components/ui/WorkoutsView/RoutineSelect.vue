@@ -21,6 +21,7 @@
 </template>
 
 <script lang="ts">
+// Vue imports
 import { defineComponent } from 'vue';
 // Pinia stores
 import { useWorkoutStore } from '@/stores/workoutStore';

@@ -1,5 +1,7 @@
 <template>
-<button class="ForwardButton"></button>
+<button
+    class="ForwardButton"
+></button>
 </template>
 
 <style scoped lang="scss">
@@ -21,6 +23,7 @@
         background-image: url('/public/images/icons/arrow_right.svg');
             background-size: contain;
             background-repeat: no-repeat;
+            background-position: center;
         width: 48px;
         height: 48px;
         content: '';

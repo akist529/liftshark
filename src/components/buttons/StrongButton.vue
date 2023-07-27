@@ -1,11 +1,11 @@
 <template>
-<button>
+<button class="StrongButton">
     <slot></slot>
 </button>
 </template>
 
 <style scoped lang="scss">
-button {
+.StrongButton {
     background-color: var(--error-color);
     color: white;
     font-size: 1.5rem;

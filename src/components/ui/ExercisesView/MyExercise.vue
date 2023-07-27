@@ -15,7 +15,7 @@
 		<div v-if="exercise.muscles_secondary.length" class="item-group">
 			<h3>Secondary Muscles</h3>
 			<ul>
-				<li v-for="muscle in exercise.secondary_muscles" :key="muscle">
+				<li v-for="muscle in exercise.muscles_secondary" :key="muscle">
 					<span :style="getLocalImage('muscles', getSlug(getMuscleName(muscle)))"></span>
 					{{ getMuscleName(muscle) }}
 				</li>
@@ -47,10 +47,11 @@
 </template>
 
 <script lang="ts">
-import { defineComponent } from 'vue';
-import { Muscle, Equipment, Image } from '@/types/index';
+// Vue imports
+import { defineComponent, PropType } from 'vue';
+// Type interfaces
+import { Muscle, Equipment, Image, Exercise } from '@/types/index';
 // Mixins
-import { fetchData } from '@/mixins/fetchData';
 import { fetchMuscles } from '@/mixins/fetchMuscles';
 import { fetchEquipment } from '@/mixins/fetchEquipment';
 import { fetchExerciseImages } from '@/mixins/fetchExerciseImages';
@@ -66,8 +67,13 @@ export default defineComponent({
 			images
 		});
 	},
-	props: ['exercise'],
-	mixins: [fetchData, fetchMuscles, fetchEquipment, fetchExerciseImages, fetchImages, getCorrectName, getSlug],
+	props: {
+		exercise: {
+			type: Object as PropType<Exercise>,
+			required: true
+		}
+	},
+	mixins: [fetchMuscles, fetchEquipment, fetchExerciseImages, fetchImages, getCorrectName, getSlug],
 	methods: {
 		getMuscleName (item: number) {
 			const muscle = this.muscles.find((muscle: Muscle) => muscle.id === item);
@@ -165,7 +171,8 @@ export default defineComponent({
 				span {
 					display: inline-block;
 					background-size: contain;
-					background-repeat: no-repeat;
+						background-repeat: no-repeat;
+						background-position: center;
 					width: 16px;
 					height: 20px;
 					content: '';

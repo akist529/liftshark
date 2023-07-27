@@ -1,5 +1,7 @@
 <template>
-<button class="BackButton"></button>
+<button
+    class="BackButton"
+></button>
 </template>
 
 <style scoped lang="scss">
@@ -21,6 +23,7 @@
         background-image: url('/public/images/icons/arrow_left.svg');
             background-size: contain;
             background-repeat: no-repeat;
+            background-position: center;
         width: 48px;
         height: 48px;
         content: '';
@@ -31,7 +34,7 @@
     &:hover {
         &::after {
             background-image: url('/public/images/icons/double_arrow_left.svg');
-            transform: translateX(5px);
+            transform: translateX(-5px);
         }
     }
 }

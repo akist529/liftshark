@@ -1,11 +1,11 @@
 <template>
-    <button>
-        <slot></slot>
-    </button>
+<button class="GenericButton">
+    <slot></slot>
+</button>
 </template>
 
 <style scoped lang="scss">
-button {
+.GenericButton {
     background-color: var(--button-bg-color);
     color: white;
     font-size: 1.5rem;

@@ -16,12 +16,17 @@
 </template>
 
 <script lang="ts">
+// Vue imports
 import { defineComponent, PropType } from 'vue';
+// Type interfaces
 import { Routine } from '@/types/index';
 
 export default defineComponent({
     props: {
-        routine: Object as PropType<Routine>
+        routine: {
+            type: Object as PropType<Routine>,
+            required: true
+        }
     }
 });
 </script>

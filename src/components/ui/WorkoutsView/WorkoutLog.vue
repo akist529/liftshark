@@ -1,5 +1,5 @@
 <template>
-<div v-if="routine" class="workout-log">
+<div v-if="routine" class="WorkoutLog">
 	<DeleteButton
 		title="Delete Workout"
 		@click="workoutStore.deleteWorkout(workout.id)" />
@@ -25,7 +25,10 @@
 </template>
 
 <script scoped lang="ts">
-import { defineComponent } from 'vue';
+// Vue imports
+import { defineComponent, PropType } from 'vue';
+// Type interfaces
+import { Workout } from '@/types/index';
 // Pinia stores
 import { useRoutineStore } from '@/stores/routineStore';
 import { useWorkoutStore } from '@/stores/workoutStore';
@@ -47,12 +50,17 @@ export default defineComponent({
 	components: {
 		DeleteButton
 	},
-	props: ['workout']
+	props: {
+		workout: {
+			type: Object as PropType<Workout>,
+			required: true
+		}
+	}
 });
 </script>
 
 <style scoped lang="scss">
-.workout-log {
+.WorkoutLog {
 	/* Positioning */
     position: relative;
 		z-index: 0;

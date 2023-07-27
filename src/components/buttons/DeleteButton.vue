@@ -1,5 +1,7 @@
 <template>
-<button class="DeleteButton"></button>
+<button
+    class="DeleteButton"
+></button>
 </template>
 
 <style scoped lang="scss">
@@ -30,6 +32,7 @@
         background-image: url('/public/images/icons/delete.svg');
             background-repeat: no-repeat;
             background-size: contain;
+            background-position: center;
     }
 }
 </style>

@@ -14,8 +14,12 @@
 </template>
 
 <script lang="ts">
-import { defineComponent } from 'vue';
+// Vue imports
+import { defineComponent, PropType } from 'vue';
+// Pinia stores
 import { useExerciseStore } from '@/stores/exerciseStore';
+// Type interfaces
+import { ExerciseData } from '@/types/index';
 // Local components
 import BackButton from '@/components/buttons/BackButton.vue';
 import ForwardButton from '@/components/buttons/ForwardButton.vue';
@@ -34,7 +38,16 @@ export default defineComponent({
         ForwardButton,
         ExerciseNavButton
     },
-    props: ['data', 'refetch'],
+	props: {
+		data: {
+			type: Object as PropType<ExerciseData>,
+			required: true
+		},
+		refetch: {
+			type: Function as any,
+			required: true
+		}
+	},
     methods: {
 		nextPage () {
 			if (this.data && this.data.next !== null) {
@@ -70,9 +83,9 @@ export default defineComponent({
 
 		.page-buttons {
 			display: flex;
-			flex-wrap: wrap;
-			justify-content: center;
-			align-items: center;
+				flex-wrap: wrap;
+				justify-content: center;
+				align-items: center;
 		}
 	}
 </style>

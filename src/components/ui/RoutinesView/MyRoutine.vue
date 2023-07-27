@@ -93,8 +93,14 @@ export default defineComponent({
 		CloseButton
 	},
 	props: {
-		routine: Object as PropType<Routine>,
-		exercises: Array as PropType<Exercise[]>
+		routine: {
+			type: Object as PropType<Routine>,
+			required: true
+		},
+		exercises: {
+			type: Array as PropType<Exercise[]>,
+			required: true
+		}
 	}
 });
 </script>
@@ -112,8 +118,8 @@ export default defineComponent({
 	/* Visual */
 	padding: 40px 20px 20px;
 	background-color: rgb(206, 206, 206);
-	border-radius: 10px;
 	border: 2px solid rgb(126, 126, 126);
+		border-radius: 10px;
 
 	#routine-hide {
 		display: flex;
@@ -130,7 +136,8 @@ export default defineComponent({
 		width: 32px;
 		height: 32px;
 		background-size: contain;
-		background-repeat: no-repeat;
+			background-repeat: no-repeat;
+			background-position: center;
 
 		&:hover {
 			filter: invert(39%) sepia(19%) saturate(0%) hue-rotate(175deg) brightness(98%) contrast(111%);
@@ -155,6 +162,7 @@ export default defineComponent({
 			background: none;
 				background-size: contain;
 				background-repeat: no-repeat;
+				background-position: center;
 			border: none;
 			cursor: pointer;
 
@@ -166,9 +174,9 @@ export default defineComponent({
 
 	.btn-newExercise {
 		display: flex;
-		justify-content: center;
-		align-items: center;
-		gap: 10px;
+			justify-content: center;
+			align-items: center;
+			gap: 10px;
 		padding: 5px 10px;
 		cursor: pointer;
 

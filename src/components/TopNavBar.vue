@@ -1,12 +1,15 @@
 <template>
 <nav class="TopNavBar">
 	<ModeButton />
-	<LogButton @click="handleLogButton" />
+	<LogButton
+		@click="handleLogButton" />
 </nav>
 </template>
 
 <script lang="ts">
+// Vue imports
 import { defineComponent } from 'vue';
+// Third-party libraries
 import Cookies from 'js-cookie';
 // Pinia stores
 import { useLoginStore } from '@/stores/loginStore';
@@ -34,9 +37,6 @@ export default defineComponent({
 				this.loginStore.toggleLoginModal();
 			}
 		}
-	},
-	props: {
-		userToken: String
 	}
 });
 </script>

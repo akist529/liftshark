@@ -50,6 +50,7 @@
 </template>
 
 <script lang="ts">
+// Vue imports
 import { defineComponent } from 'vue';
 // Pinia stores
 import { useLoginStore } from '@/stores/loginStore';
@@ -170,8 +171,9 @@ export default defineComponent({
 				width: 32px;
 				height: 32px;
 				background-image: url('/public/images/icons/person.svg');
-				background-repeat: no-repeat;
-				background-size: contain;
+					background-repeat: no-repeat;
+					background-size: contain;
+					background-position: center;
 			}
 		}
 
@@ -182,8 +184,9 @@ export default defineComponent({
 				width: 32px;
 				height: 32px;
 				background-image: url('/public/images/icons/person_add.svg');
-				background-repeat: no-repeat;
-				background-size: contain;
+					background-repeat: no-repeat;
+					background-size: contain;
+					background-position: center;
 			}
 		}
 	}
@@ -205,7 +208,8 @@ export default defineComponent({
 				border: none;
 				cursor: pointer;
 				background-repeat: no-repeat;
-				background-size: contain;
+					background-size: contain;
+					background-position: center;
 				content: '';
 				width: 16px;
 				height: 16px;

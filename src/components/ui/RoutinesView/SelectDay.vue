@@ -14,7 +14,9 @@
 </template>
 
 <script lang="ts">
+// Vue imports
 import { defineComponent } from 'vue';
+// Type interfaces
 import { useRoutineStore } from '@/stores/routineStore';
 
 export default defineComponent({

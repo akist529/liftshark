@@ -1,7 +1,8 @@
 <template>
 <ModalBackground>
 <dialog class="RoutineModal">
-    <CloseButton @click="routineStore.toggleModal" />
+    <CloseButton
+		@click="routineStore.toggleModal" />
 </dialog>
 </ModalBackground>
 </template>

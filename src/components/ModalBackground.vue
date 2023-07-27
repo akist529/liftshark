@@ -1,11 +1,11 @@
 <template>
-<div class="modal-bg">
+<div class="ModalBackground">
     <slot></slot>
 </div>
 </template>
 
 <style scoped lang="scss">
-.modal-bg {
+.ModalBackground {
     /* Positioning */
     width: 100vw;
     height: 100vh;

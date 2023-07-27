@@ -6,7 +6,9 @@
 </template>
 
 <script lang="ts">
-import { defineComponent } from 'vue';
+// Vue imports
+import { defineComponent, PropType } from 'vue';
+// Pinia stores
 import { useExerciseStore } from '@/stores/exerciseStore';
 
 export default defineComponent({
@@ -15,10 +17,15 @@ export default defineComponent({
 
         return ({
             exerciseStore,
-            id: this.exerciseId as number
+            id: this.exerciseId
         });
     },
-    props: ['exerciseId'],
+    props: {
+        exerciseId: {
+            type: Object as PropType<number>,
+            required: true
+        }
+    },
     computed: {
         favorited () {
             const isFavorited = this.exerciseStore.favorited.find((id: number) => id === this.exerciseId);

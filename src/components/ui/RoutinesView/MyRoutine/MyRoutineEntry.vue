@@ -10,13 +10,13 @@
 		</select>
 		<div class="entry-setcount">
 			<input
-			id="setCount"
-			type="number"
-			min="1"
-			max="6"
-			v-model="setCount"
-			@change="updateEntry()"
-			ref="setCount"
+				id="setCount"
+				type="number"
+				min="1"
+				max="6"
+				v-model="setCount"
+				@change="updateEntry()"
+				ref="setCount"
 			/><span> sets</span>
 		</div>
 		<button class="entry-delete" @click="deleteEntry"></button>
@@ -24,22 +24,22 @@
 	<div v-for="set in entry?.sets" :key="set.id" class="entry-set">
 		<div class="set-reps">
 			<input
-			type="number"
-			min="1"
-			max="100"
-			:value="set.reps || 1"
-			:ref="`repCount-${set.id}`"
-			@change="updateEntry()" />
+				type="number"
+				min="1"
+				max="100"
+				:value="set.reps || 1"
+				:ref="`repCount-${set.id}`"
+				@change="updateEntry()" />
 			<span> reps</span>
 		</div>
 		<div class="set-weight">
 			<input
-			type="number"
-			min="1"
-			max="500"
-			:value="set.weight || 1"
-			:ref="`weight-${set.id}`"
-			@change="updateEntry()" />
+				type="number"
+				min="1"
+				max="500"
+				:value="set.weight || 1"
+				:ref="`weight-${set.id}`"
+				@change="updateEntry()" />
 			<span> lbs.</span>
 		</div>
 	</div>
@@ -47,10 +47,13 @@
 </template>
 
 <script lang="ts">
-import { defineComponent } from 'vue';
-import type { PropType } from 'vue';
+// Vue imports
+import { defineComponent, PropType } from 'vue';
+// Third-party libraries
 import Cookies from 'js-cookie';
+// Type interfaces
 import { Routine, Entry, Set, Exercise } from '@/types/index';
+// Pinia stores
 import { useRoutineStore } from '@/stores/routineStore';
 
 export default defineComponent({
@@ -64,9 +67,18 @@ export default defineComponent({
 		});
 	},
 	props: {
-		routine: Object as PropType<Routine>,
-		entry: Object as PropType<Entry>,
-		exercises: Array as PropType<Exercise[]>
+		routine: {
+			type: Object as PropType<Routine>,
+			required: true
+		},
+		entry: {
+			type: Object as PropType<Entry>,
+			required: true
+		},
+		exercises: {
+			type: Array as PropType<Exercise[]>,
+			required: true
+		}
 	},
 	watch: {
 		setCount (newSetCount) {
@@ -178,13 +190,13 @@ export default defineComponent({
 	/* Visual */
 	padding: 10px;
 	border: 2px solid rgb(161, 161, 161);
-	border-radius: 10px;
+		border-radius: 10px;
 	background-color: rgb(230, 230, 230);
 
 	.entry-header {
 		display: grid;
-		grid-template-columns: 1fr auto auto;
-		gap: 10px;
+			grid-template-columns: 1fr auto auto;
+			gap: 10px;
 
 		select {
 			text-overflow: ellipsis;
@@ -214,8 +226,9 @@ export default defineComponent({
 				width: 16px;
 				height: 16px;
 				background-image: url('/public/images/icons/delete.svg');
-				background-size: contain;
-				background-repeat: no-repeat;
+					background-size: contain;
+					background-repeat: no-repeat;
+					background-position: center;
 			}
 
 			&:hover {

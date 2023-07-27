@@ -1,5 +1,7 @@
 <template>
-<button class="SubmitButton"></button>
+<button
+    class="SubmitButton"
+></button>
 </template>
 
 <style scoped lang="scss">
@@ -16,6 +18,7 @@
         background-image: url('/public/images/icons/add_circle.svg');
             background-repeat: no-repeat;
             background-size: contain;
+            background-position: center;
     }
 }
 </style>

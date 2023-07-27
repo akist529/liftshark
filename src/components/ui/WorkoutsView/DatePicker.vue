@@ -7,6 +7,7 @@
 </template>
 
 <script lang="ts">
+// Vue imports
 import { defineComponent } from 'vue';
 // Local components
 import DateLeftButton from './DatePicker/DateLeftButton.vue';

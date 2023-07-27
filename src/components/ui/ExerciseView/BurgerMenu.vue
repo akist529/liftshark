@@ -1,16 +1,18 @@
 <template>
 <div class="BurgerMenu">
-    <BurgerMenuButton :image="'@/../public/images/ui/sidebar/routines.webp'">
-        Add to Routine
-    </BurgerMenuButton>
-    <BurgerMenuButton :image="'@/../public/images/ui/sidebar/workouts.webp'">
-        Add to Workout
-    </BurgerMenuButton>
+    <BurgerMenuButton
+        :image="'@/../public/images/ui/sidebar/routines.webp'"
+    >Add to Routine</BurgerMenuButton>
+    <BurgerMenuButton
+        :image="'@/../public/images/ui/sidebar/workouts.webp'"
+    >Add to Workout</BurgerMenuButton>
 </div>
 </template>
 
 <script lang="ts">
+// Vue imports
 import { defineComponent } from 'vue';
+// Local components
 import BurgerMenuButton from '@/components/ui/ExerciseView/BurgerMenuButton.vue';
 
 export default defineComponent({

@@ -19,9 +19,13 @@
 </template>
 
 <script lang="ts">
+// Vue imports
 import { defineComponent } from 'vue';
+// Vue Query imports
 import { useQuery } from 'vue-query';
+// Pinia stores
 import { useExerciseStore } from '@/stores/exerciseStore';
+// Type interfaces
 import { ExerciseData } from '@/types/index';
 // Local components
 import MyExercise from '@/components/ui/ExercisesView/MyExercise.vue';
@@ -116,6 +120,7 @@ export default defineComponent({
 			background-image: url('/public/images/icons/exercises.webp');
 				background-repeat: no-repeat;
 				background-size: contain;
+				background-position: center;
 		}
 	}
 
