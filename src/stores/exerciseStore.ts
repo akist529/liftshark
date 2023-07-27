@@ -35,9 +35,7 @@ export const useExerciseStore = defineStore('exerciseStore', {
             }
         },
         async removeFromFavorites (exerciseId: number) {
-            const index = this.favorited.indexOf(exerciseId);
-            if (index) this.favorited.splice(index, 1);
-
+            this.favorited = this.favorited.filter((id: number) => id !== exerciseId);
             const favorites = this.favorited;
 
             if (token) {

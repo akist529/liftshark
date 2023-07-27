@@ -101,8 +101,22 @@ export default defineComponent({
 	font-family: var(--content-font);
 
 	h1 {
+		display: flex;
+			justify-content: center;
+			align-items: center;
+			gap: 10px;
 		font-family: var(--title-font);
 			font-weight: 700;
+
+		&::after {
+			display: inline-block;
+			content: '';
+			width: 64px;
+			height: 64px;
+			background-image: url('/public/images/icons/exercises.webp');
+				background-repeat: no-repeat;
+				background-size: contain;
+		}
 	}
 
 	.exercise-list {

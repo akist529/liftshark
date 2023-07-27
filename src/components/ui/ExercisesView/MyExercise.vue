@@ -2,6 +2,7 @@
 <li className="MyExercise">
 	<router-link :to="{ name: 'Exercise - Gym Tracker', params: { id: slug } }">
 		<h2>{{ name }}</h2>
+		<hr />
 		<div v-if="exercise.muscles.length" class="item-group">
 			<h3>Primary Muscles</h3>
 			<ul>
@@ -102,19 +103,19 @@ export default defineComponent({
 
 <style scoped lang="scss">
 .MyExercise {
-	/* Positioning */
-	display: flex;
-		flex-direction: column;
-		gap: 10px;
-
 	/* Visual */
 	border: 2px solid black;
 		border-radius: 10px;
 	padding: 10px;
+	list-style-type: none;
 
 	a {
 		color: black;
 		text-decoration: none;
+
+		display: flex;
+			flex-direction: column;
+			gap: 10px;
 	}
 
 	h2 {
@@ -125,6 +126,12 @@ export default defineComponent({
 
 	h3 {
 		font-size: 1.25rem;
+	}
+
+	hr {
+		height: 3px;
+		background-color: rgb(66, 103, 178);
+		border: none;
 	}
 
 	figure {

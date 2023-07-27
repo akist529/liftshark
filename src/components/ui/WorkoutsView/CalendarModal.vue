@@ -10,19 +10,28 @@
 				<NextMonthButton
 					@click="workoutStore.changeMonthForward" />
 			</tr>
+			<tr>
+				<th>Sun</th>
+				<th>Mon</th>
+				<th>Tue</th>
+				<th>Wed</th>
+				<th>Thu</th>
+				<th>Fri</th>
+				<th>Sat</th>
+			</tr>
 		</thead>
 		<tbody>
-			<button v-for="day in workoutStore.firstDateInMonth"
+			<button v-for="day in workoutStore.firstDayInMonth"
 				:key="day"
 				class="prev-month"
 				@click="changeToLastMonth(day)"
-			>{{ workoutStore.lastDateInPreviousMonth - (workoutStore.firstDateInMonth - day) }}</button>
+			>{{ workoutStore.lastDateInPreviousMonth - (workoutStore.firstDayInMonth - day) }}</button>
 			<button v-for="day in workoutStore.daysInMonth"
 				:key="day"
 				:class="(day === workoutStore.selectedDate) ? 'active-day' : ''"
 				@click="workoutStore.setSelectedDate(day)"
 			>{{ day }}</button>
-			<button v-for="day in (42 - (workoutStore.daysInMonth + workoutStore.firstDateInMonth))"
+			<button v-for="day in (42 - (workoutStore.daysInMonth + workoutStore.firstDayInMonth))"
 				:key="day"
 				class="next-month"
 				@click="changeToNextMonth(day)"
@@ -60,16 +69,8 @@ export default defineComponent({
 	},
 	mixins: [fetchImages],
 	methods: {
-		getFirstDayInMonth () {
-			const date = new Date(this.selectedYear as number, this.selectedMonth as number, 1);
-			return date.getDay();
-		},
-		getLastDateInPreviousMonth () {
-			const date = new Date(this.selectedYear as number, this.selectedMonth as number, 0);
-			return date.getDate();
-		},
 		changeToLastMonth (day: number) {
-			const date = this.workoutStore.lastDateInPreviousMonth - (this.workoutStore.firstDateInMonth - day);
+			const date = this.workoutStore.lastDateInPreviousMonth - (this.workoutStore.firstDayInMonth - day);
 			this.workoutStore.setSelectedDate(date);
 			this.workoutStore.changeMonthBack();
 		},

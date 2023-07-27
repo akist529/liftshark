@@ -1,53 +1,36 @@
 <template>
-<button class="AddButton" type="button" @click="$emit('clicked')">
-    <div class="icons">
-        <span :style="{ backgroundImage: `url(images/icons/${itemAdded}.svg)` }"></span>
-    </div>
-    <slot></slot>
-</button>
+<button class="AddButton" type="button"></button>
 </template>
-
-<script lang="ts">
-import { defineComponent } from 'vue';
-import { fetchImages } from '@/mixins/fetchImages';
-
-export default defineComponent({
-    mixins: [fetchImages],
-    props: ['itemAdded']
-});
-</script>
 
 <style scoped lang="scss">
 .AddButton {
-    /* Positioning */
-    display: grid;
-        grid-template-columns: auto 1fr;
-        justify-items: flex-end;
-        align-items: center;
-
     /* Visual */
-    width: 200px;
-    padding: 5px 10px;
     cursor: pointer;
+    border-radius: 50%;
+    border: none;
+    background-color: #4267B2;
+    width: 64px;
+    height: 64px;
+    position: fixed;
+    bottom: 80px;
+    right: 10px;
+    transform: rotate(0deg);
+    transition: 0.25s ease-out;
 
-    .icons {
-        display: flex;
-            justify-content: center;
-            align-items: center;
-            gap: 5px;
-
-        span,
-        &::after {
-            content: '';
-            width: 32px;
-            height: 32px;
+    &::after {
+        display: inline-block;
+        background-image: url('/public/images/icons/add.svg');
             background-size: contain;
             background-repeat: no-repeat;
-        }
+            background-position: center;
+        content: '';
+        width: 64px;
+        height: 64px;
+        filter: invert(1);
+    }
 
-        &::after {
-            background-image: url('/public/images/icons/add.svg');
-        }
+    &:hover {
+        transform: rotate(90deg);
     }
 }
 </style>

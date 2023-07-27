@@ -1,22 +1,9 @@
 <template>
-<button>
-    <img
-        alt="Close"
-        :src="assetspath('./ui/close.webp')" />
-</button>
+<button class="CloseButton"></button>
 </template>
 
-<script lang="ts">
-import { defineComponent } from 'vue';
-import { fetchImages } from '@/mixins/fetchImages';
-
-export default defineComponent({
-    mixins: [fetchImages]
-});
-</script>
-
 <style scoped lang="scss">
-button {
+.CloseButton {
     /* Positioning */
     display: flex;
         justify-content: center;
@@ -30,14 +17,31 @@ button {
     background: none;
     border: none;
     cursor: pointer;
-
-    img {
-        width: 20px;
-        height: 20px;
-    }
+    transform: rotate(0deg);
+    transition: all 0.25s ease;
 
     &:hover {
-        background: rgba(0,0,0,0.1);
+        animation: rotate 0.25s ease-in-out;
+        transform: rotate(90deg);
+        filter: invert(26%) sepia(75%) saturate(4623%) hue-rotate(349deg) brightness(95%) contrast(145%);
+    }
+
+    &::after {
+        display: inline-block;
+        content: '';
+        width: 20px;
+        height: 20px;
+        background-image: url('/public/images/icons/close.svg');
+        background-repeat: no-repeat;
+        background-size: contain;
+    }
+}
+
+@keyframes rotate {
+    from {
+        transform: rotate(0deg);
+    } to {
+        transform: rotate(90deg);
     }
 }
 </style>

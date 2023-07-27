@@ -1,28 +1,27 @@
 <template>
-<div class="slider-btn">
-	<div :class="getState()"></div>
+<div class="SliderButton">
+	<div :class="modeStore.darkMode ? 'slider dark' : 'slider light'"></div>
 </div>
 </template>
 
 <script lang="ts">
 import { defineComponent } from 'vue';
+// Pinia stores
+import { useModeStore } from '@/stores/modeStore';
 
 export default defineComponent({
-	props: {
-		darkMode: Boolean
-	},
-	methods: {
-		getState () {
-			if (this.darkMode) {
-				return 'slider dark';
-			} else return 'slider light';
-		}
-	}
+    data () {
+        const modeStore = useModeStore();
+
+        return ({
+            modeStore
+        });
+    }
 });
 </script>
 
 <style lang="scss">
-.slider-btn {
+.SliderButton {
     /* Positioning */
     display: flex;
 		align-items: center;
@@ -33,6 +32,7 @@ export default defineComponent({
     width: 40px;
     height: 20px;
     border-radius: 10px;
+    cursor: pointer;
 
     .slider {
         /* Positioning */
@@ -71,6 +71,18 @@ export default defineComponent({
             left: 25px;
         } to {
             left: 0px;
+        }
+    }
+}
+
+@media only screen and (min-width: 992px) {
+    .SliderButton {
+        /* Visual */
+        background-color: rgb(0, 0, 0);
+
+        .slider {
+            /* Visual */
+            background-color: rgb(255, 255, 255);
         }
     }
 }

@@ -1,14 +1,8 @@
 <template>
-<button>
-	<span v-if="userToken">Log Out</span>
-	<span v-if="!userToken">Log In</span>
-	<div>
-		<img v-if="userToken"
-			alt="Log Out"
-			:src="assetspath('./ui/sidebar/logout.webp')" />
-		<img v-if="!userToken"
-			alt="Log In"
-			:src="assetspath('./ui/sidebar/login.webp')" />
+<button class="LogButton">
+	<span>Log {{ userToken ? 'Out' : 'In' }}</span>
+	<div class="icon-bg">
+		<span class="icon" :style="{backgroundImage: `url(/images/icons/${userToken ? 'logout' : 'login'}.svg)`}"></span>
 	</div>
 </button>
 </template>
@@ -32,7 +26,7 @@ export default defineComponent({
 </script>
 
 <style scoped lang="scss">
-button {
+.LogButton {
 	/* Positioning */
 	display: grid;
 		grid-template-columns: 60px 30px;
@@ -44,25 +38,25 @@ button {
 	border: none;
 		border-radius: 10px;
 	overflow: hidden;
+	cursor: pointer;
 
 	span {
 		font-family: var(--title-font);
 	}
 
-	div {
-		/* Positioning */
-		display: flex;
-			justify-content: center;
-			align-items: center;
-
-		/* Visual */
+	.icon-bg {
 		background-color: var(--button-bg-color);
+		padding: 5px;
 
-		img {
+		.icon {
+			/* Visual */
 			filter: invert(1);
-			width: 100%;
-			height: 100%;
-			padding: 5px;
+			display: inline-block;
+			content: '';
+			width: 20px;
+			height: 20px;
+			background-repeat: no-repeat;
+			background-size: contain;
 		}
 	}
 }

@@ -1,5 +1,8 @@
+// Pinia imports
 import { defineStore } from 'pinia';
+// Type interfaces
 import { Workout } from '@/types/index';
+// Third-party libraries
 import Cookies from 'js-cookie';
 
 const token: string = Cookies.get('token');
@@ -13,7 +16,8 @@ export const useWorkoutStore = defineStore('workoutStore', {
         selectedYear: new Date().getFullYear(),
         calendarOpen: false,
         loading: false,
-        date: new Date()
+        date: new Date(),
+        modalOpen: false
     }),
     getters: {
         activeWorkouts: (state) => {
@@ -24,24 +28,27 @@ export const useWorkoutStore = defineStore('workoutStore', {
         getToday: (state) => {
             const today = new Date();
             const year = today.getFullYear();
-            const month = today.getMonth();
+            const month = today.getMonth() + 1;
             const date = today.getDate();
 
             return state.workouts.filter((workout: Workout) => {
                 return workout.attributes.date === `${year}-${month}-${date}`;
             });
         },
-        firstDateInMonth: (state) => {
-            return new Date(state.selectedYear, state.selectedMonth, 1).getDate();
+        firstDayInMonth: (state) => {
+            return new Date(state.selectedYear, state.selectedMonth + 2, 1).getDay();
         },
         lastDateInPreviousMonth: (state) => {
             return new Date(state.selectedYear, state.selectedMonth, 0).getDate();
         },
         daysInMonth: (state) => {
-            return new Date(state.selectedYear, state.selectedMonth, 0).getDate();
+            return new Date(state.selectedYear, state.selectedMonth + 1, 0).getDate();
         }
     },
     actions: {
+        toggleWorkoutModal () {
+            this.modalOpen = !this.modalOpen;
+        },
         openCalendar () {
             this.calendarOpen = true;
         },

@@ -6,9 +6,14 @@
 		:routine="routine"
 		:exercises="exercises.data?.results || []"
 		:key="routine.id" />
-	<AddButton itemAdded="routine" @clicked="routineStore.addRoutine()">
-		<span>New Routine</span>
-	</AddButton>
+	<AddButton
+		title="Add New Routine"
+		@click="routineStore.toggleModal" />
+	<footer>
+		<ul>
+			<li>Report icon by nawicon</li>
+		</ul>
+	</footer>
 </div>
 </template>
 
@@ -76,6 +81,23 @@ export default defineComponent({
 		flex-direction: column;
 		align-items: center;
 		gap: 30px;
+
+	h1 {
+		display: flex;
+			justify-content: center;
+			align-items: center;
+			gap: 10px;
+
+		&::after {
+			display: inline-block;
+			content: '';
+			width: 64px;
+			height: 64px;
+			background-image: url('/public/images/icons/report.webp');
+				background-repeat: no-repeat;
+				background-size: contain;
+		}
+	}
 
 	#day {
 		font-size: 18px;

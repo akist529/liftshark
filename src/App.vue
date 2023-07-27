@@ -1,37 +1,37 @@
 <template>
-<TopNavBar v-if="windowWidth <= 480"
-	@handleLoginModal="handleLoginModal"
-	@handleWarningModal="handleWarningModal"
-	:userToken = userToken />
+<TopNavBar v-if="windowStore.width < 600" />
 <router-view
 	id="router-view"
 	:key="$route.fullPath" />
 <NavBar />
-<LoginModal v-if="loginModalOpen"
-	:loginModalOpen="loginModalOpen"
-	@handleLoginModal="handleLoginModal"
-	:userToken = userToken />
-<WarningModal v-if="warningModalOpen"
-	:warningModalOpen="warningModalOpen"
-	@handleWarningModal="handleWarningModal"
-	@yes="logUserOut">
+<LoginModal v-if="loginStore.modalOpen" />
+<WorkoutModal v-if="workoutStore.modalOpen" />
+<RoutineModal v-if="routineStore.modalOpen" />
+<StatsModal v-if="statStore.modalOpen" />
+<WarningModal v-if="loginStore.warningOpen">
 	<span>Are you sure you want to log out?</span>
 </WarningModal>
 </template>
 
 <script lang="ts">
+// Vue imports
 import { defineComponent } from 'vue';
-import Cookies from 'js-cookie';
+// Pinia stores
+import { useLoginStore } from './stores/loginStore';
 // Local components
 import NavBar from '@/components/NavBar.vue';
 import TopNavBar from '@/components/TopNavBar.vue';
-import LoginModal from '@/components/LoginModal.vue';
+import LoginModal from '@/components/modals/LoginModal.vue';
 import WarningModal from '@/components/WarningModal.vue';
+import WorkoutModal from './components/modals/WorkoutModal.vue';
+import RoutineModal from './components/modals/RoutineModal.vue';
+import StatsModal from './components/modals/StatsModal.vue';
 // Pinia stores
 import { useExerciseStore } from './stores/exerciseStore';
 import { useRoutineStore } from '@/stores/routineStore';
 import { useStatStore } from './stores/statStore';
 import { useWorkoutStore } from './stores/workoutStore';
+import { useWindowStore } from './stores/windowStore';
 
 export default defineComponent({
 	name: 'App',
@@ -39,70 +39,38 @@ export default defineComponent({
 		NavBar,
 		TopNavBar,
 		LoginModal,
-		WarningModal
+		WarningModal,
+		WorkoutModal,
+		RoutineModal,
+		StatsModal
 	},
 	data () {
-		const windowWidth: number = window.innerWidth;
-		const userToken: string = Cookies.get('token');
-		const loginModalOpen: boolean = JSON.parse(sessionStorage.getItem('loginModalOpen') || 'false');
-		const warningModalOpen: boolean = JSON.parse(sessionStorage.getItem('warningModalOpen') || 'false');
-
 		const exerciseStore = useExerciseStore();
 		const routineStore = useRoutineStore();
 		const statStore = useStatStore();
 		const workoutStore = useWorkoutStore();
+		const loginStore = useLoginStore();
+		const windowStore = useWindowStore();
 
 		return ({
-			windowWidth,
-			userToken,
-			loginModalOpen,
-			warningModalOpen,
 			exerciseStore,
 			routineStore,
 			statStore,
-			workoutStore
+			workoutStore,
+			loginStore,
+			windowStore
 		});
 	},
 	mounted () {
 		this.$nextTick(() => {
-			window.addEventListener('resize', this.onResize);
+			window.addEventListener('resize', this.windowStore.resize);
 		});
-	},
-	methods: {
-		onResize () {
-			this.windowWidth = window.innerWidth;
-		},
-		handleLoginModal () {
-			sessionStorage.setItem('loginModalOpen', JSON.stringify(!this.loginModalOpen));
-		},
-		handleWarningModal () {
-			sessionStorage.setItem('warningModalOpen', JSON.stringify(!this.warningModalOpen));
-		},
-		logUserOut () {
-			Cookies.remove('token');
-			this.handleWarningModal();
-		},
-		updateUserToken () {
-			this.userToken = Cookies.get('token');
-		},
-		updateLoginModal () {
-			this.loginModalOpen = (sessionStorage.getItem('loginModalOpen') === 'true');
-		},
-		updateWarningModal () {
-			this.warningModalOpen = (sessionStorage.getItem('warningModalOpen') === 'true');
-		}
 	},
 	created () {
 		this.exerciseStore.getFavorited();
 		this.routineStore.getRoutineData();
 		this.statStore.getStats();
 		this.workoutStore.getWorkouts();
-
-		window.setInterval(() => {
-			this.updateUserToken();
-			this.updateLoginModal();
-			this.updateWarningModal();
-		}, 100);
 	}
 });
 </script>
@@ -151,7 +119,7 @@ export default defineComponent({
 	}
 }
 
-@media (width > 480px) {
+@media (width >= 600px) {
 	#app {
 		grid-template-columns: auto 1fr;
 		grid-template-rows: 1fr;
@@ -163,7 +131,7 @@ export default defineComponent({
 	}
 }
 
-@media (width > 1024px) {
+@media (width >= 992px) {
 	#app {
 		grid-template-columns: 1fr;
 		grid-template-rows: auto 1fr;

@@ -9,11 +9,16 @@
 	<WorkoutLog v-for="workout in workoutStore.workouts"
 		:key="workout.id"
 		:workout="workout" />
+	<AddButton
+		title="Add New Workout"
+		@click="workoutStore.toggleWorkoutModal" />
 </main>
 </template>
 
 <script lang="ts">
+// Vue imports
 import { defineComponent } from 'vue';
+// Third-party libraries
 import Cookies from 'js-cookie';
 // Pinia stores
 import { useWorkoutStore } from '@/stores/workoutStore';
@@ -26,6 +31,7 @@ import CalendarModal from '@/components/ui/WorkoutsView/CalendarModal.vue';
 import WorkoutLog from '@/components/ui/WorkoutsView/WorkoutLog.vue';
 import ModalBackground from '@/components/ModalBackground.vue';
 import RoutineSelect from '@/components/ui/WorkoutsView/RoutineSelect.vue';
+import AddButton from '@/components/buttons/AddButton.vue';
 
 export default defineComponent({
 	data () {
@@ -56,7 +62,8 @@ export default defineComponent({
 		CalendarModal,
 		WorkoutLog,
 		ModalBackground,
-		RoutineSelect
+		RoutineSelect,
+		AddButton
 	},
 	mixins: [fetchImages],
 	methods: {
@@ -87,5 +94,22 @@ export default defineComponent({
 		gap: 10px;
 	position: relative;
 		z-index: 0;
+
+	h1 {
+		display: flex;
+		justify-content: center;
+		align-items: center;
+		gap: 10px;
+
+		&::after {
+			display: inline-block;
+			content: '';
+			width: 64px;
+			height: 64px;
+			background-image: url('/public/images/icons/exercise.webp');
+				background-repeat: no-repeat;
+				background-size: contain;
+		}
+	}
 }
 </style>

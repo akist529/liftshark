@@ -7,9 +7,10 @@ const token: string = Cookies.get('token');
 export const useRoutineStore = defineStore('routineStore', {
     state: () => ({
         routines: <Routine[]>[],
-        activeDay: 'Sunday',
+        activeDay: ['Sunday', 'Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday'][new Date().getDay()],
         weekdays: ['Sunday', 'Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday'],
-        loading: false
+        loading: false,
+        modalOpen: false
     }),
     getters: {
         recordedDays: (state) => {
@@ -59,6 +60,9 @@ export const useRoutineStore = defineStore('routineStore', {
         }
     },
     actions: {
+        toggleModal () {
+            this.modalOpen = !this.modalOpen;
+        },
         async addRoutine () {
             if (token) {
 				await fetch('http://localhost:1337/api/routines', {

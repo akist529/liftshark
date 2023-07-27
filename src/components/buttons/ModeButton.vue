@@ -1,43 +1,34 @@
 <template>
-<button class="display-mode-btn" @click="changeState">
-	<img
-		alt="Light Mode"
-		:class="darkMode ? 'inactive' : 'active'"
-		:src="assetspath('./ui/sidebar/light_mode.webp')" />
-	<SliderButton
-		:darkMode="darkMode" />
-	<img
-		alt="Dark Mode"
-		:class="darkMode ? 'active' : 'inactive'"
-		:src="assetspath('./ui/sidebar/dark_mode.webp')" />
+<button class="ModeButton" @click="modeStore.toggleDarkMode">
+	<span id="light-mode" :class="modeStore.darkMode ? 'inactive' : 'active'"></span>
+	<SliderButton />
+	<span id="dark-mode" :class="modeStore.darkMode ? 'active' : 'inactive'"></span>
 </button>
 </template>
 
 <script lang="ts">
 import { defineComponent } from 'vue';
-import { fetchImages } from '@/mixins/fetchImages';
+// Pinia stores
+import { useModeStore } from '@/stores/modeStore';
+// Local components
 import SliderButton from '@/components/buttons/SliderButton.vue';
 
 export default defineComponent({
-	mixins: [fetchImages],
-	components: {
-		SliderButton
-	},
 	data () {
+		const modeStore = useModeStore();
+
 		return ({
-			darkMode: false
+			modeStore
 		});
 	},
-	methods: {
-		changeState () {
-			this.darkMode = !this.darkMode;
-		}
+	components: {
+		SliderButton
 	}
 });
 </script>
 
 <style scoped lang="scss">
-.display-mode-btn {
+.ModeButton {
 	/* Positioning */
 	display: flex;
 		justify-content: center;
@@ -49,16 +40,48 @@ export default defineComponent({
 	border: none;
 	cursor: pointer;
 
-	img {
-		max-height: 25px;
-	}
-
 	.inactive {
 		filter: invert(1) opacity(30%);
 	}
 
 	.active {
 		filter: invert(1) opacity(100%);
+	}
+
+	#light-mode {
+		display: inline-block;
+		content: '';
+		width: 25px;
+		height: 25px;
+		background-image: url('/public/images/icons/light_mode.svg');
+		background-repeat: no-repeat;
+		background-size: contain;
+	}
+
+	#dark-mode {
+		display: inline-block;
+		content: '';
+		width: 25px;
+		height: 25px;
+		background-image: url('/public/images/icons/dark_mode.svg');
+		background-repeat: no-repeat;
+		background-size: contain;
+	}
+}
+
+@media only screen and (min-width: 992px) {
+	.ModeButton {
+		position: absolute;
+		top: 10px;
+		left: 10px;
+
+		.inactive {
+			filter: invert(0) opacity(30%);
+		}
+
+		.active {
+			filter: invert(0) opacity(100%);
+		}
 	}
 }
 </style>

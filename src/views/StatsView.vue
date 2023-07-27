@@ -1,6 +1,5 @@
 <template>
-<main class="my-stats">
-    <h1>My Statistics</h1>
+<main class="StatsView">
     <nav>
         <ul>
             <li v-for="page in statPages" :key="page">
@@ -15,24 +14,38 @@
     <WeightLog v-if="pageShown === 'Weight'" />
     <MeasurementLog v-if="pageShown === 'Measurements'" />
     <PRLog v-if="pageShown === 'PRs'" />
+    <AddButton
+        :title="addButtonTitle"
+        @click="statStore.toggleModal" />
+    <footer>
+        <ul>
+            <li>Tape icon by Smashicons</li>
+        </ul>
+    </footer>
 </main>
 </template>
 
 <script lang="ts">
+// Vue imports
 import { defineComponent } from 'vue';
+// Pinia stores
+import { useStatStore } from '@/stores/statStore';
 // Local components
-import WeightLog from '@/components/WeightLog.vue';
-import MeasurementLog from '@/components/MeasurementLog.vue';
-import PRLog from '@/components/PRLog.vue';
+import WeightLog from '@/components/ui/StatsView/WeightLog.vue';
+import MeasurementLog from '@/components/ui/StatsView/MeasurementLog.vue';
+import PRLog from '@/components/ui/StatsView/PRLog.vue';
+import AddButton from '@/components/buttons/AddButton.vue';
 
 export default defineComponent({
 	data () {
 		const statPages = ['Weight', 'Measurements', 'PRs'];
 		const pageShown = 'Measurements';
+        const statStore = useStatStore();
 
 		return ({
 			statPages,
-			pageShown
+			pageShown,
+            statStore
 		});
 	},
 	methods: {
@@ -48,8 +61,23 @@ export default defineComponent({
 	components: {
 		WeightLog,
 		MeasurementLog,
-		PRLog
+		PRLog,
+        AddButton
 	},
+    computed: {
+        addButtonTitle () {
+            switch (this.pageShown) {
+                case 'Weight':
+                    return 'Add New Weight';
+                case 'Measurements':
+                    return 'Add New Measurement';
+                case 'PRs':
+                    return 'Add New PR';
+                default:
+                    return '';
+            }
+        }
+    },
 	created () {
 		this.pageShown = sessionStorage.getItem('statPageShown') || 'Measurements';
 	}
@@ -57,9 +85,10 @@ export default defineComponent({
 </script>
 
 <style lang="scss">
-.my-stats {
+.StatsView {
     display: flex;
 		flex-direction: column;
+        gap: 20px;
 
     nav ul {
         /* Positioning */

@@ -1,0 +1,38 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<svg
+   height="32"
+   viewBox="0 -960 880 640"
+   width="44"
+   version="1.1"
+   id="svg304"
+   sodipodi:docname="menu_book.svg"
+   inkscape:version="1.2.2 (b0a8486, 2022-12-01)"
+   xmlns:inkscape="http://www.inkscape.org/namespaces/inkscape"
+   xmlns:sodipodi="http://sodipodi.sourceforge.net/DTD/sodipodi-0.dtd"
+   xmlns="http://www.w3.org/2000/svg"
+   xmlns:svg="http://www.w3.org/2000/svg">
+  <defs
+     id="defs308" />
+  <sodipodi:namedview
+     id="namedview306"
+     pagecolor="#ffffff"
+     bordercolor="#000000"
+     borderopacity="0.25"
+     inkscape:showpageshadow="2"
+     inkscape:pageopacity="0.0"
+     inkscape:pagecheckerboard="0"
+     inkscape:deskcolor="#d1d1d1"
+     showgrid="false"
+     inkscape:zoom="12.583333"
+     inkscape:cx="22.013245"
+     inkscape:cy="15.97351"
+     inkscape:window-width="1920"
+     inkscape:window-height="928"
+     inkscape:window-x="0"
+     inkscape:window-y="25"
+     inkscape:window-maximized="1"
+     inkscape:current-layer="svg304" />
+  <path
+     d="m 520,-734 v -48 q 33,-14 67.5,-21 34.5,-7 72.5,-7 26,0 51,4 25,4 49,10 v 44 q -24,-9 -48.5,-13.5 -24.5,-4.5 -51.5,-4.5 -38,0 -73,9.5 -35,9.5 -67,26.5 z m 0,220 v -49 q 33,-13.5 67.5,-20.25 34.5,-6.75 72.5,-6.75 26,0 51,4 25,4 49,10 v 44 q -24,-9 -48.5,-13.5 -24.5,-4.5 -51.5,-4.5 -38,0 -73,9 -35,9 -67,27 z m 0,-110 v -48 q 33,-14 67.5,-21 34.5,-7 72.5,-7 26,0 51,4 25,4 49,10 v 44 q -24,-9 -48.5,-13.5 -24.5,-4.5 -51.5,-4.5 -38,0 -73,9.5 -35,9.5 -67,26.5 z m -312,164 q 53.566,0 104.283,12.5 Q 363,-435 412,-410 V -837 Q 367,-867 314.381,-883.5 261.763,-900 208,-900 q -38,0 -74.5,9.5 Q 97,-881 60,-867 v 434 q 31,-14 70.5,-20.5 39.5,-6.5 77.5,-6.5 z m 264,50 q 50,-25 98,-37.5 48,-12.5 102,-12.5 38,0 78.5,6 40.5,6 69.5,16 v -429 q -34,-17 -71.822,-25 -37.823,-8 -76.178,-8 -54,0 -104.5,16.5 Q 517,-867 472,-837 Z m -30,90 q -51,-38 -111,-58.5 -60,-20.5 -123,-20.5 -36.537,0 -71.768,9 Q 101,-381 66,-368 42.9,-357 21.45,-371 0,-385 0,-411 v -463 q 0,-15 7,-27.5 7,-12.5 21,-19.5 42,-20 87.395,-29.5 45.394,-9.5 92.605,-9.5 63,0 122.5,17 59.5,17 111.5,52 51,-35 109.5,-52 58.5,-17 120.5,-17 46.868,0 91.934,9.5 Q 809,-941 851,-921 q 14,7 21.5,19.5 7.5,12.5 7.5,27.5 v 463 q 0,27.894 -22.5,42.447 Q 835,-354 813,-368 779,-382 743.768,-390.5 708.537,-399 672,-399 q -63,0 -121,21 -58,21 -109,58 z M 236,-649 Z"
+     id="path302" />
+</svg>

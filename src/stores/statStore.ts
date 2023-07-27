@@ -16,9 +16,13 @@ export const useStatStore = defineStore('statStore', {
             hips: <Stat[]>[],
             thighs: <Stat[]>[]
         },
-        loading: false
+        loading: false,
+        modalOpen: false
     }),
     actions: {
+        toggleModal () {
+            this.modalOpen = !this.modalOpen;
+        },
         addStat (stat: Stat) {
             switch (stat.attributes.type) {
                 case 'Weight':

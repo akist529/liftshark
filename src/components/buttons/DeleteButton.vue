@@ -1,22 +1,9 @@
 <template>
-<button>
-    <img
-        alt="Delete"
-        :src="assetspath('./ui/delete.svg')" />
-</button>
+<button class="DeleteButton"></button>
 </template>
 
-<script lang="ts">
-import { defineComponent } from 'vue';
-import { fetchImages } from '@/mixins/fetchImages';
-
-export default defineComponent({
-    mixins: [fetchImages]
-});
-</script>
-
 <style scoped lang="scss">
-button {
+.DeleteButton {
     /* Positioning */
     display: flex;
         justify-content: center;
@@ -31,13 +18,18 @@ button {
     border: none;
     cursor: pointer;
 
-    img {
-        width: 20px;
-        height: 20px;
-    }
-
     &:hover {
         background: rgba(0,0,0,0.1);
+    }
+
+    &::after {
+        display: inline-block;
+        content: '';
+        width: 16px;
+        height: 16px;
+        background-image: url('/public/images/icons/delete.svg');
+            background-repeat: no-repeat;
+            background-size: contain;
     }
 }
 </style>

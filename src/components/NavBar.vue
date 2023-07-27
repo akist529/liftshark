@@ -1,45 +1,46 @@
 <template>
-<nav>
+<nav class="NavBar">
+    <ModeButton v-if="windowWidth >= 600 && windowWidth < 992" />
     <ul>
         <li>
             <router-link class="link" to="/">
-                <img alt="Home Icon" :src="require('@/../public/images/ui/sidebar/home.webp')" />
+                <span class="icon" :style="{backgroundImage: `url(/images/icons/home.svg)`}"></span>
                 <span>Home</span>
             </router-link>
         </li>
         <li>
             <router-link class="link" to="/workouts">
-                <img alt="Workouts Icon" :src="require('@/../public/images/ui/sidebar/workouts.webp')" />
+                <span class="icon" :style="{backgroundImage: `url(/images/icons/menu_book.svg)`}"></span>
                 <span>Workouts</span>
             </router-link>
         </li>
         <li>
             <router-link class="link" to="/routines">
-                <img alt="Routines Icon" :src="require('@/../public/images/ui/sidebar/routines.webp')" />
+                <span class="icon" :style="{backgroundImage: `url(/images/icons/routine.svg)`}"></span>
                 <span>Routines</span>
             </router-link>
         </li>
-        <li v-if="windowWidth <= 480">
+        <li v-if="windowWidth < 600">
             <router-link class="link" to="/stats">
-                <img alt="Stats Icon" :src="require('@/../public/images/ui/sidebar/stats.webp')" />
+                <span class="icon" :style="{backgroundImage: `url(/images/icons/conditions.svg)`}"></span>
                 <span>Stats</span>
             </router-link>
         </li>
-        <li v-if="windowWidth > 480">
+        <li v-if="windowWidth >= 600">
             <router-link class="link" to="/stats/measurements">
-                <img alt="Measurements Icon" :src="require('@/../public/images/ui/sidebar/measurements.webp')" />
+                <span class="icon" :style="{backgroundImage: `url(/images/icons/body_fat.svg)`}"></span>
                 <span>Measurements</span>
             </router-link>
         </li>
-        <li v-if="windowWidth > 480">
+        <li v-if="windowWidth >= 600">
             <router-link class="link" to="/stats/weight">
-                <img alt="Weight Icon" :src="require('@/../public/images/ui/sidebar/weight.webp')" />
+                <span class="icon" :style="{backgroundImage: `url(/images/icons/scale.svg)`}"></span>
                 <span>Weight</span>
             </router-link>
         </li>
         <li>
             <router-link class="link" to="/exercises">
-                <img alt="Exercises Icon" :src="require('@/../public/images/ui/sidebar/exercises.webp')" />
+                <span class="icon" :style="{backgroundImage: `url(/images/icons/fitness_center.svg)`}"></span>
                 <span>Exercises</span>
             </router-link>
         </li>
@@ -49,7 +50,8 @@
 
 <script lang="ts">
 import { defineComponent } from 'vue';
-import { fetchImages } from '@/mixins/fetchImages';
+// Local components
+import ModeButton from './buttons/ModeButton.vue';
 
 export default defineComponent({
 	data () {
@@ -57,17 +59,19 @@ export default defineComponent({
 			windowWidth: window.innerWidth
 		});
 	},
+    components: {
+        ModeButton
+    },
 	mounted () {
 		window.addEventListener('resize', () => {
 			this.windowWidth = window.innerWidth;
 		});
-	},
-	mixins: [fetchImages]
+	}
 });
 </script>
 
 <style scoped lang="scss">
-nav {
+.NavBar {
 	/* Positioning */
 	position: relative;
 		z-index: 1;
@@ -111,6 +115,16 @@ nav {
                     height: 30px;
                     filter: invert(0.25);
                 }
+
+                .icon {
+                    display: inline-block;
+                    content: '';
+                    width: 30px;
+                    height: 30px;
+                    background-repeat: no-repeat;
+                    background-size: contain;
+                    filter: invert(0.25);
+                }
             }
 
             .router-link-active {
@@ -119,13 +133,17 @@ nav {
                 img {
                     filter: invert(1);
                 }
+
+                .icon {
+                    filter: invert(1);
+                }
             }
         }
     }
 }
 
-@media (width > 480px) {
-    nav {
+@media (width >= 600px) {
+    .NavBar {
         grid-row: 1 / -1;
         grid-column: 1 / 2;
         padding: 2vw;
@@ -143,8 +161,8 @@ nav {
     }
 }
 
-@media (width > 1024px) {
-    nav {
+@media (width >= 992px) {
+    .NavBar {
         grid-row: 1 / 2;
         grid-column: 1 / -1;
         height: 100%;

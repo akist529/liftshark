@@ -352,7 +352,6 @@ export default defineComponent({
 			bottom: 70px;
 
 		/* Visual */
-		background: linear-gradient(to top, rgba(0,0,0,0.6), rgba(0,0,0,0));
 		padding: 10px;
 
 		img {

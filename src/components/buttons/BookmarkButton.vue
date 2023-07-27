@@ -1,7 +1,7 @@
 <template>
 <button
     :class="`BookmarkButton ${favorited ? 'favorited' : 'not-favorited'}`"
-    @click="favorited ? removeFromFavorites(id) : addToFavorites(id)"
+    @click="favorited ? exerciseStore.removeFromFavorites(id) : exerciseStore.addToFavorites(id)"
 ></button>
 </template>
 
@@ -14,16 +14,14 @@ export default defineComponent({
         const exerciseStore = useExerciseStore();
 
         return ({
-            favoriteExercises: exerciseStore.favorited,
-            addToFavorites: exerciseStore.addToFavorites,
-            removeFromFavorites: exerciseStore.removeFromFavorites,
+            exerciseStore,
             id: this.exerciseId as number
         });
     },
     props: ['exerciseId'],
     computed: {
         favorited () {
-            const isFavorited = this.favoriteExercises.find((id: number) => id === this.exerciseId);
+            const isFavorited = this.exerciseStore.favorited.find((id: number) => id === this.exerciseId);
 
             if (isFavorited) return true;
                 else return false;
@@ -40,16 +38,20 @@ export default defineComponent({
         align-items: center;
 
     /* Visual */
-    background: none;
+    background: #4267B2;
     border: none;
+    border-radius: 50%;
     cursor: pointer;
+    padding: 15px;
 
     &::after {
         background-size: contain;
             background-repeat: no-repeat;
+            background-position: center;
         width: 64px;
         height: 64px;
         content: '';
+        filter: invert(1);
     }
 }
 
@@ -67,8 +69,7 @@ export default defineComponent({
 
 .favorited {
     &::after {
-        background-image: url('/public/images/icons/favorite.svg');
-        filter: invert(65%) sepia(15%) saturate(6854%) hue-rotate(295deg) brightness(101%) contrast(102%);
+        background-image: url('/public/images/icons/heart_check.svg');
     }
 }
 </style>

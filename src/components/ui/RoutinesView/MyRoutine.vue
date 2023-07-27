@@ -5,8 +5,7 @@
 		:style="{ backgroundImage: `url(images/icons/expand_${routineHidden ? 'more' : 'less'}.svg)` }"
 		@click="routineHidden = !routineHidden"
 	></button>
-	<DeleteRoutineButton
-		@click="routineStore.deleteRoutine(routine?.id || 0)" />
+	<CloseButton @click="routineStore.deleteRoutine(routine?.id || 0)" />
 	<div class="routine-name">
 		<span v-if="!editNameOpen" id="span-name">{{ name }}</span>
 		<input v-if="editNameOpen" v-model="name"
@@ -25,22 +24,23 @@
 			:entry="entry"
 			:exercises="exercises" />
 	</ul>
-	<AddButton
-		itemAdded="exercise"
-		@clicked="newEntry()">
-		<slot>Add Exercise</slot>
-	</AddButton>
+	<button
+		class="btn-newExercise"
+		@click="newEntry()"
+	>New Exercise</button>
 </div>
 </template>
 
 <script lang="ts">
+// Vue imports
 import { defineComponent, PropType } from 'vue';
+// Type interfaces
 import { Routine, Exercise } from '@/types/index';
+// Pinia stores
 import { useRoutineStore } from '@/stores/routineStore';
 // Local components
 import MyRoutineEntry from '@/components/ui/RoutinesView/MyRoutine/MyRoutineEntry.vue';
-import AddButton from '@/components/buttons/AddButton.vue';
-import DeleteRoutineButton from './MyRoutine/DeleteRoutineButton.vue';
+import CloseButton from '@/components/buttons/CloseButton.vue';
 
 export default defineComponent({
 	data () {
@@ -90,8 +90,7 @@ export default defineComponent({
 	},
 	components: {
 		MyRoutineEntry,
-		AddButton,
-		DeleteRoutineButton
+		CloseButton
 	},
 	props: {
 		routine: Object as PropType<Routine>,
@@ -111,7 +110,7 @@ export default defineComponent({
 	height: auto;
 
 	/* Visual */
-	padding: 20px;
+	padding: 40px 20px 20px;
 	background-color: rgb(206, 206, 206);
 	border-radius: 10px;
 	border: 2px solid rgb(126, 126, 126);
@@ -162,6 +161,26 @@ export default defineComponent({
 			&:hover {
 				filter: invert(39%) sepia(19%) saturate(0%) hue-rotate(175deg) brightness(98%) contrast(111%);
 			}
+		}
+	}
+
+	.btn-newExercise {
+		display: flex;
+		justify-content: center;
+		align-items: center;
+		gap: 10px;
+		padding: 5px 10px;
+		cursor: pointer;
+
+		&::after {
+			display: inline-block;
+			content: '';
+			width: 20px;
+			height: 20px;
+			background-image: url('/public/images/icons/exercise.svg');
+				background-repeat: no-repeat;
+				background-size: contain;
+				background-position: center;
 		}
 	}
 
