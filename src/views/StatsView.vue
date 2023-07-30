@@ -16,7 +16,8 @@
     <PRLog v-if="pageShown === 'PRs'" />
     <AddButton
         :title="addButtonTitle"
-        @click="statStore.toggleModal" />
+        @click="statStore.toggleModal"
+        :style="{position: 'absolute', bottom: 10 + 'px', right: 10 + 'px'}" />
     <footer>
         <ul>
             <li>Tape icon by Smashicons</li>

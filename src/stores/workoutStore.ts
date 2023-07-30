@@ -11,6 +11,7 @@ export const useWorkoutStore = defineStore('workoutStore', {
     state: () => ({
         workouts: <Workout[]>[],
         months: ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'],
+        days: ['Sunday', 'Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday'],
         selectedDate: new Date().getDate(),
         selectedMonth: new Date().getMonth(),
         selectedYear: new Date().getFullYear(),
@@ -20,6 +21,14 @@ export const useWorkoutStore = defineStore('workoutStore', {
         modalOpen: false
     }),
     getters: {
+        getDay: (state) => {
+            const day = new Date(state.selectedYear, state.selectedMonth, state.selectedDate).getDay();
+
+            return state.days[day];
+        },
+        getMonth: (state) => {
+            return state.months[state.selectedMonth];
+        },
         activeWorkouts: (state) => {
             return state.workouts.filter((workout: Workout) => {
                 return workout.attributes.date === new Date(state.selectedYear, state.selectedMonth, state.selectedDate, 0).toISOString().split('T')[0];

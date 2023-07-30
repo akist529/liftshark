@@ -17,9 +17,11 @@
     "vue-query": "^1.26.0",
     "vue-reactive-provide": "^0.3.0",
     "vue-router": "^4.0.3",
+    "vuetify": "^3.3.10",
     "vuex": "^4.0.0"
   },
   "devDependencies": {
+    "@mdi/font": "^7.2.96",
     "@typescript-eslint/eslint-plugin": "^5.4.0",
     "@typescript-eslint/parser": "^5.4.0",
     "@vue/cli-plugin-babel": "~5.0.0",

@@ -10,9 +10,6 @@
     display: flex;
         justify-content: center;
         align-items: center;
-    position: absolute;
-        right: 5px;
-        top: 5px;
 
     /* Visual */
     padding: 5px;

@@ -8,7 +8,8 @@
 		:key="routine.id" />
 	<AddButton
 		title="Add New Routine"
-		@click="routineStore.toggleModal" />
+		@click="routineStore.toggleModal"
+		:style="{position: 'absolute', bottom: 10 + 'px', right: 10 + 'px'}" />
 	<footer>
 		<ul>
 			<li>Report icon by nawicon</li>

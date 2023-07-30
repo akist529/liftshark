@@ -11,7 +11,8 @@
 		:workout="workout" />
 	<AddButton
 		title="Add New Workout"
-		@click="workoutStore.toggleWorkoutModal" />
+		@click="workoutStore.toggleWorkoutModal"
+		:style="{position: 'absolute', bottom: 10 + 'px', right: 10 + 'px'}" />
 </main>
 </template>
 
