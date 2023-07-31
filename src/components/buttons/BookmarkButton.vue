@@ -3,6 +3,9 @@
     :class="`BookmarkButton ${favorited ? 'favorited' : 'not-favorited'}`"
     @click="favorited ? exerciseStore.removeFromFavorites(id) : exerciseStore.addToFavorites(id)"
 ></button>
+<v-btn>
+    <v-icon icon="mdi-heart-plus"></v-icon>
+</v-btn>
 </template>
 
 <script lang="ts">
