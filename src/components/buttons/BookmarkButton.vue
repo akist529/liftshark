@@ -1,10 +1,13 @@
 <template>
-<button
-    :class="`BookmarkButton ${favorited ? 'favorited' : 'not-favorited'}`"
-    @click="favorited ? exerciseStore.removeFromFavorites(id) : exerciseStore.addToFavorites(id)"
-></button>
-<v-btn>
-    <v-icon icon="mdi-heart-plus"></v-icon>
+<v-btn
+    class="BookmarkButton"
+    width="64"
+    height="64"
+    @click="favorited ? exerciseStore.removeFromFavorites(id) : exerciseStore.addToFavorites(id)">
+    <v-icon
+        :icon="favorited ? 'mdi-heart-plus' : 'mdi-heart'"
+        size="xxx-large"
+    ></v-icon>
 </v-btn>
 </template>
 
@@ -42,44 +45,7 @@ export default defineComponent({
 
 <style scoped lang="scss">
 .BookmarkButton {
-    /* Positioning */
-    display: flex;
-        justify-content: center;
-        align-items: center;
-
     /* Visual */
-    background: #4267B2;
-    border: none;
     border-radius: 50%;
-    cursor: pointer;
-    padding: 15px;
-
-    &::after {
-        background-size: contain;
-            background-repeat: no-repeat;
-            background-position: center;
-        width: 64px;
-        height: 64px;
-        content: '';
-        filter: invert(1);
-    }
-}
-
-.not-favorited {
-    &::after {
-        background-image: url('/public/images/icons/heart_plus.svg');
-    }
-
-    &:hover {
-        &::after {
-            filter: invert(65%) sepia(15%) saturate(6854%) hue-rotate(295deg) brightness(101%) contrast(102%);
-        }
-    }
-}
-
-.favorited {
-    &::after {
-        background-image: url('/public/images/icons/heart_check.svg');
-    }
 }
 </style>

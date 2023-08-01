@@ -37,6 +37,7 @@ export default defineComponent({
 		border-radius: 10px;
 	overflow: hidden;
 	cursor: pointer;
+	background: white;
 
 	span {
 		font-family: var(--title-font);

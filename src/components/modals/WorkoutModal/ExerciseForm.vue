@@ -64,7 +64,7 @@ export default defineComponent({
 })
 </script>
 
-<style scoped lang="scss">
+<style lang="scss">
 .ExerciseForm {
     display: grid;
     grid-template-columns: 1fr;
@@ -97,6 +97,11 @@ export default defineComponent({
                 width: 32px;
             }
         }
+    }
+
+    input,
+    select {
+        background: white;
     }
 }
 
