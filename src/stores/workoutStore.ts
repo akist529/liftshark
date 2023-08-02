@@ -17,8 +17,7 @@ export const useWorkoutStore = defineStore('workoutStore', {
         selectedYear: new Date().getFullYear(),
         calendarOpen: false,
         loading: false,
-        date: new Date(),
-        modalOpen: false
+        date: new Date()
     }),
     getters: {
         getDay: (state) => {
@@ -55,9 +54,6 @@ export const useWorkoutStore = defineStore('workoutStore', {
         }
     },
     actions: {
-        toggleWorkoutModal () {
-            this.modalOpen = !this.modalOpen;
-        },
         openCalendar () {
             this.calendarOpen = true;
         },

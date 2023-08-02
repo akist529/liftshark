@@ -4,8 +4,20 @@
 	id="router-view"
 	:key="$route.fullPath" />
 <NavBar />
+<v-snackbar top v-model="snackbarStore.open" :timeout="2000" :color="snackbarStore.color">
+	<v-icon
+		:icon="snackbarStore.icon"
+	></v-icon>
+	{{ snackbarStore.text }}
+	<template v-slot:actions>
+		<v-btn
+			flat
+			color="white"
+			@click="snackbarStore.open = false"
+		>Close</v-btn>
+	</template>
+</v-snackbar>
 <LoginModal v-if="loginStore.modalOpen" />
-<WorkoutModal v-if="workoutStore.modalOpen" />
 <RoutineModal v-if="routineStore.modalOpen" />
 <StatsModal v-if="statStore.modalOpen" />
 <WarningModal v-if="loginStore.warningOpen">
@@ -23,7 +35,6 @@ import NavBar from '@/components/NavBar.vue';
 import TopNavBar from '@/components/TopNavBar.vue';
 import LoginModal from '@/components/modals/LoginModal.vue';
 import WarningModal from '@/components/WarningModal.vue';
-import WorkoutModal from './components/modals/WorkoutModal.vue';
 import RoutineModal from './components/modals/RoutineModal.vue';
 import StatsModal from './components/modals/StatsModal.vue';
 // Pinia stores
@@ -32,6 +43,7 @@ import { useRoutineStore } from '@/stores/routineStore';
 import { useStatStore } from './stores/statStore';
 import { useWorkoutStore } from './stores/workoutStore';
 import { useWindowStore } from './stores/windowStore';
+import { useSnackbarStore } from './stores/snackbarStore';
 
 export default defineComponent({
 	name: 'App',
@@ -40,7 +52,6 @@ export default defineComponent({
 		TopNavBar,
 		LoginModal,
 		WarningModal,
-		WorkoutModal,
 		RoutineModal,
 		StatsModal
 	},
@@ -51,6 +62,7 @@ export default defineComponent({
 		const workoutStore = useWorkoutStore();
 		const loginStore = useLoginStore();
 		const windowStore = useWindowStore();
+		const snackbarStore = useSnackbarStore();
 
 		return ({
 			exerciseStore,
@@ -58,7 +70,8 @@ export default defineComponent({
 			statStore,
 			workoutStore,
 			loginStore,
-			windowStore
+			windowStore,
+			snackbarStore
 		});
 	},
 	mounted () {

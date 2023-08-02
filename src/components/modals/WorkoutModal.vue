@@ -48,6 +48,7 @@ import { ExerciseData, Entry, Set } from '@/types/index';
 // Pinia stores
 import { useWorkoutStore } from '@/stores/workoutStore';
 import { useWindowStore } from '@/stores/windowStore';
+import { useSnackbarStore } from '@/stores/snackbarStore';
 // Local components
 import CloseButton from '../buttons/CloseButton.vue';
 import ExerciseForm from './WorkoutModal/ExerciseForm.vue';
@@ -63,15 +64,18 @@ export default defineComponent({
     data () {
         const workoutStore = useWorkoutStore();
 		const windowStore = useWindowStore();
+		const snackbarStore = useSnackbarStore();
 		const exerciseQuery = useQuery('exercises', () => getData());
 		const exerciseCount = 1;
 
         return ({
             workoutStore,
 			windowStore,
+			snackbarStore,
 			exerciseQuery,
 			exerciseCount,
-			dialog: false
+			dialog: false,
+			snackbar: false
         });
     },
     components: {
@@ -121,9 +125,13 @@ export default defineComponent({
 			}
 
 			console.log(workout);
+			this.dialog = false;
+			this.snackbarStore.text = 'Workout successfully logged';
+			this.snackbarStore.color = 'success';
+			this.snackbarStore.open = true;
 		}
 	}
-})
+});
 </script>
 
 <style scoped lang="scss">
