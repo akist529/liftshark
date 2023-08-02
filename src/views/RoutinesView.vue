@@ -6,10 +6,10 @@
 		:routine="routine"
 		:exercises="exercises.data?.results || []"
 		:key="routine.id" />
-	<AddButton
+	<RoutineModal
 		title="Add New Routine"
-		@click="routineStore.toggleModal"
-		:style="{position: 'absolute', bottom: 10 + 'px', right: 10 + 'px'}" />
+		:style="{position: 'absolute', bottom: 10 + 'px', right: 10 + 'px'}"
+		@showSnackBar="showSnackBar = true" />
 	<footer>
 		<ul>
 			<li>Report icon by nawicon</li>
@@ -30,9 +30,9 @@ import { ExerciseData, Routine } from '@/types/index';
 // Pinia stores
 import { useRoutineStore } from '@/stores/routineStore';
 // Local components
-import AddButton from '@/components/buttons/AddButton.vue';
 import MyRoutine from '@/components/ui/RoutinesView/MyRoutine.vue';
 import SelectDay from '@/components/ui/RoutinesView/SelectDay.vue';
+import RoutineModal from '@/components/modals/RoutineModal.vue';
 
 const getData = async (): Promise<ExerciseData> => {
 	return await fetch('https://wger.de/api/v2/exercise?limit=999&language=2')
@@ -55,7 +55,8 @@ export default defineComponent({
 			deleteRoutine: routineStore.deleteRoutine,
 			addRoutine: routineStore.addRoutine,
 			userToken,
-			exercises
+			exercises,
+			showSnackBar: false
 		});
 	},
 	watch: {
@@ -71,9 +72,9 @@ export default defineComponent({
 		}
 	},
 	components: {
-		AddButton,
 		MyRoutine,
-		SelectDay
+		SelectDay,
+		RoutineModal
 	},
 	async created () {
 		window.setInterval(this.updateUserToken, 100); // Routinely check if user signs in or out
@@ -85,8 +86,9 @@ export default defineComponent({
 .RoutinesView {
 	display: flex;
 		flex-direction: column;
-		align-items: center;
-		gap: 30px;
+		gap: 10px;
+	position: relative;
+		z-index: 0;
 
 	h1 {
 		display: flex;

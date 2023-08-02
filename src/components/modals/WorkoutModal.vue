@@ -32,7 +32,7 @@
 		<v-card-actions>
 			<AddButton
 				title="Add Workout"
-				@click="addExercise" />
+				@click="addWorkout" />
 		</v-card-actions>
 	</v-card>
 </v-dialog>
@@ -91,7 +91,7 @@ export default defineComponent({
 				this.exerciseCount--;
 			}
 		},
-		addExercise (e: MouseEvent) {
+		addWorkout (e: MouseEvent) {
 			e.preventDefault();
 
 			const workout = ({

@@ -9,8 +9,7 @@ export const useRoutineStore = defineStore('routineStore', {
         routines: <Routine[]>[],
         activeDay: ['Sunday', 'Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday'][new Date().getDay()],
         weekdays: ['Sunday', 'Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday'],
-        loading: false,
-        modalOpen: false
+        loading: false
     }),
     getters: {
         recordedDays: (state) => {
@@ -60,9 +59,6 @@ export const useRoutineStore = defineStore('routineStore', {
         }
     },
     actions: {
-        toggleModal () {
-            this.modalOpen = !this.modalOpen;
-        },
         async addRoutine () {
             if (token) {
 				await fetch('http://localhost:1337/api/routines', {
