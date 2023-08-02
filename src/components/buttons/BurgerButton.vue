@@ -1,6 +1,6 @@
 <template>
 <v-btn
-	class="BurgerButton"
+	class="BurgerButton rounded-l"
 	width="96"
 	height="auto"
 	@click="$emit('setMenuOpen')">
@@ -31,7 +31,5 @@ export default defineComponent({
 	/* Positioning */
 	padding: 15px 10px;
 	background-color: rgb(20, 20, 20);
-	border: none;
-		border-radius: 10px;
 }
 </style>

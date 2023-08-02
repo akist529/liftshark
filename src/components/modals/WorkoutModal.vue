@@ -1,27 +1,41 @@
 <template>
-<ModalBackground>
-<dialog class="WorkoutModal">
-	<header>
-		<h1>New Workout</h1>
-		<span>{{ workoutStore.getDay }}, {{ workoutStore.getMonth }} {{ workoutStore.selectedDate }}, {{ workoutStore.selectedYear }}</span>
-		<button class="btn-add-exercise">Add Exercise</button>
-		<CloseButton
-			@click="workoutStore.toggleWorkoutModal" />
-	</header>
-	<form v-if="exerciseQuery.isSuccess">
-		<ExerciseForm v-for="exercise in exerciseCount"
-			:key="exercise"
-			:exercises="exerciseQuery.data.results"
-			:count="exercise"
-			@deleteExercise="deleteExercise($event)" />
-	</form>
-	<footer>
-		<AddButton
-			title="Add Workout"
-			@click="exerciseCount++" />
-	</footer>
-</dialog>
-</ModalBackground>
+<v-dialog :fullscreen="windowStore.width < 600" scrollable persistent v-model="dialog" class="WorkoutModal w-100 h-100" max-width="400px">
+	<template v-slot:activator="{ props }">
+		<AddButton v-bind="props" />
+	</template>
+	<v-card v-if="exerciseQuery.isSuccess" class="d-flex justify-center align-center pa-2 rounded-lg bg-blue-grey-lighten-3 text-black">
+		<v-card-title class="d-flex flex-column justify-center align-center">
+			<h1>New Workout</h1>
+			<h2>{{ workoutStore.getDay }}, {{ workoutStore.getMonth }} {{ workoutStore.selectedDate }}, {{ workoutStore.selectedYear }}</h2>
+		</v-card-title>
+		<v-card-actions>
+			<v-btn
+				class="btn-add-exercise"
+				@click="exerciseCount++">
+				Add Exercise
+				<v-icon icon="mdi-dumbbell"></v-icon>
+			</v-btn>
+			<CloseButton
+				@click="dialog = false" />
+		</v-card-actions>
+		<v-card-text class="w-100 bg-blue-grey-lighten-1">
+			<v-form class="w-100">
+				<v-carousel class="rounded-lg w-100 h-100" show-arrows="hover" progress="primary">
+					<ExerciseForm v-for="exercise in exerciseCount"
+						:key="exercise"
+						:exercises="exerciseQuery.data.results"
+						:count="exercise"
+						@deleteExercise="deleteExercise($event)" />
+				</v-carousel>
+			</v-form>
+		</v-card-text>
+		<v-card-actions>
+			<AddButton
+				title="Add Workout"
+				@click="addExercise" />
+		</v-card-actions>
+	</v-card>
+</v-dialog>
 </template>
 
 <script lang="ts">
@@ -30,11 +44,11 @@ import { defineComponent } from 'vue';
 // Vue Query imports
 import { useQuery } from 'vue-query';
 // Type interfaces
-import { ExerciseData } from '@/types/index';
+import { ExerciseData, Entry, Set } from '@/types/index';
 // Pinia stores
 import { useWorkoutStore } from '@/stores/workoutStore';
+import { useWindowStore } from '@/stores/windowStore';
 // Local components
-import ModalBackground from '../ModalBackground.vue';
 import CloseButton from '../buttons/CloseButton.vue';
 import ExerciseForm from './WorkoutModal/ExerciseForm.vue';
 import AddButton from '../buttons/AddButton.vue';
@@ -48,17 +62,19 @@ const getData = async (): Promise<ExerciseData> => {
 export default defineComponent({
     data () {
         const workoutStore = useWorkoutStore();
+		const windowStore = useWindowStore();
 		const exerciseQuery = useQuery('exercises', () => getData());
 		const exerciseCount = 1;
 
         return ({
             workoutStore,
+			windowStore,
 			exerciseQuery,
-			exerciseCount
+			exerciseCount,
+			dialog: false
         });
     },
     components: {
-        ModalBackground,
         CloseButton,
 		ExerciseForm,
 		AddButton
@@ -70,6 +86,41 @@ export default defineComponent({
 			if (this.exerciseCount > 1) {
 				this.exerciseCount--;
 			}
+		},
+		addExercise (e: MouseEvent) {
+			e.preventDefault();
+
+			const workout = ({
+				date: `${this.workoutStore.selectedYear}-${this.workoutStore.selectedMonth}-${this.workoutStore.selectedDate}`,
+				exercises: [] as Entry[]
+			});
+
+			for (let i = 1; i <= this.exerciseCount; i++) {
+				const name = document.getElementById(`exercise-${i}-name`) as HTMLSelectElement;
+
+				const exercise = ({
+					id: i,
+					name: name.value || `Exercise ${i}`,
+					sets: []
+				} as Entry);
+
+				for (let j = 1; j <= 6; j++) {
+					const reps = document.getElementById(`exercise-${i}-repCount-${j}`) as HTMLInputElement;
+					const weight = document.getElementById(`exercise-${i}-weight-${j}`) as HTMLInputElement;
+
+					if (reps && weight) {
+						exercise.sets.push({
+							id: j,
+							weight: Number(weight.value),
+							reps: Number(reps.value)
+						} as Set)
+					}
+				}
+
+				workout.exercises.push(exercise);
+			}
+
+			console.log(workout);
 		}
 	}
 })
@@ -77,67 +128,22 @@ export default defineComponent({
 
 <style scoped lang="scss">
 .WorkoutModal {
-    /* Positioning */
-	display: grid;
-		grid-template-columns: 1fr;
-		grid-template-rows: auto 1fr auto;
-		justify-items: center;
-		align-items: center;
-		gap: 10px;
-	position: fixed;
-		top: 50%;
-		left: 50%;
-	transform: translate(-50%, -50%);
-	width: 90vw;
-	height: 90vh;
-
 	/* Visual */
-	background-color: rgb(255, 255, 255);
-	padding: 45px 15px 15px;
-	border: none;
-		border-radius: 20px;
-	filter: drop-shadow(10px 10px 10px rgba(0,0,0,0.5));
 	font-family: 'Karla';
 	text-transform: uppercase;
 
-	header {
-		display: flex;
-			flex-direction: column;
-			justify-content: center;
-			align-items: center;
-			gap: 5px;
-		text-align: center;
-
-		.btn-add-exercise {
-			padding: 5px 10px;
-			background: none;
-			border: none;
-			cursor: pointer;
-
-			display: flex;
-			justify-content: center;
-			align-items: center;
-			gap: 5px;
-			font-size: 16px;
-			text-transform: uppercase;
-			font-weight: 700;
-
-			&::after {
-				display: inline-block;
-				content: '';
-				background-image: url('/public/images/icons/exercise.svg');
-					background-repeat: no-repeat;
-					background-size: contain;
-					background-position: center;
-				width: 24px;
-				height: 24px;
-			}
-		}
+	.btn-add-exercise {
+		font-size: 16px;
+		text-transform: uppercase;
+		font-weight: 700;
 	}
 
-	form {
-		overflow: scroll;
-		height: 100%;
+	h1 {
+		font-size: 32px;
+	}
+
+	h2 {
+		font-size: 24px;
 	}
 }
 </style>

@@ -1,22 +1,41 @@
 <template>
-<div class="SetForm">
-    <div class="set-reps">
-        <span>reps</span>
-        <input
-            type="number"
-            min="1"
-            max="100"
-            :id="`repCount-${count}`" />
-    </div>
-    <div class="set-weight">
-        <span>lbs.</span>
-        <input
-            type="number"
-            min="1"
-            max="500"
-            :id="`weight-${count}`" />
-    </div>
-</div>
+<v-container class="SetForm w-50">
+    <v-row>
+        <v-col class="d-flex justify-center align-center">
+            <v-label>Set #{{ setCount }}</v-label>
+        </v-col>
+    </v-row>
+    <v-row>
+        <v-col class="d-flex flex-column justify-center align-center">
+            <v-text-field
+                v-model="repCount"
+                hide-details="auto"
+                density="compact"
+                type="number"
+                style="width: 70px"
+                :id="`exc-${exerciseCount}-repCount-${setCount}`"
+                :name="`exc-${exerciseCount}-repCount-${setCount}`"
+                label="reps"
+                :min="1"
+                :max="100"
+            ></v-text-field>
+        </v-col>
+        <v-col class="d-flex flex-column justify-center align-center">
+            <v-text-field
+                v-model="weight"
+                hide-details="auto"
+                density="compact"
+                type="number"
+                style="width: 70px"
+                :id="`exc-${exerciseCount}-weight-${setCount}`"
+                :name="`exc-${exerciseCount}-weight-${setCount}`"
+                label="lbs"
+                :min="0"
+                :max="1000"
+            ></v-text-field>
+        </v-col>
+    </v-row>
+</v-container>
 </template>
 
 <script lang="ts">
@@ -24,32 +43,24 @@
 import { defineComponent, PropType } from 'vue';
 
 export default defineComponent({
+    data () {
+        const repCount = 1;
+        const weight = 0;
+
+        return ({
+            repCount,
+            weight
+        });
+    },
     props: {
-        count: {
+        exerciseCount: {
+            type: Number as PropType<number>,
+            required: true
+        },
+        setCount: {
             type: Number as PropType<number>,
             required: true
         }
     }
 })
 </script>
-
-<style scoped lang="scss">
-.SetForm {
-    display: grid;
-        grid-template-columns: 1fr 1fr;
-        justify-items: center;
-        align-items: center;
-
-    input {
-        width: 48px;
-    }
-
-    .set-reps,
-    .set-weight {
-        display: flex;
-        flex-direction: column;
-        justify-content: center;
-        align-items: center;
-    }
-}
-</style>

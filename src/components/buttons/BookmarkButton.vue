@@ -1,6 +1,6 @@
 <template>
 <v-btn
-    class="BookmarkButton"
+    class="rounded-circle"
     width="64"
     height="64"
     @click="favorited ? exerciseStore.removeFromFavorites(id) : exerciseStore.addToFavorites(id)">
@@ -42,10 +42,3 @@ export default defineComponent({
     }
 });
 </script>
-
-<style scoped lang="scss">
-.BookmarkButton {
-    /* Visual */
-    border-radius: 50%;
-}
-</style>

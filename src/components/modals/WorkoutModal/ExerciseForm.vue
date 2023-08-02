@@ -1,29 +1,45 @@
 <template>
-<div class="ExerciseForm">
-    <header>
-        <label for="exercise">Exercise:</label>
-        <select :name="`exercise-${count}-name`">
-            <option v-for="exercise in exercises"
-                :value="exercise.name"
-                :key="exercise.name"
-            >{{ exercise.name }}</option>
-        </select>
-        <div class="set-count">
-            <input
-                :id="`exercise-${count}-setCount`"
-                type="number"
-                min="1"
-                max="6"
-                v-model="setCount"
-            /><span> sets</span>
-        </div>
+<v-carousel-item class="rounded-xl h-100">
+    <v-toolbar flat dense>
+        <v-toolbar-title>
+            <span class="text-subheading">{{ name ? name : 'Exercise ' + count }}</span>
+        </v-toolbar-title>
         <DeleteButton
             @click="$emit('deleteExercise', $event)" />
-    </header>
-    <SetForm v-for="set in setCount"
-        :key="set"
-        :count="set" />
-</div>
+    </v-toolbar>
+    <v-card-text class="bg-blue-grey-darken-2 overflow-y-auto h-100">
+        <v-select
+            clearable
+            label="Exercise"
+            :id="`exercise-${count}-name`"
+            :name="`exercise-${count}-name`"
+            :placeholder="exercises[0].name"
+            :items="exercises.map(exercise => exercise.name)"
+            v-model="name"
+        ></v-select>
+        <v-row>
+            <v-slider
+                v-model="setCount"
+                :id="`exercise-${count}-setCount`"
+                :name="`exercise-${count}-setCount`"
+                :step="1"
+                :min="1"
+                :max="6"
+                label="Sets"
+                show-ticks="always"
+                tick-size="6"
+                :ticks="tickLabels"
+                prepend-icon="mdi-weight-lifter">
+            </v-slider>
+        </v-row>
+        <v-container class="d-flex flex-wrap justify-center align-center">
+            <SetForm v-for="set in setCount"
+                :key="set"
+                :exerciseCount="count"
+                :setCount="set" />
+        </v-container>
+    </v-card-text>
+</v-carousel-item>
 </template>
 
 <script lang="ts">
@@ -41,10 +57,21 @@ export default defineComponent({
     data () {
         const workoutStore = useWorkoutStore();
         const setCount = 1;
+        const name = '';
+        const tickLabels = ({
+            1: '1',
+            2: '2',
+            3: '3',
+            4: '4',
+            5: '5',
+            6: '6'
+        });
 
         return ({
             workoutStore,
-            setCount
+            setCount,
+            name,
+            tickLabels
         });
     },
     props: {
@@ -63,61 +90,3 @@ export default defineComponent({
     }
 })
 </script>
-
-<style lang="scss">
-.ExerciseForm {
-    display: grid;
-    grid-template-columns: 1fr;
-    justify-items: center;
-    align-items: center;
-
-    background-color: rgb(206, 206, 206);
-	border: 2px solid rgb(126, 126, 126);
-		border-radius: 10px;
-    padding: 10px;
-
-    header {
-        display: grid;
-            grid-template-columns: 1fr;
-            justify-items: center;
-            align-items: center;
-            gap: 5px;
-
-        select {
-            width: 100%;
-        }
-
-        .set-count {
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            gap: 5px;
-
-            input {
-                width: 32px;
-            }
-        }
-    }
-
-    input,
-    select {
-        background: white;
-    }
-}
-
-@media only screen and (min-width: 420px) {
-    .ExerciseForm {
-        header {
-            grid-template-columns: auto 1fr auto auto;
-        }
-    }
-}
-
-@media only screen and (min-width: 600px) {
-    .ExerciseForm {
-        header {
-
-        }
-    }
-}
-</style>

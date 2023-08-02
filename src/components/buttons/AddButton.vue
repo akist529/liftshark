@@ -1,6 +1,6 @@
 <template>
 <v-btn
-    class="AddButton"
+    class="AddButton rounded-circle"
     width="64"
     height="64"
     color="indigo-darken-4"
@@ -14,7 +14,6 @@
 <style scoped lang="scss">
 .AddButton {
     /* Visual */
-    border-radius: 50%;
     transform: rotate(0deg);
     transition: 0.25s ease-out;
 

@@ -9,9 +9,8 @@
 	<WorkoutLog v-for="workout in workoutStore.workouts"
 		:key="workout.id"
 		:workout="workout" />
-	<AddButton
+	<WorkoutModal
 		title="Add New Workout"
-		@click="workoutStore.toggleWorkoutModal"
 		:style="{position: 'absolute', bottom: 10 + 'px', right: 10 + 'px'}" />
 </main>
 </template>
@@ -32,7 +31,7 @@ import CalendarModal from '@/components/ui/WorkoutsView/CalendarModal.vue';
 import WorkoutLog from '@/components/ui/WorkoutsView/WorkoutLog.vue';
 import ModalBackground from '@/components/ModalBackground.vue';
 import RoutineSelect from '@/components/ui/WorkoutsView/RoutineSelect.vue';
-import AddButton from '@/components/buttons/AddButton.vue';
+import WorkoutModal from '@/components/modals/WorkoutModal.vue';
 
 export default defineComponent({
 	data () {
@@ -64,7 +63,7 @@ export default defineComponent({
 		WorkoutLog,
 		ModalBackground,
 		RoutineSelect,
-		AddButton
+		WorkoutModal
 	},
 	mixins: [fetchImages],
 	methods: {
