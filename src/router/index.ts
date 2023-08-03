@@ -1,12 +1,8 @@
 import { createRouter, createWebHistory, RouteRecordRaw } from 'vue-router';
 import DashboardView from '@/views/DashboardView.vue';
 import WorkoutsView from '@/views/WorkoutsView.vue';
-import WorkoutDetailView from '@/views/WorkoutDetailView.vue';
 import RoutinesView from '@/views/RoutinesView.vue';
-import RoutineDetailView from '@/views/RoutineDetailView.vue';
 import StatsView from '@/views/StatsView.vue';
-import WeightView from '@/views/WeightView.vue';
-import MeasureView from '@/views/MeasureView.vue';
 import ExercisesView from '@/views/ExercisesView.vue';
 import ExerciseView from '@/views/ExerciseView.vue';
 import PageErrorView from '@/views/PageErrorView.vue';
@@ -23,34 +19,14 @@ const routes: Array<RouteRecordRaw> = [
 		component: WorkoutsView
 	},
 	{
-		path: '/workouts/:date',
-		name: 'workoutDetail',
-		component: WorkoutDetailView
-	},
-	{
 		path: '/routines',
 		name: 'Routines - Gym Tracker',
 		component: RoutinesView
 	},
 	{
-		path: '/routines/:id',
-		name: 'Routine Detail - Gym Tracker',
-		component: RoutineDetailView
-	},
-	{
 		path: '/stats',
 		name: 'Stats - Gym Tracker',
 		component: StatsView
-	},
-	{
-		path: '/stats/weight',
-		name: 'Weight - Gym Tracker',
-		component: WeightView
-	},
-	{
-		path: '/stats/measurements',
-		name: 'measurements',
-		component: MeasureView
 	},
 	{
 		path: '/exercises',

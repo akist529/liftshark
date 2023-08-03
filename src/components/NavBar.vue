@@ -29,31 +29,13 @@
                 <span>Routines</span>
             </router-link>
         </li>
-        <li v-if="windowWidth < 600">
+        <li>
             <router-link class="link" to="/stats">
                 <span
                     class="icon"
                     :style="{backgroundImage: `url(/images/icons/conditions.svg)`}"
                 ></span>
                 <span>Stats</span>
-            </router-link>
-        </li>
-        <li v-if="windowWidth >= 600">
-            <router-link class="link" to="/stats/measurements">
-                <span
-                    class="icon"
-                    :style="{backgroundImage: `url(/images/icons/body_fat.svg)`}"
-                ></span>
-                <span>Measurements</span>
-            </router-link>
-        </li>
-        <li v-if="windowWidth >= 600">
-            <router-link class="link" to="/stats/weight">
-                <span
-                    class="icon"
-                    :style="{backgroundImage: `url(/images/icons/scale.svg)`}"
-                ></span>
-                <span>Weight</span>
             </router-link>
         </li>
         <li>
@@ -173,7 +155,7 @@ export default defineComponent({
 
         ul {
             grid-template-columns: 1fr;
-            grid-template-rows: repeat(6, 1fr);
+            grid-template-rows: repeat(5, 1fr);
             margin-top: 10vh;
 
             li {
@@ -192,7 +174,7 @@ export default defineComponent({
         padding: 0;
 
         ul {
-            grid-template-columns: repeat(6, 1fr);
+            grid-template-columns: repeat(5, 1fr);
             grid-template-rows: 1fr;
             margin-top: 0;
             height: 100%;
