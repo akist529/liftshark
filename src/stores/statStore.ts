@@ -1,5 +1,8 @@
+// Pinia imports
 import { defineStore } from 'pinia';
+// Type interfaces
 import { Stat } from '@/types/index';
+// Third-party libraries
 import Cookies from 'js-cookie';
 
 const token: string = Cookies.get('token');
@@ -16,13 +19,9 @@ export const useStatStore = defineStore('statStore', {
             hips: <Stat[]>[],
             thighs: <Stat[]>[]
         },
-        loading: false,
-        modalOpen: false
+        loading: false
     }),
     actions: {
-        toggleModal () {
-            this.modalOpen = !this.modalOpen;
-        },
         addStat (stat: Stat) {
             switch (stat.attributes.type) {
                 case 'Weight':

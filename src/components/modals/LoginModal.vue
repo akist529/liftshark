@@ -13,10 +13,14 @@
 			<v-btn
 				id="btn-login"
 				@click="loggingIn = true" :class="loginStore.loggingIn ? 'btn-active' : null"
+				prepend-icon="mdi-login"
+				:variant="loggingIn ? 'flat' : 'tonal'"
 			>Log In</v-btn>
 			<v-btn
 				id="btn-register"
 				@click="loggingIn = false" :class="!loginStore.loggingIn ? 'btn-active' : null"
+				prepend-icon="mdi-account-plus"
+				:variant="loggingIn ? 'tonal' : 'flat'"
 			>Register</v-btn>
 			<CloseButton
 				@click="dialog = false" />
@@ -71,6 +75,7 @@
 			<v-btn
 				id="submit"
 				@click="loginStore.loggingIn ? loginStore.loginUser(email, password) : loginStore.registerUser(username, email, password)"
+				variant="flat"
 			>{{ loginStore.loggingIn ? 'Log In' : 'Sign Up' }}</v-btn>
 		</v-card-actions>
 		<v-card-text>

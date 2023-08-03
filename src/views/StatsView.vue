@@ -1,19 +1,43 @@
 <template>
 <main class="StatsView">
-    <nav>
-        <ul>
-            <li v-for="page in statPages" :key="page">
-                <v-btn
-                    @click="setPageShown(page)"
-                >{{ page }}</v-btn>
-            </li>
-        </ul>
-        <hr/>
-    </nav>
+    <ul>
+        <li>
+            <v-btn
+                @click="setPageShown('Weight')"
+                prepend-icon="mdi-scale-bathroom"
+                variant="flat"
+                :class="(pageShown === 'Weight') ? 'bg-blue-lighten-3' : 'bg-grey-lighten-2'"
+                :stacked="windowStore.width < 600"
+            >Weight</v-btn>
+        </li>
+        <li>
+            <v-btn
+                @click="setPageShown('Measurements')"
+                prepend-icon="mdi-tape-measure"
+                variant="flat"
+                :class="(pageShown === 'Measurements') ? 'bg-blue-lighten-3' : 'bg-grey-lighten-2'"
+                :stacked="windowStore.width < 600"
+            >Measurements</v-btn>
+        </li>
+        <li>
+            <v-btn
+                @click="setPageShown('PRs')"
+                prepend-icon="mdi-weight-lifter"
+                variant="flat"
+                :class="(pageShown === 'PRs') ? 'bg-blue-lighten-3' : 'bg-grey-lighten-2'"
+                :stacked="windowStore.width < 600"
+            >PRs</v-btn>
+        </li>
+    </ul>
+    <hr/>
     <WeightLog v-if="pageShown === 'Weight'" />
     <MeasurementLog v-if="pageShown === 'Measurements'" />
     <PRLog v-if="pageShown === 'PRs'" />
-    <StatsModal />
+    <StatsModal
+        :stat="pageShown"
+        @weight="setPageShown('Weight')"
+        @measure="setPageShown('Measurements')"
+        @prs="setPageShown('PRs')" />
     <footer>
         <ul>
             <li>Tape icon by Smashicons</li>
@@ -27,6 +51,7 @@
 import { defineComponent } from 'vue';
 // Pinia stores
 import { useStatStore } from '@/stores/statStore';
+import { useWindowStore } from '@/stores/windowStore';
 // Local components
 import WeightLog from '@/components/ui/StatsView/WeightLog.vue';
 import MeasurementLog from '@/components/ui/StatsView/MeasurementLog.vue';
@@ -38,11 +63,13 @@ export default defineComponent({
 		const statPages = ['Weight', 'Measurements', 'PRs'];
 		const pageShown = 'Measurements';
         const statStore = useStatStore();
+        const windowStore = useWindowStore();
 
 		return ({
 			statPages,
 			pageShown,
-            statStore
+            statStore,
+            windowStore
 		});
 	},
 	methods: {
@@ -87,43 +114,16 @@ export default defineComponent({
 		flex-direction: column;
         gap: 20px;
 
-    nav ul {
+    ul {
         /* Positioning */
-        display: grid;
-            grid-template-columns: repeat(3, 1fr);
-            justify-items: center;
+        display: flex;
+            flex-wrap: wrap;
+            justify-content: center;
             align-items: center;
-        width: 300px;
-        position: relative;
+            gap: 10px;
 
         /* Visual */
         list-style-type: none;
-        font-size: 16px;
-        background: rgb(215, 215, 215);
-        border: 3px solid rgb(175, 175, 175);
-
-        li {
-            position: relative;
-            width: 100%;
-
-            button {
-                /* Positioning */
-                position: relative;
-                width: 100%;
-
-                /* Visual */
-                background: none;
-                border: none;
-                cursor: pointer;
-                padding: 5px;
-            }
-
-            .page-active {
-                font-size: 16px;
-                    font-weight: 700;
-                background: rgb(195,195,195);
-            }
-        }
     }
 }
 </style>

@@ -1,8 +1,6 @@
 <template>
 <v-btn
     class="CloseButton"
-    width="auto"
-    height="auto"
     flat plain>
     <v-icon
         icon="mdi-close"
@@ -22,6 +20,9 @@
     background: none;
     transform: rotate(0deg);
     transition: all 0.25s ease;
+    min-width: 0;
+    width: 32px;
+    height: 32px;
 
     &:hover {
         animation: rotate 0.25s ease-in-out;

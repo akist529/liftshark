@@ -1,21 +1,15 @@
+// Pinia imports
 import { defineStore } from 'pinia';
+// Third-party libraries
 import Cookies from 'js-cookie';
 import axios from 'axios';
 
 export const useLoginStore = defineStore('useLoginStore', {
     state: () => ({
-        modalOpen: false,
-        warningOpen: false,
         error: false,
         loggingIn: true
     }),
     actions: {
-        toggleLoginModal () {
-            this.modalOpen = !this.modalOpen;
-        },
-        toggleWarningModal () {
-            this.warningOpen = !this.warningOpen;
-        },
         setLoggingIn () {
             this.loggingIn = true;
         },
@@ -24,7 +18,6 @@ export const useLoginStore = defineStore('useLoginStore', {
         },
         removeToken () {
             Cookies.remove('token');
-            this.toggleWarningModal();
         },
         async registerUser (username: string, email: string, password: string) {
 			await axios.post('http://localhost:1337/api/auth/local/register', {
@@ -53,7 +46,6 @@ export const useLoginStore = defineStore('useLoginStore', {
 				console.log(response);
 				this.error = false;
 				Cookies.set('token', response.data.jwt);
-				this.toggleLoginModal();
 			}).catch(error => {
 				this.error = true;
 				console.log(error.response);

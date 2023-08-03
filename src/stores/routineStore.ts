@@ -1,5 +1,8 @@
+// Pinia imports
 import { defineStore } from 'pinia';
+// Type interfaces
 import { Routine, Entry } from '@/types/index';
+// Third-party libraries
 import Cookies from 'js-cookie';
 
 const token: string = Cookies.get('token');

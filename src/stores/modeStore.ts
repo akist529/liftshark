@@ -1,3 +1,4 @@
+// Pinia imports
 import { defineStore } from 'pinia';
 
 export const useModeStore = defineStore('useModeStore', {

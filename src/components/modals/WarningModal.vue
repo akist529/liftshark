@@ -23,21 +23,6 @@
 		</v-card-actions>
 	</v-card>
 </v-dialog>
-<!-- <dialog open class="warning-modal">
-	<CloseButton
-		@click="loginStore.toggleWarningModal" />
-	<strong>
-		<slot></slot>
-	</strong>
-	<div class="warning-btns">
-		<StrongButton
-			@click="loginStore.removeToken"
-		>YES</StrongButton>
-		<GenericButton
-			@click="loginStore.toggleWarningModal"
-		>NO</GenericButton>
-	</div>
-</dialog> -->
 </template>
 
 <script scoped lang="ts">

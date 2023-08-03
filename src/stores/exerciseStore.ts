@@ -1,4 +1,6 @@
+// Pinia imports
 import { defineStore } from 'pinia';
+// Third-party libraries
 import Cookies from 'js-cookie';
 
 const token: string = Cookies.get('token');

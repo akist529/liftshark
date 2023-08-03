@@ -32,15 +32,6 @@ export default defineComponent({
 		ModeButton,
 		LoginModal,
 		WarningModal
-	},
-	methods: {
-		handleLogButton () {
-			if (Cookies.get('token')) {
-				this.loginStore.toggleWarningModal();
-			} else {
-				this.loginStore.toggleLoginModal();
-			}
-		}
 	}
 });
 </script>
