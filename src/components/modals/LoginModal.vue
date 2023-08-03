@@ -1,52 +1,83 @@
 <template>
-<ModalBackground>
-<dialog open class="LoginModal">
-	<h1>Sign In</h1>
-	<div class="login-functions">
-		<button
-			id="btn-login"
-			@click="loginStore.setLoggingIn" :class="loginStore.loggingIn ? 'btn-active' : null"
-		>Login</button>
-		<button
-			id="btn-register"
-			@click="loginStore.setRegistering" :class="!loginStore.loggingIn ? 'btn-active' : null"
-		>Register</button>
-	</div>
-	<CloseButton
-		@click="loginStore.toggleLoginModal" />
-	<form>
-		<label v-if="!loggingUserIn" for="username">Username:</label><br/>
-		<input v-if="!loggingUserIn" v-model="username"
-			type="text"
-			id="username"
-			name="username" />
-		<label for="email">E-Mail:</label><br/>
-		<input v-model="email"
-			type="email"
-			id="email"
-			name="email" />
-		<label for="password">Password:</label><br/>
-		<div class="form-password">
-			<input v-model="password"
-				:type="showPassword ? 'text' : 'password'"
-				id="password"
-				name="password" />
-			<button
-				id="pw-toggle"
-				:title="showPassword ? 'Hide Password' : 'Show Password'"
-				:style="{backgroundImage: `url(images/icons/visibility${showPassword ? '_off' : ''}.svg)`}"
-				@click="togglePasswordVisibility"
-			></button>
-		</div>
-	</form>
-	<button
-		id="submit"
-		@click="loginStore.loggingIn ? loginStore.loginUser(email, password) : loginStore.registerUser(username, email, password)"
-	>{{ loginStore.loggingIn ? 'Log In' : 'Sign Up' }}
-	</button>
-	<strong v-if="error" id="errorMessage">{{ errorMessage }}</strong>
-</dialog>
-</ModalBackground>
+<v-dialog scrollable persistent v-model="dialog" class="LoginModal w-100 h-100" max-width="400px">
+	<template v-slot:activator="{ props }">
+		<v-btn v-bind="props" append-icon="mdi-login" class="bg-blue-lighten-4" variant="tonal">
+			Log In
+		</v-btn>
+	</template>
+	<v-card class="d-flex justify-center align-center pa-3 rounded-lg bg-blue-grey-lighten-3 text-black w-100">
+		<v-card-title class="d-flex flex-column justify-center align-center w-75">
+			<h1>Sign In</h1>
+		</v-card-title>
+		<v-card-actions>
+			<v-btn
+				id="btn-login"
+				@click="loggingIn = true" :class="loginStore.loggingIn ? 'btn-active' : null"
+			>Log In</v-btn>
+			<v-btn
+				id="btn-register"
+				@click="loggingIn = false" :class="!loginStore.loggingIn ? 'btn-active' : null"
+			>Register</v-btn>
+			<CloseButton
+				@click="dialog = false" />
+		</v-card-actions>
+		<v-card-text class="d-flex justify-center align-center w-100">
+			<v-form class="d-flex flex-column justify-center w-100">
+				<v-text-field
+					v-if="!loggingIn"
+					variant="underlined"
+					prepend-icon="mdi-account"
+					v-model="username"
+					id="username"
+					name="username"
+					type="text"
+					label="Username"
+					clearable
+				></v-text-field>
+				<v-text-field
+					variant="underlined"
+					prepend-icon="mdi-email"
+					v-model="email"
+					id="email"
+					name="email"
+					type="email"
+					label="E-Mail"
+					clearable
+				></v-text-field>
+				<v-container class="d-flex justify-center align-center pa-0">
+					<v-text-field
+						variant="underlined"
+						prepend-icon="mdi-lock"
+						v-model="password"
+						id="password"
+						name="password"
+						:type="showPassword ? 'text' : 'password'"
+						label="Password"
+						clearable
+					></v-text-field>
+					<v-btn
+						variant="plain"
+						:ripple="false"
+						id="pw-toggle"
+						width="32px"
+						:title="showPassword ? 'Hide Password' : 'Show Password'"
+						@click="togglePasswordVisibility">
+						<v-icon :icon="showPassword ? 'mdi-eye-off' : 'mdi-eye-outline'"></v-icon>
+					</v-btn>
+				</v-container>
+			</v-form>
+		</v-card-text>
+		<v-card-actions>
+			<v-btn
+				id="submit"
+				@click="loginStore.loggingIn ? loginStore.loginUser(email, password) : loginStore.registerUser(username, email, password)"
+			>{{ loginStore.loggingIn ? 'Log In' : 'Sign Up' }}</v-btn>
+		</v-card-actions>
+		<v-card-text>
+			<strong v-if="error" id="errorMessage">{{ errorMessage }}</strong>
+		</v-card-text>
+	</v-card>
+</v-dialog>
 </template>
 
 <script lang="ts">
@@ -54,13 +85,14 @@
 import { defineComponent } from 'vue';
 // Pinia stores
 import { useLoginStore } from '@/stores/loginStore';
+import { useWindowStore } from '@/stores/windowStore';
 // Local components
-import ModalBackground from '@/components/ModalBackground.vue';
 import CloseButton from '@/components/buttons/CloseButton.vue';
+// Third-party libraries
+import Cookies from 'js-cookie';
 
 export default defineComponent({
 	components: {
-		ModalBackground,
 		CloseButton
 	},
 	data () {
@@ -69,17 +101,22 @@ export default defineComponent({
 		const password = '';
 		const errorMessage = '';
 		const loginStore = useLoginStore();
+		const windowStore = useWindowStore();
 		const showPassword = false;
+		const token = Cookies.get('token');
 
 		return ({
 			username,
 			email,
 			password,
 			errorMessage,
-			loggingUserIn: true,
+			loggingIn: true,
 			error: false,
 			loginStore,
-			showPassword
+			windowStore,
+			showPassword,
+			dialog: false,
+			token
 		});
 	},
 	methods: {
@@ -96,147 +133,12 @@ export default defineComponent({
 
 <style scoped lang="scss">
 .LoginModal {
-	/* Positioning */
-	display: flex;
-		flex-direction: column;
-		justify-content: center;
-		align-items: center;
-		gap: 10px;
-	position: fixed;
-		top: 50%;
-		left: 50%;
-	transform: translate(-50%, -50%);
-	width: 80vw;
-	height: 80vh;
-
 	/* Visual */
-	background-color: rgb(255, 255, 255);
-	padding: 15px;
-	border: none;
-	border-radius: 20px;
-	filter: drop-shadow(10px 10px 10px rgba(0,0,0,0.5));
 	font-family: 'Karla';
 	text-transform: uppercase;
 
-	.login-functions {
-		/* Positioning */
-		display: flex;
-			flex-direction: column;
-			justify-content: center;
-			align-items: center;
-			gap: 10px;
-		position: relative;
-
-		/* Visual */
-		background-color: rgb(200,200,200);
-		border: 2px solid rgb(175,175,175);
-		padding: 20px 10px;
-
-		button {
-			/* Positioning */
-			display: grid;
-				grid-template-columns: 1fr 1fr;
-				grid-template-rows: 1fr;
-				align-items: center;
-			width: 100%;
-
-			/* Visual */
-			background: white;
-			border: none;
-			border-radius: 30px;
-			font-size: 1.25rem;
-			padding: 10px 20px;
-			cursor: pointer;
-		}
-
-		button:hover {
-			background: rgb(200,200,200);
-			box-shadow: 5px 5px 10px rgba(0,0,0,0.2);
-		}
-
-		.btn-active {
-			background: var(--button-bg-color-hover);
-			color: white;
-			border: 2px solid rgb(90, 90, 255);
-
-			&::before {
-				filter: invert(1);
-			}
-		}
-
-		#btn-login {
-			&::before {
-				display: inline-block;
-				content: '';
-				width: 32px;
-				height: 32px;
-				background-image: url('/public/images/icons/person.svg');
-					background-repeat: no-repeat;
-					background-size: contain;
-					background-position: center;
-			}
-		}
-
-		#btn-register {
-			&::before {
-				display: inline-flex;
-				content: '';
-				width: 32px;
-				height: 32px;
-				background-image: url('/public/images/icons/person_add.svg');
-					background-repeat: no-repeat;
-					background-size: contain;
-					background-position: center;
-			}
-		}
-	}
-
-	form {
-		display: flex;
-			flex-direction: column;
-			justify-content: center;
-			align-items: center;
-
-		.form-password {
-			display: flex;
-			justify-content: center;
-			align-items: center;
-			gap: 5px;
-
-			#pw-toggle {
-				background: none;
-				border: none;
-				cursor: pointer;
-				background-repeat: no-repeat;
-					background-size: contain;
-					background-position: center;
-				content: '';
-				width: 16px;
-				height: 16px;
-			}
-		}
-	}
-
-	#submit {
-		/* Positioning */
-		width: 100%;
-
-		/* Visual */
-		background-color: var(--button-bg-color);
-		padding: 10px;
-		cursor: pointer;
-
-		/* Textography */
-		color: white;
-		text-transform: uppercase;
-		font-weight: 700;
-		font-size: 18px;
-	}
-
-	#errorMessage {
-		font-size: 1rem;
-		text-align: center;
-		color: var(--error-color);
+	.v-btn {
+		min-width: 0;
 	}
 }
 </style>

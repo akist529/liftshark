@@ -17,11 +17,10 @@
 		>Close</v-btn>
 	</template>
 </v-snackbar>
-<LoginModal v-if="loginStore.modalOpen" />
 <StatsModal v-if="statStore.modalOpen" />
-<WarningModal v-if="loginStore.warningOpen">
+<!-- <WarningModal v-if="loginStore.warningOpen">
 	<span>Are you sure you want to log out?</span>
-</WarningModal>
+</WarningModal> -->
 </template>
 
 <script lang="ts">
@@ -32,8 +31,6 @@ import { useLoginStore } from './stores/loginStore';
 // Local components
 import NavBar from '@/components/NavBar.vue';
 import TopNavBar from '@/components/TopNavBar.vue';
-import LoginModal from '@/components/modals/LoginModal.vue';
-import WarningModal from '@/components/WarningModal.vue';
 import StatsModal from './components/modals/StatsModal.vue';
 // Pinia stores
 import { useExerciseStore } from './stores/exerciseStore';
@@ -48,8 +45,6 @@ export default defineComponent({
 	components: {
 		NavBar,
 		TopNavBar,
-		LoginModal,
-		WarningModal,
 		StatsModal
 	},
 	data () {

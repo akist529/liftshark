@@ -1,8 +1,8 @@
 <template>
 <nav class="TopNavBar">
 	<ModeButton />
-	<LogButton
-		@click="handleLogButton" />
+	<WarningModal v-if="token" />
+	<LoginModal v-else />
 </nav>
 </template>
 
@@ -15,19 +15,23 @@ import Cookies from 'js-cookie';
 import { useLoginStore } from '@/stores/loginStore';
 // Local components
 import ModeButton from '@/components/buttons/ModeButton.vue';
-import LogButton from '@/components/buttons/LogButton.vue';
+import LoginModal from './modals/LoginModal.vue';
+import WarningModal from './modals/WarningModal.vue';
 
 export default defineComponent({
 	data () {
 		const loginStore = useLoginStore();
+		const token = Cookies.get('token');
 
 		return ({
-			loginStore
+			loginStore,
+			token
 		});
 	},
 	components: {
 		ModeButton,
-		LogButton
+		LoginModal,
+		WarningModal
 	},
 	methods: {
 		handleLogButton () {
