@@ -1,7 +1,10 @@
 <template>
 <v-dialog :fullscreen="windowStore.width < 600" scrollable persistent v-model="dialog" class="WorkoutModal w-100 h-100" max-width="400px">
 	<template v-slot:activator="{ props }">
-		<AddButton v-bind="props" />
+		<AddButton
+			v-bind="props"
+			title="Add New Workout"
+			:style="{position: 'absolute', bottom: 30 + 'px', right: 30 + 'px'}" />
 	</template>
 	<v-card v-if="exerciseQuery.isSuccess" class="d-flex justify-center align-center pa-2 rounded-lg bg-blue-grey-lighten-3 text-black">
 		<v-card-title class="d-flex flex-column justify-center align-center">

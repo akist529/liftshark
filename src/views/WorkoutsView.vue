@@ -10,8 +10,6 @@
 		:key="workout.id"
 		:workout="workout" />
 	<WorkoutModal
-		title="Add New Workout"
-		:style="{position: 'absolute', bottom: 10 + 'px', right: 10 + 'px'}"
 		@showSnackBar="showSnackBar = true" />
 </main>
 </template>

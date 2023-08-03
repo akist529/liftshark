@@ -3,10 +3,9 @@
     <nav>
         <ul>
             <li v-for="page in statPages" :key="page">
-                <button
-                    :class="isPageShown(page) ? 'page-active' : 'page-inactive'"
+                <v-btn
                     @click="setPageShown(page)"
-                >{{ page }}</button>
+                >{{ page }}</v-btn>
             </li>
         </ul>
         <hr/>
@@ -14,10 +13,7 @@
     <WeightLog v-if="pageShown === 'Weight'" />
     <MeasurementLog v-if="pageShown === 'Measurements'" />
     <PRLog v-if="pageShown === 'PRs'" />
-    <AddButton
-        :title="addButtonTitle"
-        @click="statStore.toggleModal"
-        :style="{position: 'absolute', bottom: 10 + 'px', right: 10 + 'px'}" />
+    <StatsModal />
     <footer>
         <ul>
             <li>Tape icon by Smashicons</li>
@@ -35,7 +31,7 @@ import { useStatStore } from '@/stores/statStore';
 import WeightLog from '@/components/ui/StatsView/WeightLog.vue';
 import MeasurementLog from '@/components/ui/StatsView/MeasurementLog.vue';
 import PRLog from '@/components/ui/StatsView/PRLog.vue';
-import AddButton from '@/components/buttons/AddButton.vue';
+import StatsModal from '@/components/modals/StatsModal.vue';
 
 export default defineComponent({
 	data () {
@@ -63,7 +59,7 @@ export default defineComponent({
 		WeightLog,
 		MeasurementLog,
 		PRLog,
-        AddButton
+        StatsModal
 	},
     computed: {
         addButtonTitle () {

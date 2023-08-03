@@ -7,8 +7,6 @@
 		:exercises="exercises.data?.results || []"
 		:key="routine.id" />
 	<RoutineModal
-		title="Add New Routine"
-		:style="{position: 'absolute', bottom: 10 + 'px', right: 10 + 'px'}"
 		@showSnackBar="showSnackBar = true" />
 	<footer>
 		<ul>
