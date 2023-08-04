@@ -2,60 +2,70 @@
 import { defineStore } from 'pinia';
 // Third-party libraries
 import Cookies from 'js-cookie';
+// Type interfaces
+import { FavoriteData } from '@/types/index';
 
 const token: string = Cookies.get('token');
 
 export const useExerciseStore = defineStore('exerciseStore', {
     state: () => ({
-        favorites: [] as number[],
+        favorites: [] as FavoriteData[],
         url: 'https://wger.de/api/v2/exercise/?language=2',
         count: 0,
         loading: false
     }),
     actions: {
         async addToFavorites (id: number) {
-            const exerciseInStore = this.favorites.find((key: number) => key === id);
-            if (!exerciseInStore) this.favorites.push(id);
-
-            const favorites = this.favorites;
+            this.loading = true;
 
             if (token) {
-                await fetch('http://localhost:1337/apis/favorites', {
-                    method: 'PUT',
+                await fetch('http://localhost:1337/api/favorites', {
+                    method: 'POST',
                     headers: {
-                        Authorization: `Bearer ${Cookies.get('token')}`,
+                        Authorization: `Bearer ${token}`,
                         'Content-Type': 'application/json'
                     },
                     body: JSON.stringify({
                         data: {
-                            favorites
+                            exercise_base: id
                         }
                     })
                 });
             } else {
+                const favorites = JSON.parse(localStorage.getItem('favorites') || '[]');
+
+                favorites.push({
+                    id: favorites.length,
+                    attributes: {
+                        exercise_base: id
+                    }
+                });
+
                 localStorage.setItem('favorites', JSON.stringify(favorites));
             }
+
+            this.getFavorites();
         },
         async removeFromFavorites (id: number) {
-            this.favorites = this.favorites.filter((key: number) => key !== id);
-            const favorites = this.favorites;
+            this.loading = true;
+
+            const entry = this.favorites.find(entry => entry.attributes.exercise_base === id);
+            if (!entry) return;
 
             if (token) {
-                await fetch('http://localhost:1337/apis/favorites', {
-                    method: 'PUT',
+                await fetch(`http://localhost:1337/api/favorites/${entry.id}`, {
+                    method: 'DELETE',
                     headers: {
-                        Authorization: `Bearer ${Cookies.get('token')}`,
+                        Authorization: `Bearer ${token}`,
                         'Content-Type': 'application/json'
-                    },
-                    body: JSON.stringify({
-                        data: {
-                            favorites
-                        }
-                    })
+                    }
                 });
             } else {
+                const favorites = this.favorites.filter(entry => entry.attributes.exercise_base !== id);
                 localStorage.setItem('favorites', JSON.stringify(favorites));
             }
+
+            this.getFavorites();
         },
         async getFavorites () {
             this.loading = true;
@@ -64,7 +74,7 @@ export const useExerciseStore = defineStore('exerciseStore', {
 				await fetch('http://localhost:1337/api/favorites', {
 					method: 'GET',
 					headers: {
-						Authorization: `Bearer ${Cookies.get('token')}`,
+						Authorization: `Bearer ${token}`,
 						'Content-Type': 'application/json'
 					}
 					}).then(response => {
@@ -75,8 +85,8 @@ export const useExerciseStore = defineStore('exerciseStore', {
 						console.log(error);
 					});
             } else {
-                const localFavorites: number[] = JSON.parse(localStorage.getItem('favorites') || '[]');
-                this.favorites = localFavorites;
+                const favorites = JSON.parse(localStorage.getItem('favorites') || '[]');
+                this.favorites = favorites;
             }
 
             this.loading = false;

@@ -1,6 +1,6 @@
 <template>
 <v-btn
-	class="BurgerButton rounded-l"
+	class="BurgerButton rounded-lg"
 	width="96"
 	height="auto"
 	@click="$emit('setMenuOpen')">
@@ -19,7 +19,7 @@ import { defineComponent, PropType } from 'vue';
 export default defineComponent({
 	props: {
 		menuOpen: {
-			type: Object as PropType<boolean>,
+			type: Boolean as PropType<boolean>,
 			required: true
 		}
 	}

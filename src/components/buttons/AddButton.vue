@@ -7,7 +7,8 @@
     variant="tonal">
     <v-icon
         icon="mdi-plus"
-        size="xxx-large" />
+        size="xxx-large"
+    ></v-icon>
 </v-btn>
 </template>
 

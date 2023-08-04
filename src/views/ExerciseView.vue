@@ -1,61 +1,63 @@
 <template>
-<LoadIcon v-if="!isLoaded && !isError" />
-<h1 v-if="isError">Error!</h1>
-<article v-if="isLoaded && !isError && exercise.data && muscles.data && equipment.data" class="ExerciseView">
-	<h1>{{ exercise.data.name }}</h1>
-	<h2 v-if="exercise.data.muscles.length">Primary Muscles</h2>
-	<ul v-if="exercise.data.muscles.length">
-		<li v-for="muscle in exercise.data.muscles" :key="muscle">
-			<span
-				:style="getLocalImage('muscles', getSlug(getMuscleName(muscle)))"
-			></span>
-			{{ getMuscleName(muscle) }}
-		</li>
-	</ul>
-	<h2 v-if="exercise.data.muscles_secondary.length">Secondary Muscles</h2>
-	<ul v-if="exercise.data.muscles_secondary.length">
-		<li v-for="muscle in exercise.data.muscles_secondary" :key="muscle">
-			<span
-				:style="getLocalImage('muscles', getSlug(getMuscleName(muscle)))"
-			></span>
-			{{ getMuscleName(muscle) }}
-		</li>
-	</ul>
-	<h2 v-if="exercise.data.equipment.length">Equipment</h2>
-	<ul v-if="exercise.data.equipment.length">
-		<li v-for="item in exercise.data.equipment" :key="item">
-			<span
-				:style="getLocalImage('equipment', getSlug(getEquipmentName(item)))"
-			></span>
-			{{ getEquipmentName(item) }}
-		</li>
-	</ul>
-	<p v-if="exercise.data.description" :innerHTML="exercise.data.description"></p>
-	<ul v-if="images.isSuccess && images.data.results.length" class="exercise-pics">
-		<li v-for="image in images.data.results" :key="image.id">
-			<figure>
-				<img
-					alt="Exercise Example"
-					:src="image.image" />
-				<figcaption>Example of {{ exercise.data.name }}</figcaption>
-			</figure>
-		</li>
-	</ul>
-	<BurgerMenu v-if="menuOpen" />
-	<footer class="exercise-btns">
-		<BackButton
-			class="back-btn"
-			@click="$router.back()" />
-		<div class="burger-column">
-			<BurgerButton
-				:menuOpen="menuOpen"
-				@setMenuOpen="setMenuOpen" />
-		</div>
-		<BookmarkButton
-			class="bookmark-btn"
-			:exerciseId="exercise.data.id" />
-	</footer>
-</article>
+<v-container>
+	<LoadIcon v-if="!isLoaded && !isError" />
+	<h1 v-if="isError">Error!</h1>
+	<article v-if="isLoaded && !isError && exercise.data && muscles.data && equipment.data" class="ExerciseView">
+		<h1>{{ exercise.data.name }}</h1>
+		<h2 v-if="exercise.data.muscles.length">Primary Muscles</h2>
+		<ul v-if="exercise.data.muscles.length">
+			<li v-for="muscle in exercise.data.muscles" :key="muscle">
+				<span
+					:style="getLocalImage('muscles', getSlug(getMuscleName(muscle)))"
+				></span>
+				{{ getMuscleName(muscle) }}
+			</li>
+		</ul>
+		<h2 v-if="exercise.data.muscles_secondary.length">Secondary Muscles</h2>
+		<ul v-if="exercise.data.muscles_secondary.length">
+			<li v-for="muscle in exercise.data.muscles_secondary" :key="muscle">
+				<span
+					:style="getLocalImage('muscles', getSlug(getMuscleName(muscle)))"
+				></span>
+				{{ getMuscleName(muscle) }}
+			</li>
+		</ul>
+		<h2 v-if="exercise.data.equipment.length">Equipment</h2>
+		<ul v-if="exercise.data.equipment.length">
+			<li v-for="item in exercise.data.equipment" :key="item">
+				<span
+					:style="getLocalImage('equipment', getSlug(getEquipmentName(item)))"
+				></span>
+				{{ getEquipmentName(item) }}
+			</li>
+		</ul>
+		<p v-if="exercise.data.description" :innerHTML="exercise.data.description"></p>
+		<ul v-if="images.isSuccess && images.data.results.length" class="exercise-pics">
+			<li v-for="image in images.data.results" :key="image.id">
+				<figure>
+					<img
+						alt="Exercise Example"
+						:src="image.image" />
+					<figcaption>Example of {{ exercise.data.name }}</figcaption>
+				</figure>
+			</li>
+		</ul>
+		<BurgerMenu v-if="menuOpen" />
+		<footer class="exercise-btns">
+			<BackButton
+				class="back-btn"
+				@click="$router.back()" />
+			<div class="burger-column">
+				<BurgerButton
+					:menuOpen="menuOpen"
+					@setMenuOpen="setMenuOpen" />
+			</div>
+			<BookmarkButton
+				class="bookmark-btn"
+				:id="exercise.data.id" />
+		</footer>
+	</article>
+</v-container>
 </template>
 
 <script lang="ts">

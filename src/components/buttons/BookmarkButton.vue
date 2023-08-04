@@ -3,9 +3,9 @@
     class="rounded-circle"
     width="64"
     height="64"
-    @click="favorited ? exerciseStore.removeFromFavorites(id) : exerciseStore.addToFavorites(id)">
+    @click="isFavorited ? exerciseStore.removeFromFavorites(id) : exerciseStore.addToFavorites(id)">
     <v-icon
-        :icon="favorited ? 'mdi-heart-plus' : 'mdi-heart'"
+        :icon="isFavorited ? 'mdi-heart' : 'mdi-heart-plus'"
         size="xxx-large"
     ></v-icon>
 </v-btn>
@@ -27,13 +27,13 @@ export default defineComponent({
     },
     props: {
         id: {
-            type: Object as PropType<number>,
+            type: Number as PropType<number>,
             required: true
         }
     },
     computed: {
-        favorited () {
-            const isFavorited = this.exerciseStore.favorites.find((key: number) => key === this.id);
+        isFavorited () {
+            const isFavorited = this.exerciseStore.favorites.find(entry => entry.attributes.exercise_base === this.id);
 
             if (isFavorited) return true;
                 else return false;

@@ -131,3 +131,13 @@ export interface ExerciseData {
     previous: string,
     results: Exercise[]
 }
+
+export interface Favorite {
+    // eslint-disable-next-line camelcase
+    exercise_base: number
+}
+
+export interface FavoriteData {
+    id: number,
+    attributes: Favorite
+}
