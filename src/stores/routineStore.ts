@@ -90,7 +90,7 @@ export const useRoutineStore = defineStore('routineStore', {
 					attributes: {
 						name: 'New Routine',
 						day: this.activeDay,
-						exercises: []
+						entries: []
 					}
 				});
 
@@ -99,7 +99,7 @@ export const useRoutineStore = defineStore('routineStore', {
 
             this.getRoutineData();
         },
-        async updateRoutine (id: number, name: string, day: string, exercises: Entry[]) {
+        async updateRoutine (id: number, name: string, day: string, entries: Entry[]) {
             const routine = this.routines.find((routine: Routine) => routine.id === id);
 
             if (routine) {
@@ -114,7 +114,7 @@ export const useRoutineStore = defineStore('routineStore', {
                             data: {
                                 name: name,
                                 day: day,
-                                exercises: exercises
+                                entries: entries
                             }
                         })
                     }).then(response => {
@@ -130,7 +130,7 @@ export const useRoutineStore = defineStore('routineStore', {
                             routines[i].attributes = ({
                                 name: name,
                                 day: day,
-                                exercises: exercises
+                                entries: entries
                             });
                         }
                     }
@@ -195,7 +195,9 @@ export const useRoutineStore = defineStore('routineStore', {
 
             this.loading = false;
         },
-        getRoutineById (id: number) {
+        getRoutineById (id: number | undefined) {
+            if (!id) return null;
+
             const routine = this.routines.find((routine: Routine) => routine.id === id);
 
             if (routine) return routine;

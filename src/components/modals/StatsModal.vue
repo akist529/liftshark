@@ -84,7 +84,7 @@
 		</v-card-text>
 		<v-card-actions>
 			<v-btn
-				@click="dialog = false"
+				@click="addStat"
 				variant="flat"
 				color="success"
 			>Add</v-btn>
@@ -106,6 +106,7 @@ import { useQuery } from 'vue-query';
 // Pinia stores
 import { useStatStore } from '@/stores/statStore';
 import { useExerciseStore } from '@/stores/exerciseStore';
+import { useSnackbarStore } from '@/stores/snackbarStore';
 // Local components
 import CloseButton from '../buttons/CloseButton.vue';
 import AddButton from '../buttons/AddButton.vue';
@@ -122,6 +123,7 @@ export default defineComponent({
     data () {
         const statStore = useStatStore();
 		const exerciseStore = useExerciseStore();
+		const snackbarStore = useSnackbarStore();
 		const weight = 0;
 		const muscle = 'Upper Arm';
 		const measurement = 0;
@@ -131,6 +133,8 @@ export default defineComponent({
 
         return ({
             statStore,
+			exerciseStore,
+			snackbarStore,
 			dialog: false,
 			weight,
 			muscle,
@@ -154,6 +158,49 @@ export default defineComponent({
 		stat: {
 			type: String as PropType<string>,
 			required: true
+		}
+	},
+	methods: {
+		addStat (e: MouseEvent) {
+			e.preventDefault();
+
+			const statType = (() => {
+				switch (this.stat) {
+					case 'Weight':
+						return 'weight';
+					case 'Measurements':
+						return 'measurement';
+					case 'PRs':
+						return 'record';
+					default:
+						return '';
+				}
+			})();
+
+			const statNum = (() => {
+				switch (this.stat) {
+					case 'Weight':
+						return this.weight;
+					case 'Measurements':
+						return this.measurement;
+					case 'PRs':
+						return this.record;
+					default:
+						return 0;
+				}
+			})();
+
+			const statInfo = ({
+				date: `${new Date().getFullYear()}-${new Date().getMonth()}-${new Date().getDate()}`,
+				type: statType,
+				stat: statNum
+			});
+
+			console.log(statInfo);
+			this.dialog = false;
+			this.snackbarStore.text = 'Stat successfully added';
+			this.snackbarStore.color = 'success';
+			this.snackbarStore.open = true;
 		}
 	}
 })

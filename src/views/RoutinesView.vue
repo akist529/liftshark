@@ -1,11 +1,27 @@
 <template>
-<div class="RoutinesView">
-	<h1>My Routines</h1>
-	<SelectDay />
-	<MyRoutine v-for="routine in routineStore.activeDayRoutines"
-		:routine="routine"
-		:exercises="exercises.data?.results || []"
-		:key="routine.id" />
+<v-container class="RoutinesView d-flex flex-column justify-start align-center">
+	<v-row cols="1">
+		<v-col class="d-flex flex-column justify-center align-center" :style="{gap: '10px'}">
+			<h1>My Routines</h1>
+			<v-select
+				class="w-100"
+				label="Select Day"
+				name="day"
+				id="day"
+				ref="day"
+				:items="routineStore.weekdays"
+				prepend-icon="mdi-calendar-star"
+			></v-select>
+		</v-col>
+	</v-row>
+	<v-row>
+		<v-col>
+			<MyRoutine v-for="routine in routineStore.activeDayRoutines"
+				:routine="routine"
+				:exercises="exercises.data?.results || []"
+				:key="routine.id" />
+		</v-col>
+	</v-row>
 	<RoutineModal
 		@showSnackBar="showSnackBar = true" />
 	<footer>
@@ -13,7 +29,7 @@
 			<li>Report icon by nawicon</li>
 		</ul>
 	</footer>
-</div>
+</v-container>
 </template>
 
 <script lang="ts">
@@ -29,7 +45,6 @@ import { ExerciseData, Routine } from '@/types/index';
 import { useRoutineStore } from '@/stores/routineStore';
 // Local components
 import MyRoutine from '@/components/ui/RoutinesView/MyRoutine.vue';
-import SelectDay from '@/components/ui/RoutinesView/SelectDay.vue';
 import RoutineModal from '@/components/modals/RoutineModal.vue';
 
 const getData = async (): Promise<ExerciseData> => {
@@ -71,7 +86,6 @@ export default defineComponent({
 	},
 	components: {
 		MyRoutine,
-		SelectDay,
 		RoutineModal
 	},
 	async created () {
@@ -82,12 +96,6 @@ export default defineComponent({
 
 <style scoped lang="scss">
 .RoutinesView {
-	display: flex;
-		flex-direction: column;
-		gap: 10px;
-	position: relative;
-		z-index: 0;
-
 	h1 {
 		display: flex;
 			justify-content: center;
@@ -104,11 +112,6 @@ export default defineComponent({
 				background-size: contain;
 				background-position: center;
 		}
-	}
-
-	#day {
-		font-size: 18px;
-		appearance: none;
 	}
 }
 </style>

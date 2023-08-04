@@ -12,13 +12,13 @@
 		<v-card-actions>
 			<v-btn
 				id="btn-login"
-				@click="loggingIn = true" :class="loginStore.loggingIn ? 'btn-active' : null"
+				@click="loggingIn = true" :class="loggingIn ? 'btn-active' : null"
 				prepend-icon="mdi-login"
 				:variant="loggingIn ? 'flat' : 'tonal'"
 			>Log In</v-btn>
 			<v-btn
 				id="btn-register"
-				@click="loggingIn = false" :class="!loginStore.loggingIn ? 'btn-active' : null"
+				@click="loggingIn = false" :class="!loggingIn ? 'btn-active' : null"
 				prepend-icon="mdi-account-plus"
 				:variant="loggingIn ? 'tonal' : 'flat'"
 			>Register</v-btn>
@@ -66,7 +66,7 @@
 						width="32px"
 						:title="showPassword ? 'Hide Password' : 'Show Password'"
 						@click="togglePasswordVisibility">
-						<v-icon :icon="showPassword ? 'mdi-eye-off' : 'mdi-eye-outline'"></v-icon>
+						<v-icon :icon="showPassword ? 'mdi-eye-outline' : 'mdi-eye-off'"></v-icon>
 					</v-btn>
 				</v-container>
 			</v-form>
@@ -74,9 +74,9 @@
 		<v-card-actions>
 			<v-btn
 				id="submit"
-				@click="loginStore.loggingIn ? loginStore.loginUser(email, password) : loginStore.registerUser(username, email, password)"
+				@click="loggingIn ? loginUser() : registerUser()"
 				variant="flat"
-			>{{ loginStore.loggingIn ? 'Log In' : 'Sign Up' }}</v-btn>
+			>{{ loggingIn ? 'Log In' : 'Sign Up' }}</v-btn>
 		</v-card-actions>
 		<v-card-text>
 			<strong v-if="error" id="errorMessage">{{ errorMessage }}</strong>
@@ -91,6 +91,7 @@ import { defineComponent } from 'vue';
 // Pinia stores
 import { useLoginStore } from '@/stores/loginStore';
 import { useWindowStore } from '@/stores/windowStore';
+import { useSnackbarStore } from '@/stores/snackbarStore';
 // Local components
 import CloseButton from '@/components/buttons/CloseButton.vue';
 // Third-party libraries
@@ -107,6 +108,7 @@ export default defineComponent({
 		const errorMessage = '';
 		const loginStore = useLoginStore();
 		const windowStore = useWindowStore();
+		const snackbarStore = useSnackbarStore();
 		const showPassword = false;
 		const token = Cookies.get('token');
 
@@ -119,6 +121,7 @@ export default defineComponent({
 			error: false,
 			loginStore,
 			windowStore,
+			snackbarStore,
 			showPassword,
 			dialog: false,
 			token
@@ -131,6 +134,36 @@ export default defineComponent({
 		togglePasswordVisibility (e: MouseEvent) {
 			e.preventDefault();
 			this.showPassword = !this.showPassword;
+		},
+		loginUser () {
+			this.loginStore.loginUser(this.email, this.password);
+			this.dialog = false;
+			this.snackbarStore.open = true;
+
+			if (!this.loginStore.error) {
+				this.snackbarStore.text = `Welcome back, ${this.username}!`;
+				this.snackbarStore.color = 'success';
+				this.snackbarStore.icon = 'mdi-check-circle';
+			} else {
+				this.snackbarStore.text = 'Failed to log in';
+				this.snackbarStore.color = 'error';
+				this.snackbarStore.icon = 'mdi-alert-circle';
+			}
+		},
+		registerUser () {
+			this.loginStore.registerUser(this.username, this.email, this.password);
+			this.dialog = false;
+			this.snackbarStore.open = true;
+
+			if (!this.loginStore.error) {
+				this.snackbarStore.text = `Welcome, ${this.username}!`;
+				this.snackbarStore.color = 'success';
+				this.snackbarStore.icon = 'mdi-check-circle';
+			} else {
+				this.snackbarStore.text = 'Failed to register new user';
+				this.snackbarStore.color = 'error';
+				this.snackbarStore.icon = 'mdi-alert-circle';
+			}
 		}
 	}
 });

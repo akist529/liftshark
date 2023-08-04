@@ -61,13 +61,13 @@ export interface Image {
 }
 
 export interface Set {
-    id: number,
+    key: number,
     weight: number,
     reps: number
 }
 
 export interface Entry {
-    id: number,
+    key: number,
     name: string,
     sets: Set[]
 }
@@ -77,7 +77,7 @@ export interface Routine {
     attributes: {
         name: string,
         day: string,
-        exercises?: Entry[]
+        entries: Entry[]
     }
 }
 
@@ -85,7 +85,8 @@ export interface Workout {
     id: number,
     attributes: {
         date: string,
-        routine: number
+        entries: Entry[],
+        routine?: number
     }
 }
 
@@ -95,6 +96,32 @@ export interface Stat {
         date: string,
         type: string,
         stat: number
+    }
+}
+
+export interface Weight {
+    id: number,
+    attributes: {
+        date: string,
+        measurement: number
+    }
+}
+
+export interface Measurement {
+    id: number,
+    attributes: {
+        date: string,
+        muscle: string,
+        measurement: number
+    }
+}
+
+export interface Record {
+    id: number,
+    attributes: {
+        date: string,
+        exercise: number,
+        max: number
     }
 }
 

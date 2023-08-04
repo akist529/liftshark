@@ -5,18 +5,18 @@
 		@click="workoutStore.deleteWorkout(workout.id)" />
 	<span>{{ routine.attributes.name }}</span>
 	<ul class="exercises">
-		<table v-for="exercise in routine.attributes.exercises" :key="exercise.id">
-			<thead>{{ exercise.name }}</thead>
+		<table v-for="entry in routine.attributes.entries" :key="entry.key">
+			<thead>{{ entry.name }}</thead>
 			<tbody>
 			<tr id="exercise-headers">
 				<th>SET</th>
 				<th>REPS</th>
 				<th>WEIGHT</th>
 			</tr>
-			<tr v-for="set in exercise.sets.length" :key="set" class="set">
+			<tr v-for="set in entry.sets.length" :key="set" class="set">
 				<td>{{ set }}</td>
-				<td>{{ exercise.sets[set - 1].reps }}</td>
-				<td>{{ exercise.sets[set - 1].weight }} lbs.</td>
+				<td>{{ entry.sets[set - 1].reps }}</td>
+				<td>{{ entry.sets[set - 1].weight }} lbs.</td>
 			</tr>
 			</tbody>
 		</table>

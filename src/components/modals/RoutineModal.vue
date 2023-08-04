@@ -115,8 +115,8 @@ export default defineComponent({
 			for (let i = 1; i <= this.exerciseCount; i++) {
 				const name = document.getElementById(`exercise-${i}-name`) as HTMLSelectElement;
 
-				const exercise = ({
-					id: i,
+				const entry = ({
+					key: i,
 					name: name.value || `Exercise ${i}`,
 					sets: []
 				} as Entry);
@@ -126,15 +126,15 @@ export default defineComponent({
 					const weight = document.getElementById(`exercise-${i}-weight-${j}`) as HTMLInputElement;
 
 					if (reps && weight) {
-						exercise.sets.push({
-							id: j,
+						entry.sets.push({
+							key: j,
 							weight: Number(weight.value),
 							reps: Number(reps.value)
 						} as Set)
 					}
 				}
 
-				routine.exercises.push(exercise);
+				routine.exercises.push(entry);
 			}
 
 			console.log(routine);

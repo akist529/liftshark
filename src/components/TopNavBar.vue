@@ -1,7 +1,7 @@
 <template>
 <nav class="TopNavBar">
 	<ModeButton />
-	<WarningModal v-if="token" />
+	<WarningModal v-if="loginStore.token" />
 	<LoginModal v-else />
 </nav>
 </template>
@@ -9,8 +9,6 @@
 <script lang="ts">
 // Vue imports
 import { defineComponent } from 'vue';
-// Third-party libraries
-import Cookies from 'js-cookie';
 // Pinia stores
 import { useLoginStore } from '@/stores/loginStore';
 // Local components
@@ -21,11 +19,9 @@ import WarningModal from './modals/WarningModal.vue';
 export default defineComponent({
 	data () {
 		const loginStore = useLoginStore();
-		const token = Cookies.get('token');
 
 		return ({
-			loginStore,
-			token
+			loginStore
 		});
 	},
 	components: {

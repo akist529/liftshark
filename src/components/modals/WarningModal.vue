@@ -15,7 +15,7 @@
 		</v-card-text>
 		<v-card-actions>
 			<StrongButton
-				@click="Cookies.remove('token')"
+				@click="removeToken"
 			>YES</StrongButton>
 			<GenericButton
 				@click="dialog = false"
@@ -42,12 +42,11 @@ export default defineComponent({
 	data () {
 		const loginStore = useLoginStore();
 		const windowStore = useWindowStore();
-		const token = Cookies.get('token');
 
 		return ({
 			loginStore,
 			windowStore,
-			token,
+			token: Cookies.get('token'),
 			dialog: false,
 			Cookies
 		});
@@ -56,6 +55,13 @@ export default defineComponent({
 		CloseButton,
 		StrongButton,
 		GenericButton
+	},
+	methods: {
+		removeToken () {
+			Cookies.remove('token');
+			this.loginStore.token = null;
+			this.dialog = false;
+		}
 	}
 });
 </script>

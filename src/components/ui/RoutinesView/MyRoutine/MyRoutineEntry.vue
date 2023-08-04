@@ -21,14 +21,14 @@
 		</div>
 		<button class="entry-delete" @click="deleteEntry"></button>
 	</div>
-	<div v-for="set in entry?.sets" :key="set.id" class="entry-set">
+	<div v-for="set in entry?.sets" :key="set.key" class="entry-set">
 		<div class="set-reps">
 			<input
 				type="number"
 				min="1"
 				max="100"
 				:value="set.reps || 1"
-				:ref="`repCount-${set.id}`"
+				:ref="`repCount-${set.key}`"
 				@change="updateEntry()" />
 			<span> reps</span>
 		</div>
@@ -38,7 +38,7 @@
 				min="1"
 				max="500"
 				:value="set.weight || 1"
-				:ref="`weight-${set.id}`"
+				:ref="`weight-${set.key}`"
 				@change="updateEntry()" />
 			<span> lbs.</span>
 		</div>
@@ -91,7 +91,7 @@ export default defineComponent({
 	},
 	methods: {
 		async deleteEntry () {
-			const entries = this.routine?.attributes.exercises?.filter((entry: Entry) => entry.id !== this.entry?.id);
+			const entries = this.routine?.attributes.entries?.filter((entry: Entry) => entry.key !== this.entry?.key);
 
 			this.routineStore.updateRoutine(
 				this.routine?.id || 0,
@@ -103,20 +103,20 @@ export default defineComponent({
 		async updateEntry () {
 			const updatedEntries: Entry[] = [];
 
-			this.routine?.attributes.exercises?.forEach(exercise => {
-				if (exercise.id === this.entry?.id) {
+			this.routine?.attributes.entries?.forEach(exercise => {
+				if (exercise.key === this.entry?.key) {
 					const updatedSets: Set[] = [];
 
 					for (let i = 0; i < (this.setCount || 0); i++) {
 						if (this.entry?.sets[i]) {
 							updatedSets.push({
-								id: this.entry?.sets[i].id,
-								weight: Number((this.$refs[`weight-${this.entry?.sets[i].id}`] as HTMLInputElement)[0].value as string),
-								reps: Number((this.$refs[`repCount-${this.entry?.sets[i].id}`] as HTMLInputElement)[0].value as string)
+								key: this.entry?.sets[i].key,
+								weight: Number((this.$refs[`weight-${this.entry?.sets[i].key}`] as HTMLInputElement)[0].value as string),
+								reps: Number((this.$refs[`repCount-${this.entry?.sets[i].key}`] as HTMLInputElement)[0].value as string)
 							});
 						} else {
 							updatedSets.push({
-								id: i,
+								key: i,
 								weight: 0,
 								reps: 0
 							});
@@ -124,7 +124,7 @@ export default defineComponent({
 					}
 
 					updatedEntries.push({
-						id: this.entry?.id,
+						key: this.entry?.key,
 						name: (this.$refs.name as HTMLSelectElement).value,
 						sets: updatedSets
 					});
@@ -163,7 +163,7 @@ export default defineComponent({
 							attributes: {
 								name: currentStorage[i].attributes.name,
 								day: (this.routine?.attributes.day || 'Sunday'),
-								exercises: updatedEntries
+								entries: updatedEntries
 							}
 						});
 					} else {

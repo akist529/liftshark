@@ -18,7 +18,7 @@
 			@click="editNameOpen = !editNameOpen"
 		></button>
 	</div>
-	<ul v-for="entry in routine?.attributes.exercises" :key="entry.id">
+	<ul v-for="entry in routine?.attributes.entries" :key="entry.key">
 		<MyRoutineEntry
 			:routine="routine"
 			:entry="entry"
@@ -35,7 +35,7 @@
 // Vue imports
 import { defineComponent, PropType } from 'vue';
 // Type interfaces
-import { Routine, Exercise } from '@/types/index';
+import { Routine, Exercise, Entry } from '@/types/index';
 // Pinia stores
 import { useRoutineStore } from '@/stores/routineStore';
 // Local components
@@ -59,18 +59,18 @@ export default defineComponent({
 	methods: {
 		newEntry () {
 			const newEntry = ({
-				id: this.routine?.attributes.exercises?.length || 0,
+				key: this.routine?.attributes.entries.length || 0,
 				name: '2 Handed Kettlebell Swing',
 				sets: [
 					{
-						id: 0,
+						key: 0,
 						weight: 0,
 						reps: 0
 					}
 				]
-			});
+			} as Entry);
 
-			const entries = this.routine?.attributes.exercises || [];
+			const entries = this.routine?.attributes.entries || [];
 			entries?.push(newEntry);
 
 			this.routineStore.updateRoutine(
@@ -84,7 +84,7 @@ export default defineComponent({
 				this.routine?.id || 0,
 				this.name || '',
 				this.routine?.attributes.day || this.routineStore.activeDay,
-				this.routine?.attributes.exercises || []
+				this.routine?.attributes.entries || []
 			);
 		}
 	},

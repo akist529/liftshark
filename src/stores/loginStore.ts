@@ -1,5 +1,7 @@
 // Pinia imports
 import { defineStore } from 'pinia';
+// Pinia stores
+import { useSnackbarStore } from './snackbarStore';
 // Third-party libraries
 import Cookies from 'js-cookie';
 import axios from 'axios';
@@ -7,15 +9,10 @@ import axios from 'axios';
 export const useLoginStore = defineStore('useLoginStore', {
     state: () => ({
         error: false,
-        loggingIn: true
+		snackbarStore: useSnackbarStore(),
+		token: Cookies.get('token') || null
     }),
     actions: {
-        setLoggingIn () {
-            this.loggingIn = true;
-        },
-        setRegistering () {
-            this.loggingIn = false;
-        },
         removeToken () {
             Cookies.remove('token');
         },
@@ -46,6 +43,7 @@ export const useLoginStore = defineStore('useLoginStore', {
 				console.log(response);
 				this.error = false;
 				Cookies.set('token', response.data.jwt);
+				this.token = response.data.jwt;
 			}).catch(error => {
 				this.error = true;
 				console.log(error.response);
