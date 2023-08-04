@@ -1,7 +1,7 @@
 // Pinia imports
 import { defineStore } from 'pinia';
 // Type interfaces
-import { WeightData, Weight, MeasurementData, Measurement, RecordData, Record } from '@/types/index';
+import { WeightData, MeasurementData, RecordData } from '@/types/index';
 // Third-party libraries
 import Cookies from 'js-cookie';
 

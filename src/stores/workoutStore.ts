@@ -87,7 +87,7 @@ export const useWorkoutStore = defineStore('workoutStore', {
             this.loading = true;
 
             if (token) {
-                await fetch('http://localhost:1337/apis/workouts', {
+                await fetch('http://localhost:1337/api/workouts', {
                     method: 'POST',
                     headers: {
                         Authorization: `Bearer ${token}`,
@@ -96,7 +96,11 @@ export const useWorkoutStore = defineStore('workoutStore', {
                     body: JSON.stringify({
                         data: workout
                     })
-                });
+                }).then(response => {
+					console.log(response);
+				}).catch(error => {
+					console.log(error);
+				});
             } else {
 				const workouts = JSON.parse(localStorage.getItem('workouts') || '[]');
 
@@ -116,7 +120,7 @@ export const useWorkoutStore = defineStore('workoutStore', {
             const workouts = this.workouts.filter(workout => workout.id !== idToDelete);
 
             if (token) {
-				await fetch('http://localhost:1337/apis/workouts', {
+				await fetch('http://localhost:1337/api/workouts', {
 					method: 'PUT',
 					headers: {
 						Authorization: `Bearer ${token}`,
@@ -127,6 +131,10 @@ export const useWorkoutStore = defineStore('workoutStore', {
                             workouts
                         }
 					})
+				}).then(response => {
+					console.log(response);
+				}).catch(error => {
+					console.log(error);
 				});
 			} else {
 				localStorage.setItem('workouts', JSON.stringify(workouts));
@@ -141,7 +149,7 @@ export const useWorkoutStore = defineStore('workoutStore', {
             workouts.push(workout);
 
             if (token) {
-                await fetch('http://localhost:1337/apis/workouts', {
+                await fetch('http://localhost:1337/api/workouts', {
                     method: 'PUT',
                     headers: {
                         Authorization: `Bearer ${token}`,
@@ -152,7 +160,11 @@ export const useWorkoutStore = defineStore('workoutStore', {
                             workouts
                         }
                     })
-                });
+                }).then(response => {
+					console.log(response);
+				}).catch(error => {
+					console.log(error);
+				});
             } else {
                 localStorage.setItem('workouts', JSON.stringify(workouts));
             }

@@ -14,7 +14,7 @@
 		<v-card-actions>
 			<v-btn
 				class="btn-add-exercise"
-				@click="exerciseCount++">
+				@click="entryCount++">
 				Add Exercise
 				<v-icon icon="mdi-dumbbell"></v-icon>
 			</v-btn>
@@ -24,7 +24,7 @@
 		<v-card-text class="w-100 bg-blue-grey-lighten-1">
 			<v-form class="w-100">
 				<v-carousel class="rounded-lg w-100 h-100" show-arrows="hover" progress="primary">
-					<ExerciseForm v-for="exercise in exerciseCount"
+					<ExerciseForm v-for="exercise in entryCount"
 						:key="exercise"
 						:exercises="exerciseQuery.data.results"
 						:count="exercise"
@@ -69,14 +69,14 @@ export default defineComponent({
 		const windowStore = useWindowStore();
 		const snackbarStore = useSnackbarStore();
 		const exerciseQuery = useQuery('exercises', () => getData());
-		const exerciseCount = 1;
+		const entryCount = 1;
 
         return ({
             workoutStore,
 			windowStore,
 			snackbarStore,
 			exerciseQuery,
-			exerciseCount,
+			entryCount,
 			dialog: false,
 			snackbar: false
         });
@@ -90,19 +90,19 @@ export default defineComponent({
 		deleteExercise (e: MouseEvent) {
 			e.preventDefault();
 
-			if (this.exerciseCount > 1) {
-				this.exerciseCount--;
+			if (this.entryCount > 1) {
+				this.entryCount--;
 			}
 		},
 		addWorkout (e: MouseEvent) {
 			e.preventDefault();
 
 			const workout = ({
-				date: `${this.workoutStore.selectedYear}-${this.workoutStore.selectedMonth}-${this.workoutStore.selectedDate}`,
+				date: new Date(this.workoutStore.selectedYear, this.workoutStore.selectedMonth, this.workoutStore.selectedDate).toISOString().split('T')[0],
 				entries: [] as Entry[]
 			});
 
-			for (let i = 1; i <= this.exerciseCount; i++) {
+			for (let i = 1; i <= this.entryCount; i++) {
 				const name = document.getElementById(`exercise-${i}-name`) as HTMLSelectElement;
 
 				const entry = ({
@@ -112,8 +112,8 @@ export default defineComponent({
 				} as Entry);
 
 				for (let j = 1; j <= 6; j++) {
-					const reps = document.getElementById(`exercise-${i}-repCount-${j}`) as HTMLInputElement;
-					const weight = document.getElementById(`exercise-${i}-weight-${j}`) as HTMLInputElement;
+					const reps = document.getElementById(`exc-${i}-repCount-${j}`) as HTMLInputElement;
+					const weight = document.getElementById(`exc-${i}-weight-${j}`) as HTMLInputElement;
 
 					if (reps && weight) {
 						entry.sets.push({
