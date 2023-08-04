@@ -1,9 +1,10 @@
 <template>
 <v-dialog scrollable persistent v-model="dialog" class="WarningModal w-100 h-100" max-width="400px">
 	<template v-slot:activator="{ props }">
-		<v-btn v-bind="props" append-icon="mdi-logout">
-			Log Out
-		</v-btn>
+		<v-btn
+			v-bind="props"
+			append-icon="mdi-logout"
+		>Log Out</v-btn>
 	</template>
 	<v-card class="d-flex justify-center align-center pa-2 rounded-lg bg-blue-grey-lighten-3 text-black">
 		<v-card-actions>

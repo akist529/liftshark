@@ -1,9 +1,12 @@
 <template>
 <v-dialog scrollable persistent v-model="dialog" class="LoginModal w-100 h-100" max-width="400px">
 	<template v-slot:activator="{ props }">
-		<v-btn v-bind="props" append-icon="mdi-login" class="bg-blue-lighten-4" variant="tonal">
-			Log In
-		</v-btn>
+		<v-btn
+			v-bind="props"
+			append-icon="mdi-login"
+			class="bg-blue-lighten-4"
+			variant="tonal"
+		>Log In</v-btn>
 	</template>
 	<v-card class="d-flex justify-center align-center pa-3 rounded-lg bg-blue-grey-lighten-3 text-black w-100">
 		<v-card-title class="d-flex flex-column justify-center align-center w-75">
@@ -69,6 +72,11 @@
 						<v-icon :icon="showPassword ? 'mdi-eye-outline' : 'mdi-eye-off'"></v-icon>
 					</v-btn>
 				</v-container>
+				<v-checkbox
+					label="Stay logged in"
+					v-model="stayLoggedIn"
+					@change="changeLogPref"
+				></v-checkbox>
 			</v-form>
 		</v-card-text>
 		<v-card-actions>
@@ -111,6 +119,7 @@ export default defineComponent({
 		const snackbarStore = useSnackbarStore();
 		const showPassword = false;
 		const token = Cookies.get('token');
+		const stayLoggedIn = (Cookies.get('stayLoggedIn') === 'true');
 
 		return ({
 			username,
@@ -124,7 +133,8 @@ export default defineComponent({
 			snackbarStore,
 			showPassword,
 			dialog: false,
-			token
+			token,
+			stayLoggedIn
 		});
 	},
 	methods: {
@@ -163,6 +173,13 @@ export default defineComponent({
 				this.snackbarStore.text = 'Failed to register new user';
 				this.snackbarStore.color = 'error';
 				this.snackbarStore.icon = 'mdi-alert-circle';
+			}
+		},
+		changeLogPref () {
+			if (this.stayLoggedIn) {
+				Cookies.set('stayLoggedIn', true);
+			} else {
+				Cookies.set('stayLoggedIn', false);
 			}
 		}
 	}

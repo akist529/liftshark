@@ -10,7 +10,7 @@ export const useLoginStore = defineStore('useLoginStore', {
     state: () => ({
         error: false,
 		snackbarStore: useSnackbarStore(),
-		token: Cookies.get('token') || null
+		token: (Cookies.get('stayLoggedIn') === 'true') ? (Cookies.get('token') || null) : null
     }),
     actions: {
         removeToken () {
