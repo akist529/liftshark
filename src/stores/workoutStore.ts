@@ -1,7 +1,7 @@
 // Pinia imports
 import { defineStore } from 'pinia';
 // Type interfaces
-import { Workout } from '@/types/index';
+import { WorkoutData, Workout } from '@/types/index';
 // Third-party libraries
 import Cookies from 'js-cookie';
 
@@ -9,7 +9,7 @@ const token: string = Cookies.get('token');
 
 export const useWorkoutStore = defineStore('workoutStore', {
     state: () => ({
-        workouts: <Workout[]>[],
+        workouts: [] as WorkoutData[],
         months: ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'],
         days: ['Sunday', 'Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday'],
         selectedDate: new Date().getDate(),
@@ -29,7 +29,7 @@ export const useWorkoutStore = defineStore('workoutStore', {
             return state.months[state.selectedMonth];
         },
         activeWorkouts: (state) => {
-            return state.workouts.filter((workout: Workout) => {
+            return state.workouts.filter((workout: WorkoutData) => {
                 return workout.attributes.date === new Date(state.selectedYear, state.selectedMonth, state.selectedDate, 0).toISOString().split('T')[0];
             });
         },
@@ -39,7 +39,7 @@ export const useWorkoutStore = defineStore('workoutStore', {
             const month = today.getMonth() + 1;
             const date = today.getDate();
 
-            return state.workouts.filter((workout: Workout) => {
+            return state.workouts.filter((workout: WorkoutData) => {
                 return workout.attributes.date === `${year}-${month}-${date}`;
             });
         },
@@ -83,12 +83,14 @@ export const useWorkoutStore = defineStore('workoutStore', {
         setSelectedDate (date: number) {
 			this.selectedDate = date;
 		},
-        async addWorkout (workout: any) {
+        async addWorkout (workout: Workout) {
+            this.loading = true;
+
             if (token) {
                 await fetch('http://localhost:1337/apis/workouts', {
                     method: 'POST',
                     headers: {
-                        Authorization: `Bearer ${Cookies.get('token')}`,
+                        Authorization: `Bearer ${token}`,
                         'Content-Type': 'application/json'
                     },
                     body: JSON.stringify({
@@ -96,64 +98,63 @@ export const useWorkoutStore = defineStore('workoutStore', {
                     })
                 });
             } else {
-				const localWorkouts: Workout[] = JSON.parse(localStorage.getItem('workouts') || '[]');
+				const workouts = JSON.parse(localStorage.getItem('workouts') || '[]');
 
-				localWorkouts.push({
-					id: JSON.parse(localStorage.getItem('workouts') || '[]').length,
+				workouts.push({
+					id: workouts.length,
 					attributes: workout
 				});
 
-				localStorage.setItem('workouts', JSON.stringify(localWorkouts));
+				localStorage.setItem('workouts', JSON.stringify(workouts));
             }
 
             this.getWorkouts();
         },
         async deleteWorkout (idToDelete: number) {
-            const updatedWorkouts = this.workouts.filter((workout: Workout) => {
-                return workout.id !== idToDelete;
-            });
+            this.loading = true;
 
-            this.workouts = updatedWorkouts;
+            const workouts = this.workouts.filter(workout => workout.id !== idToDelete);
 
             if (token) {
 				await fetch('http://localhost:1337/apis/workouts', {
 					method: 'PUT',
 					headers: {
-						Authorization: `Bearer ${Cookies.get('token')}`,
+						Authorization: `Bearer ${token}`,
 						'Content-Type': 'application/json'
 					},
 					body: JSON.stringify({
                         data: {
-                            updatedWorkouts
+                            workouts
                         }
 					})
 				});
 			} else {
-				localStorage.setItem('workouts', JSON.stringify(updatedWorkouts));
+				localStorage.setItem('workouts', JSON.stringify(workouts));
 			}
 
             this.getWorkouts();
         },
-        async updateWorkout (updatedWorkout: Workout) {
-            const filteredWorkouts = this.workouts.filter((workout: Workout) => workout.id !== updatedWorkout.id);
-            filteredWorkouts.push(updatedWorkout);
-            this.workouts = filteredWorkouts;
+        async updateWorkout (workout: WorkoutData) {
+            this.loading = true;
+
+            const workouts = this.workouts.filter(storedWorkout => storedWorkout.id !== workout.id);
+            workouts.push(workout);
 
             if (token) {
                 await fetch('http://localhost:1337/apis/workouts', {
                     method: 'PUT',
                     headers: {
-                        Authorization: `Bearer ${Cookies.get('token')}`,
+                        Authorization: `Bearer ${token}`,
                         'Content-Type': 'application/json'
                     },
                     body: JSON.stringify({
                         data: {
-                            filteredWorkouts
+                            workouts
                         }
                     })
                 });
             } else {
-                localStorage.setItem('workouts', JSON.stringify(filteredWorkouts));
+                localStorage.setItem('workouts', JSON.stringify(workouts));
             }
 
             this.getWorkouts();
@@ -165,7 +166,7 @@ export const useWorkoutStore = defineStore('workoutStore', {
 				await fetch('http://localhost:1337/api/workouts', {
 					method: 'GET',
 					headers: {
-						Authorization: `Bearer ${Cookies.get('token')}`,
+						Authorization: `Bearer ${token}`,
 						'Content-Type': 'application/json'
 					}
 					}).then(response => {
@@ -176,8 +177,7 @@ export const useWorkoutStore = defineStore('workoutStore', {
 						console.log(error);
 					});
             } else {
-                const localRoutines: Workout[] = JSON.parse(localStorage.getItem('workouts') || '[]');
-                this.workouts = localRoutines;
+                this.workouts = JSON.parse(localStorage.getItem('workouts') || '[]');
             }
 
             this.loading = false;

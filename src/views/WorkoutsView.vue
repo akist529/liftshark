@@ -1,5 +1,5 @@
 <template>
-<main class="WorkoutsView">
+<v-container class="WorkoutsView">
 	<h1>My Workouts</h1>
 	<DatePicker />
 	<ModalBackground v-if="workoutStore.calendarOpen">
@@ -11,7 +11,7 @@
 		:workout="workout" />
 	<WorkoutModal
 		@showSnackBar="showSnackBar = true" />
-</main>
+</v-container>
 </template>
 
 <script lang="ts">
@@ -89,12 +89,6 @@ export default defineComponent({
 
 <style scoped lang="scss">
 .WorkoutsView {
-	display: flex;
-		flex-direction: column;
-		gap: 10px;
-	position: relative;
-		z-index: 0;
-
 	h1 {
 		display: flex;
 			justify-content: center;

@@ -66,7 +66,7 @@ export default defineComponent({
 		});
 	},
 	created () {
-		this.exerciseStore.getFavorited();
+		this.exerciseStore.getFavorites();
 		this.routineStore.getRoutineData();
 		this.statStore.getStats();
 		this.workoutStore.getWorkouts();

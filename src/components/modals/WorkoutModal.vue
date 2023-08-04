@@ -128,6 +128,7 @@ export default defineComponent({
 			}
 
 			console.log(workout);
+			this.workoutStore.addWorkout(workout);
 			this.dialog = false;
 			this.snackbarStore.text = 'Workout successfully logged';
 			this.snackbarStore.color = 'success';

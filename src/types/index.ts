@@ -73,56 +73,56 @@ export interface Entry {
 }
 
 export interface Routine {
+    name: string,
+    day: string,
+    entries: Entry[]
+}
+
+export interface RoutineData {
     id: number,
-    attributes: {
-        name: string,
-        day: string,
-        entries: Entry[]
-    }
+    attributes: Routine
 }
 
 export interface Workout {
-    id: number,
-    attributes: {
-        date: string,
-        entries: Entry[],
-        routine?: number
-    }
+    date: string,
+    entries: Entry[]
 }
 
-export interface Stat {
+export interface WorkoutData {
     id: number,
-    attributes: {
-        date: string,
-        type: string,
-        stat: number
-    }
+    attributes: Workout
 }
 
 export interface Weight {
+    date: string,
+    measurement: number
+}
+
+export interface WeightData {
     id: number,
-    attributes: {
-        date: string,
-        measurement: number
-    }
+    attributes: Weight
 }
 
 export interface Measurement {
+    date: string,
+    muscle: string,
+    measurement: number
+}
+
+export interface MeasurementData {
     id: number,
-    attributes: {
-        date: string,
-        muscle: string,
-        measurement: number
-    }
+    attributes: Measurement
 }
 
 export interface Record {
+    date: string,
+    exercise: number,
+    max: number
+}
+
+export interface RecordData {
     id: number,
-    attributes: {
-        date: string,
-        exercise: number,
-        max: number
-    }
+    attributes: Record
 }
 
 export interface ExerciseData {

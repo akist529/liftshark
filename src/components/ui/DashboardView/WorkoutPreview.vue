@@ -1,11 +1,11 @@
 <template>
 <div v-if="workout" class="WorkoutPreview">
-    <h3>{{ routine?.attributes.name }}</h3>
-    <ul v-if="routine?.attributes.exercises && routine?.attributes.exercises.length > 0" class="exercise-list">
-        <li v-for="exercise in routine?.attributes.exercises" :key="exercise.id">
-            <h4>{{ exercise.name }}</h4>
-            <ul v-if="exercise.sets.length > 0" class="set-list">
-                <li v-for="set in exercise.sets" :key="set.id">
+    <h3>{{ workout.attributes.date }}</h3>
+    <ul v-if="workout.attributes.entries && workout.attributes.entries.length > 0" class="exercise-list">
+        <li v-for="entry in workout.attributes.entries" :key="entry.key">
+            <h4>{{ entry.name }}</h4>
+            <ul v-if="entry.sets.length > 0" class="set-list">
+                <li v-for="set in entry.sets" :key="set.key">
                     <span>{{ set.reps }} reps</span>
                     <span>{{ set.weight }} lbs.</span>
                 </li>
@@ -19,7 +19,7 @@
 // Vue imports
 import { defineComponent, PropType } from 'vue';
 // Type interfaces
-import { Workout } from '@/types/index';
+import { WorkoutData } from '@/types/index';
 // Pinia stores
 import { useRoutineStore } from '@/stores/routineStore';
 
@@ -33,7 +33,7 @@ export default defineComponent({
     },
     props: {
         workout: {
-            type: Object as PropType<Workout>,
+            type: Object as PropType<WorkoutData>,
             required: true
         }
     },

@@ -7,20 +7,20 @@ const token: string = Cookies.get('token');
 
 export const useExerciseStore = defineStore('exerciseStore', {
     state: () => ({
-        favorited: <number[]>[],
+        favorites: [] as number[],
         url: 'https://wger.de/api/v2/exercise/?language=2',
         count: 0,
         loading: false
     }),
     actions: {
-        async addToFavorites (exerciseId: number) {
-            const exerciseInStore = this.favorited.find((id: number) => id === exerciseId);
-            if (!exerciseInStore) this.favorited.push(exerciseId);
+        async addToFavorites (id: number) {
+            const exerciseInStore = this.favorites.find((key: number) => key === id);
+            if (!exerciseInStore) this.favorites.push(id);
 
-            const favorites = this.favorited;
+            const favorites = this.favorites;
 
             if (token) {
-                await fetch('http://localhost:1337/apis/routines', {
+                await fetch('http://localhost:1337/apis/favorites', {
                     method: 'PUT',
                     headers: {
                         Authorization: `Bearer ${Cookies.get('token')}`,
@@ -33,15 +33,15 @@ export const useExerciseStore = defineStore('exerciseStore', {
                     })
                 });
             } else {
-                localStorage.setItem('favorited', JSON.stringify(favorites));
+                localStorage.setItem('favorites', JSON.stringify(favorites));
             }
         },
-        async removeFromFavorites (exerciseId: number) {
-            this.favorited = this.favorited.filter((id: number) => id !== exerciseId);
-            const favorites = this.favorited;
+        async removeFromFavorites (id: number) {
+            this.favorites = this.favorites.filter((key: number) => key !== id);
+            const favorites = this.favorites;
 
             if (token) {
-                await fetch('http://localhost:1337/apis/routines', {
+                await fetch('http://localhost:1337/apis/favorites', {
                     method: 'PUT',
                     headers: {
                         Authorization: `Bearer ${Cookies.get('token')}`,
@@ -54,14 +54,14 @@ export const useExerciseStore = defineStore('exerciseStore', {
                     })
                 });
             } else {
-                localStorage.setItem('favorited', JSON.stringify(favorites));
+                localStorage.setItem('favorites', JSON.stringify(favorites));
             }
         },
-        async getFavorited () {
+        async getFavorites () {
             this.loading = true;
 
             if (token) {
-				await fetch('http://localhost:1337/api/favorited', {
+				await fetch('http://localhost:1337/api/favorites', {
 					method: 'GET',
 					headers: {
 						Authorization: `Bearer ${Cookies.get('token')}`,
@@ -70,13 +70,13 @@ export const useExerciseStore = defineStore('exerciseStore', {
 					}).then(response => {
 						return response.json();
 					}).then(data => {
-						this.favorited = data.data;
+						this.favorites = data.data;
 					}).catch(error => {
 						console.log(error);
 					});
             } else {
-                const localFavorited: number[] = JSON.parse(localStorage.getItem('favorited') || '[]');
-                this.favorited = localFavorited;
+                const localFavorites: number[] = JSON.parse(localStorage.getItem('favorites') || '[]');
+                this.favorites = localFavorites;
             }
 
             this.loading = false;

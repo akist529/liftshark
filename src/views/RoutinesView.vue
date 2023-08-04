@@ -40,7 +40,7 @@ import { useQuery } from 'vue-query';
 // Third-party libraries
 import Cookies from 'js-cookie';
 // Type interfaces
-import { ExerciseData, Routine } from '@/types/index';
+import { ExerciseData, RoutineData } from '@/types/index';
 // Pinia stores
 import { useRoutineStore } from '@/stores/routineStore';
 // Local components
@@ -63,7 +63,7 @@ export default defineComponent({
 			routineStore,
 			weekdays: routineStore.weekdays as string[],
 			activeDay: routineStore.activeDay as string,
-			routines: routineStore.routines as Routine[],
+			routines: routineStore.routines as RoutineData[],
 			getRoutineData: routineStore.getRoutineData,
 			deleteRoutine: routineStore.deleteRoutine,
 			addRoutine: routineStore.addRoutine,

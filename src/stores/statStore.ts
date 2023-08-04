@@ -1,7 +1,7 @@
 // Pinia imports
 import { defineStore } from 'pinia';
 // Type interfaces
-import { Stat } from '@/types/index';
+import { WeightData, Weight, MeasurementData, Measurement, RecordData, Record } from '@/types/index';
 // Third-party libraries
 import Cookies from 'js-cookie';
 
@@ -9,146 +9,237 @@ const token: string = Cookies.get('token');
 
 export const useStatStore = defineStore('statStore', {
     state: () => ({
-        weight: <Stat[]>[],
-        measurements: {
-            neck: <Stat[]>[],
-            shoulders: <Stat[]>[],
-            chest: <Stat[]>[],
-            biceps: <Stat[]>[],
-            waist: <Stat[]>[],
-            hips: <Stat[]>[],
-            thighs: <Stat[]>[]
-        },
+        weights: [] as WeightData[],
+        measurements: [] as MeasurementData[],
+        records: [] as RecordData[],
         loading: false
     }),
     actions: {
-        addStat (stat: Stat) {
-            switch (stat.attributes.type) {
-                case 'Weight':
-                    this.weight.push(stat);
-                    break;
-                case 'Neck':
-                    this.measurements.neck.push(stat);
-                    break;
-                case 'Shoulders':
-                    this.measurements.shoulders.push(stat);
-                    break;
-                case 'Chest':
-                    this.measurements.chest.push(stat);
-                    break;
-                case 'Biceps':
-                    this.measurements.biceps.push(stat);
-                    break;
-                case 'Waist':
-                    this.measurements.waist.push(stat);
-                    break;
-                case 'Hips':
-                    this.measurements.hips.push(stat);
-                    break;
-                case 'Thighs':
-                    this.measurements.thighs.push(stat);
-                    break;
-                default:
-                    console.log(`Attempted to log ${stat.attributes.type}, no such stat exists`);
-                    break;
+        async addWeight (weight: Weight) {
+            if (token) {
+                await fetch('http://localhost:1337/apis/weights', {
+                    method: 'POST',
+                    headers: {
+                        Authorization: `Bearer ${token}`,
+                        'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify({
+                        data: weight
+                    })
+                })
+            } else {
+                const weights: WeightData[] = JSON.parse(localStorage.getItem('weights') || '[]');
+
+                weights.push({
+                    id: weights.length,
+                    attributes: weight
+                });
+
+                localStorage.setItem('weights', JSON.stringify(weights));
             }
+
+            this.getStats();
         },
-        deleteStat (stat: Stat) {
-            switch (stat.attributes.type) {
-                case 'Weight':
-                    this.weight = this.weight.filter((weight: Stat) => weight.id !== stat.id);
-                    break;
-                case 'Neck':
-                    this.measurements.neck = this.measurements.neck.filter((neck: Stat) => neck.id !== stat.id);
-                    break;
-                case 'Shoulders':
-                    this.measurements.shoulders = this.measurements.shoulders.filter((shoulders: Stat) => shoulders.id !== stat.id);
-                    break;
-                case 'Chest':
-                    this.measurements.chest = this.measurements.chest.filter((chest: Stat) => chest.id !== stat.id);
-                    break;
-                case 'Biceps':
-                    this.measurements.biceps = this.measurements.biceps.filter((biceps: Stat) => biceps.id !== stat.id);
-                    break;
-                case 'Waist':
-                    this.measurements.waist = this.measurements.waist.filter((waist: Stat) => waist.id !== stat.id);
-                    break;
-                case 'Hips':
-                    this.measurements.hips = this.measurements.hips.filter((hips: Stat) => hips.id !== stat.id);
-                    break;
-                case 'Thighs':
-                    this.measurements.thighs = this.measurements.thighs.filter((thighs: Stat) => thighs.id !== stat.id);
-                    break;
-                default:
-                    console.log(`Attempted to delete ${stat.attributes.type}, no such stat exists`);
-                    break;
+        async addMeasurement (measurement: Measurement) {
+            if (token) {
+                await fetch('http://localhost:1337/apis/measurements', {
+                    method: 'POST',
+                    headers: {
+                        Authorization: `Bearer ${token}`,
+                        'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify({
+                        data: measurement
+                    })
+                })
+            } else {
+                const measurements: MeasurementData[] = JSON.parse(localStorage.getItem('measurements') || '[]');
+
+                measurements.push({
+                    id: measurements.length,
+                    attributes: measurement
+                });
+
+                localStorage.setItem('measurements', JSON.stringify(measurements));
             }
+
+            this.getStats();
         },
-        updateStat (updatedStat: Stat) {
-            switch (updatedStat.attributes.type) {
-                case 'Weight':
-                    { const filteredWeight = this.weight.filter((weight: Stat) => weight.id !== updatedStat.id);
-                        filteredWeight.push(updatedStat);
-                        this.weight = filteredWeight; }
-                    break;
-                case 'Neck':
-                    { const filteredNeck = this.measurements.neck.filter((neck: Stat) => neck.id !== updatedStat.id);
-                        filteredNeck.push(updatedStat);
-                        this.measurements.neck = filteredNeck; }
-                    break;
-                case 'Shoulders':
-                    { const filteredShoulders = this.measurements.shoulders.filter((shoulders: Stat) => shoulders.id !== updatedStat.id);
-                        filteredShoulders.push(updatedStat);
-                        this.measurements.shoulders = filteredShoulders; }
-                    break;
-                case 'Chest':
-                    { const filteredChest = this.measurements.chest.filter((chest: Stat) => chest.id !== updatedStat.id);
-                        filteredChest.push(updatedStat);
-                        this.measurements.chest = filteredChest; }
-                    break;
-                case 'Biceps':
-                    { const filteredBiceps = this.measurements.biceps.filter((biceps: Stat) => biceps.id !== updatedStat.id);
-                        filteredBiceps.push(updatedStat);
-                        this.measurements.biceps = filteredBiceps; }
-                    break;
-                case 'Waist':
-                    { const filteredWaist = this.measurements.waist.filter((waist: Stat) => waist.id !== updatedStat.id);
-                        filteredWaist.push(updatedStat);
-                        this.measurements.waist = filteredWaist; }
-                    break;
-                case 'Hips':
-                    { const filteredHips = this.measurements.hips.filter((hips: Stat) => hips.id !== updatedStat.id);
-                        filteredHips.push(updatedStat);
-                        this.measurements.hips = filteredHips; }
-                    break;
-                case 'Thighs':
-                    { const filteredThighs = this.measurements.thighs.filter((thighs: Stat) => thighs.id !== updatedStat.id);
-                        filteredThighs.push(updatedStat);
-                        this.measurements.thighs = filteredThighs; }
-                    break;
-                default:
-                    console.log(`Attempted to update ${updatedStat.attributes.type}, no such stat exists`);
-                    break;
+        async addRecord (record: Record) {
+            if (token) {
+                await fetch('http://localhost:1337/apis/records', {
+                    method: 'POST',
+                    headers: {
+                        Authorization: `Bearer ${token}`,
+                        'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify({
+                        data: record
+                    })
+                })
+            } else {
+                const records: RecordData[] = JSON.parse(localStorage.getItem('records') || '[]');
+
+                records.push({
+                    id: records.length,
+                    attributes: record
+                });
+
+                localStorage.setItem('records', JSON.stringify(records));
             }
+
+            this.getStats();
         },
-        async getStats () {
+        async deleteWeight (idToDelete: number) {
+            const weights = this.weights.filter(weight => weight.id !== idToDelete);
+
+            if (token) {
+                await fetch('http://localhost:1337/apis/weights', {
+                    method: 'PUT',
+                    headers: {
+                        Authorization: `Bearer ${token}`,
+                        'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify({
+                        data: weights
+                    })
+                })
+            } else {
+                localStorage.setItem('weights', JSON.stringify(weights));
+            }
+
+            this.getStats();
+        },
+        async deleteMeasurement (idToDelete: number) {
+            const measurements = this.measurements.filter(measurement => measurement.id !== idToDelete);
+
+            if (token) {
+                await fetch('http://localhost:1337/apis/measurements', {
+                    method: 'PUT',
+                    headers: {
+                        Authorization: `Bearer ${token}`,
+                        'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify({
+                        data: measurements
+                    })
+                })
+            } else {
+                localStorage.setItem('measurements', JSON.stringify(measurements));
+            }
+
+            this.getStats();
+        },
+        async deleteRecord (idToDelete: number) {
+            const records = this.records.filter(record => record.id !== idToDelete);
+
+            if (token) {
+                await fetch('http://localhost:1337/apis/records', {
+                    method: 'PUT',
+                    headers: {
+                        Authorization: `Bearer ${token}`,
+                        'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify({
+                        data: records
+                    })
+                })
+            } else {
+                localStorage.setItem('records', JSON.stringify(records));
+            }
+
+            this.getStats();
+        },
+        async updateWeight (weight: WeightData) {
+            const weights = this.weights.filter(storedWeight => storedWeight.id !== weight.id);
+            weights.push(weight);
+
+            if (token) {
+                await fetch('http://localhost:1337/apis/weights', {
+                    method: 'PUT',
+                    headers: {
+                        Authorization: `Bearer ${token}`,
+                        'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify({
+                        data: weights
+                    })
+                })
+            } else {
+                localStorage.setItem('weights', JSON.stringify(weights));
+            }
+
+            this.getStats();
+        },
+        async updateMeasurement (measurement: MeasurementData) {
+            const measurements = this.measurements.filter(storedMeasurement => storedMeasurement.id !== measurement.id);
+            measurements.push(measurement);
+
+            if (token) {
+                await fetch('http://localhost:1337/apis/measurements', {
+                    method: 'PUT',
+                    headers: {
+                        Authorization: `Bearer ${token}`,
+                        'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify({
+                        data: measurements
+                    })
+                })
+            } else {
+                localStorage.setItem('measurements', JSON.stringify(measurements));
+            }
+
+            this.getStats();
+        },
+        async updateRecord (record: RecordData) {
+            const records = this.records.filter(storedRecord => storedRecord.id !== record.id);
+            records.push(record);
+
+            if (token) {
+                await fetch('http://localhost:1337/apis/records', {
+                    method: 'PUT',
+                    headers: {
+                        Authorization: `Bearer ${token}`,
+                        'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify({
+                        data: records
+                    })
+                })
+            } else {
+                localStorage.setItem('records', JSON.stringify(records));
+            }
+
+            this.getStats();
+        },
+        async getWeights () {
             this.loading = true;
 
             if (token) {
-                await fetch('http://localhost:1337/api/weight', {
+                await fetch('http://localhost:1337/api/weights', {
                     method: 'GET',
                     headers: {
-                        Authorization: `Bearer ${Cookies.get('token')}`,
+                        Authorization: `Bearer ${token}`,
                         'Content-Type': 'application/json'
                     }
                     }).then(response => {
                         return response.json();
                     }).then(data => {
-                        this.weight = data.data;
+                        this.weights = data.data;
                     }).catch(error => {
                         console.log(error);
                     });
+            } else {
+                this.weights = JSON.parse(localStorage.getItem('weights') || '[]');
+            }
 
+            this.loading = false;
+        },
+        async getMeasurements () {
+            this.loading = true;
+
+            if (token) {
                 await fetch('http://localhost:1337/api/measurements', {
                     method: 'GET',
                     headers: {
@@ -163,11 +254,40 @@ export const useStatStore = defineStore('statStore', {
                         console.log(error);
                     });
             } else {
-                const localWeight: Stat[] = JSON.parse(localStorage.getItem('weight') || '[]');
-                this.weight = localWeight;
-                const localMeasurements = JSON.parse(localStorage.getItem('measurements') || '[]');
-                this.measurements = localMeasurements;
+                this.measurements = JSON.parse(localStorage.getItem('measurements') || '[]');
             }
+
+            this.loading = false;
+        },
+        async getRecords () {
+            this.loading = true;
+
+            if (token) {
+                await fetch('http://localhost:1337/api/records', {
+                    method: 'GET',
+                    headers: {
+                        Authorization: `Bearer ${Cookies.get('token')}`,
+                        'Content-Type': 'application/json'
+                    }
+                    }).then(response => {
+                        return response.json();
+                    }).then(data => {
+                        this.records = data.data;
+                    }).catch(error => {
+                        console.log(error);
+                    });
+            } else {
+                this.records = JSON.parse(localStorage.getItem('records') || '[]');
+            }
+
+            this.loading = false;
+        },
+        async getStats () {
+            this.loading = true;
+
+            this.getWeights();
+            this.getMeasurements();
+            this.getRecords();
 
             this.loading = false;
         }

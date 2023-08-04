@@ -1,11 +1,11 @@
 <template>
-<div v-if="routine" class="WorkoutLog">
+<div v-if="workout" class="WorkoutLog">
 	<DeleteButton
 		title="Delete Workout"
 		@click="workoutStore.deleteWorkout(workout.id)" />
-	<span>{{ routine.attributes.name }}</span>
+	<span>{{ workout.attributes.date }}</span>
 	<ul class="exercises">
-		<table v-for="entry in routine.attributes.entries" :key="entry.key">
+		<table v-for="entry in workout.attributes.entries" :key="entry.key">
 			<thead>{{ entry.name }}</thead>
 			<tbody>
 			<tr id="exercise-headers">
@@ -28,9 +28,8 @@
 // Vue imports
 import { defineComponent, PropType } from 'vue';
 // Type interfaces
-import { Workout } from '@/types/index';
+import { WorkoutData } from '@/types/index';
 // Pinia stores
-import { useRoutineStore } from '@/stores/routineStore';
 import { useWorkoutStore } from '@/stores/workoutStore';
 // Local components
 import DeleteButton from '@/components/buttons/DeleteButton.vue';
@@ -38,12 +37,8 @@ import DeleteButton from '@/components/buttons/DeleteButton.vue';
 export default defineComponent({
 	data () {
 		const workoutStore = useWorkoutStore();
-		const routineStore = useRoutineStore();
-		const routine = routineStore.getRoutineById(this.workout.attributes.routine);
 
 		return ({
-			routine,
-			routineStore,
 			workoutStore
 		});
 	},
@@ -52,7 +47,7 @@ export default defineComponent({
 	},
 	props: {
 		workout: {
-			type: Object as PropType<Workout>,
+			type: Object as PropType<WorkoutData>,
 			required: true
 		}
 	}

@@ -1,5 +1,5 @@
 <template>
-<main class="StatsView">
+<v-container class="StatsView">
     <ul>
         <li>
             <v-btn
@@ -43,7 +43,7 @@
             <li>Tape icon by Smashicons</li>
         </ul>
     </footer>
-</main>
+</v-container>
 </template>
 
 <script lang="ts">
@@ -110,10 +110,6 @@ export default defineComponent({
 
 <style lang="scss">
 .StatsView {
-    display: flex;
-		flex-direction: column;
-        gap: 20px;
-
     ul {
         /* Positioning */
         display: flex;

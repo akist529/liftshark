@@ -177,12 +177,6 @@ const getExerciseData = async (slug: string): Promise<Exercise | undefined> => {
 
 export default defineComponent({
 	data () {
-		const categories: Category[] = [];
-		const menuOpen = false;
-		const routerName = this.$route.params.id as string;
-		const exerciseBase = 0;
-		const error = true;
-
 		const exercise = useQuery('exercise', () => getExerciseData(this.$route.params.id as string));
 		const muscles = useQuery('muscles', () => getData('https://wger.de/api/v2/muscle?limit=999'));
 		const equipment = useQuery('equipment', () => getData('https://wger.de/api/v2/equipment?limit=999'));
@@ -190,14 +184,14 @@ export default defineComponent({
 
 		return ({
 			exercise,
-			categories,
-			menuOpen,
-			routerName,
 			muscles,
 			equipment,
 			images,
-			exerciseBase,
-			error
+			categories: [] as Category[],
+			menuOpen: false,
+			routerName: this.$route.params.id as string,
+			exerciseBase: 0,
+			error: true
 		});
 	},
 	components: {

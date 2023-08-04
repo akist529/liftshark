@@ -1,11 +1,11 @@
 <template>
 <div v-if="routine" class="RoutinePreview">
     <h3>{{ routine.attributes.name }}</h3>
-    <ul v-if="routine.attributes.exercises">
-        <li v-for="exercise in routine.attributes.exercises" :key="exercise.id">
-            <h4>{{ exercise.name }}</h4>
-            <ul v-if="exercise.sets">
-                <li v-for="set in exercise.sets" :key="set.id">
+    <ul v-if="routine.attributes.entries">
+        <li v-for="entry in routine.attributes.entries" :key="entry.key">
+            <h4>{{ entry.name }}</h4>
+            <ul v-if="entry.sets">
+                <li v-for="set in entry.sets" :key="set.key">
                     <span>{{ set.reps }} reps</span>
                     <span>{{ set.weight }} lbs.</span>
                 </li>
@@ -19,12 +19,12 @@
 // Vue imports
 import { defineComponent, PropType } from 'vue';
 // Type interfaces
-import { Routine } from '@/types/index';
+import { RoutineData } from '@/types/index';
 
 export default defineComponent({
     props: {
         routine: {
-            type: Object as PropType<Routine>,
+            type: Object as PropType<RoutineData>,
             required: true
         }
     }

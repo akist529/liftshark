@@ -22,19 +22,18 @@ export default defineComponent({
         const exerciseStore = useExerciseStore();
 
         return ({
-            exerciseStore,
-            id: this.exerciseId
+            exerciseStore
         });
     },
     props: {
-        exerciseId: {
+        id: {
             type: Object as PropType<number>,
             required: true
         }
     },
     computed: {
         favorited () {
-            const isFavorited = this.exerciseStore.favorited.find((id: number) => id === this.exerciseId);
+            const isFavorited = this.exerciseStore.favorites.find((key: number) => key === this.id);
 
             if (isFavorited) return true;
                 else return false;

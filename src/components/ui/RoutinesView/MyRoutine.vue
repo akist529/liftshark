@@ -5,7 +5,7 @@
 		:style="{ backgroundImage: `url(images/icons/expand_${routineHidden ? 'more' : 'less'}.svg)` }"
 		@click="routineHidden = !routineHidden"
 	></button>
-	<CloseButton @click="routineStore.deleteRoutine(routine?.id || 0)" />
+	<CloseButton @click="routineStore.deleteRoutine(routine.id)" />
 	<div class="routine-name">
 		<span v-if="!editNameOpen" id="span-name">{{ name }}</span>
 		<input v-if="editNameOpen" v-model="name"
@@ -18,7 +18,7 @@
 			@click="editNameOpen = !editNameOpen"
 		></button>
 	</div>
-	<ul v-for="entry in routine?.attributes.entries" :key="entry.key">
+	<ul v-for="entry in routine.attributes.entries" :key="entry.key">
 		<MyRoutineEntry
 			:routine="routine"
 			:entry="entry"
@@ -35,7 +35,7 @@
 // Vue imports
 import { defineComponent, PropType } from 'vue';
 // Type interfaces
-import { Routine, Exercise, Entry } from '@/types/index';
+import { RoutineData, Exercise, Entry } from '@/types/index';
 // Pinia stores
 import { useRoutineStore } from '@/stores/routineStore';
 // Local components
@@ -94,7 +94,7 @@ export default defineComponent({
 	},
 	props: {
 		routine: {
-			type: Object as PropType<Routine>,
+			type: Object as PropType<RoutineData>,
 			required: true
 		},
 		exercises: {

@@ -1,7 +1,7 @@
 // Pinia imports
 import { defineStore } from 'pinia';
 // Type interfaces
-import { Routine, Entry } from '@/types/index';
+import { RoutineData, Entry } from '@/types/index';
 // Third-party libraries
 import Cookies from 'js-cookie';
 
@@ -9,7 +9,7 @@ const token: string = Cookies.get('token');
 
 export const useRoutineStore = defineStore('routineStore', {
     state: () => ({
-        routines: <Routine[]>[],
+        routines: <RoutineData[]>[],
         activeDay: ['Sunday', 'Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday'][new Date().getDay()],
         weekdays: ['Sunday', 'Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday'],
         loading: false
@@ -17,46 +17,46 @@ export const useRoutineStore = defineStore('routineStore', {
     getters: {
         recordedDays: (state) => {
             return state.weekdays.filter((day: string) => {
-                return state.routines.find((routine: Routine) => routine.attributes.day === day);
+                return state.routines.find((routine: RoutineData) => routine.attributes.day === day);
             })
         },
         activeDayRoutines: (state) => {
-            return state.routines.filter((routine: Routine) => {
+            return state.routines.filter((routine: RoutineData) => {
                 return routine.attributes.day === state.activeDay;
             });
         },
         getSunday: (state) => {
-            return state.routines.filter((routine: Routine) => {
+            return state.routines.filter((routine: RoutineData) => {
                 return routine.attributes.day === 'Sunday';
             });
         },
         getMonday: (state) => {
-            return state.routines.filter((routine: Routine) => {
+            return state.routines.filter((routine: RoutineData) => {
                 return routine.attributes.day === 'Monday';
             });
         },
         getTuesday: (state) => {
-            return state.routines.filter((routine: Routine) => {
+            return state.routines.filter((routine: RoutineData) => {
                 return routine.attributes.day === 'Tuesday';
             });
         },
         getWednesday: (state) => {
-            return state.routines.filter((routine: Routine) => {
+            return state.routines.filter((routine: RoutineData) => {
                 return routine.attributes.day === 'Wednesday';
             });
         },
         getThursday: (state) => {
-            return state.routines.filter((routine: Routine) => {
+            return state.routines.filter((routine: RoutineData) => {
                 return routine.attributes.day === 'Thursday';
             });
         },
         getFriday: (state) => {
-            return state.routines.filter((routine: Routine) => {
+            return state.routines.filter((routine: RoutineData) => {
                 return routine.attributes.day === 'Friday';
             });
         },
         getSaturday: (state) => {
-            return state.routines.filter((routine: Routine) => {
+            return state.routines.filter((routine: RoutineData) => {
                 return routine.attributes.day === 'Saturday';
             });
         }
@@ -83,7 +83,7 @@ export const useRoutineStore = defineStore('routineStore', {
 					console.log(error);
 				});
 			} else {
-				const localRoutines: Routine[] = JSON.parse(localStorage.getItem('routines') || '[]');
+				const localRoutines: RoutineData[] = JSON.parse(localStorage.getItem('routines') || '[]');
 
 				localRoutines.push({
 					id: JSON.parse(localStorage.getItem('routines') || '[]').length,
@@ -100,7 +100,7 @@ export const useRoutineStore = defineStore('routineStore', {
             this.getRoutineData();
         },
         async updateRoutine (id: number, name: string, day: string, entries: Entry[]) {
-            const routine = this.routines.find((routine: Routine) => routine.id === id);
+            const routine = this.routines.find((routine: RoutineData) => routine.id === id);
 
             if (routine) {
                 if (Cookies.get('token')) {
@@ -140,7 +140,7 @@ export const useRoutineStore = defineStore('routineStore', {
             }
         },
         async deleteRoutine (idToDelete: number) {
-            const updatedRoutines = this.routines.filter((routine: Routine) => {
+            const updatedRoutines = this.routines.filter((routine: RoutineData) => {
                 return routine.id !== idToDelete;
             });
 
@@ -189,7 +189,7 @@ export const useRoutineStore = defineStore('routineStore', {
 						console.log(error);
 					});
             } else {
-                const localRoutines: Routine[] = JSON.parse(localStorage.getItem('routines') || '[]');
+                const localRoutines: RoutineData[] = JSON.parse(localStorage.getItem('routines') || '[]');
                 this.routines = localRoutines;
             }
 
@@ -198,7 +198,15 @@ export const useRoutineStore = defineStore('routineStore', {
         getRoutineById (id: number | undefined) {
             if (!id) return null;
 
-            const routine = this.routines.find((routine: Routine) => routine.id === id);
+            const routine = this.routines.find((routine: RoutineData) => routine.id === id);
+
+            if (routine) return routine;
+                else return null;
+        },
+        getRoutineByName (name: string) {
+            if (!name) return null;
+
+            const routine = this.routines.find(routine => routine.attributes.name === name);
 
             if (routine) return routine;
                 else return null;

@@ -52,7 +52,7 @@ import { defineComponent, PropType } from 'vue';
 // Third-party libraries
 import Cookies from 'js-cookie';
 // Type interfaces
-import { Routine, Entry, Set, Exercise } from '@/types/index';
+import { RoutineData, Entry, Set, Exercise } from '@/types/index';
 // Pinia stores
 import { useRoutineStore } from '@/stores/routineStore';
 
@@ -68,7 +68,7 @@ export default defineComponent({
 	},
 	props: {
 		routine: {
-			type: Object as PropType<Routine>,
+			type: Object as PropType<RoutineData>,
 			required: true
 		},
 		entry: {
@@ -91,28 +91,28 @@ export default defineComponent({
 	},
 	methods: {
 		async deleteEntry () {
-			const entries = this.routine?.attributes.entries?.filter((entry: Entry) => entry.key !== this.entry?.key);
+			const entries = this.routine.attributes.entries.filter((entry: Entry) => entry.key !== this.entry.key);
 
 			this.routineStore.updateRoutine(
-				this.routine?.id || 0,
-				this.routine?.attributes.name || '',
-				this.routine?.attributes.day || this.routineStore.activeDay,
-				entries || []
+				this.routine.id,
+				this.routine.attributes.name,
+				this.routine.attributes.day,
+				entries
 			);
 		},
 		async updateEntry () {
 			const updatedEntries: Entry[] = [];
 
-			this.routine?.attributes.entries?.forEach(exercise => {
-				if (exercise.key === this.entry?.key) {
+			this.routine.attributes.entries.forEach(entry => {
+				if (entry.key === this.entry.key) {
 					const updatedSets: Set[] = [];
 
-					for (let i = 0; i < (this.setCount || 0); i++) {
-						if (this.entry?.sets[i]) {
+					for (let i = 0; i < (this.setCount); i++) {
+						if (this.entry.sets[i]) {
 							updatedSets.push({
-								key: this.entry?.sets[i].key,
-								weight: Number((this.$refs[`weight-${this.entry?.sets[i].key}`] as HTMLInputElement)[0].value as string),
-								reps: Number((this.$refs[`repCount-${this.entry?.sets[i].key}`] as HTMLInputElement)[0].value as string)
+								key: this.entry.sets[i].key,
+								weight: Number((this.$refs[`weight-${this.entry.sets[i].key}`] as HTMLInputElement)[0].value as string),
+								reps: Number((this.$refs[`repCount-${this.entry.sets[i].key}`] as HTMLInputElement)[0].value as string)
 							});
 						} else {
 							updatedSets.push({
@@ -124,17 +124,17 @@ export default defineComponent({
 					}
 
 					updatedEntries.push({
-						key: this.entry?.key,
+						key: this.entry.key,
 						name: (this.$refs.name as HTMLSelectElement).value,
 						sets: updatedSets
 					});
 				} else {
-					updatedEntries.push(exercise);
+					updatedEntries.push(entry);
 				}
 			});
 
 			if (Cookies.get('token')) {
-				await fetch(`http://localhost:1337/api/routines/${this.routine?.id}`, {
+				await fetch(`http://localhost:1337/api/routines/${this.routine.id}`, {
 					method: 'PUT',
 					headers: {
 						Authorization: `Bearer ${Cookies.get('token')}`,
@@ -142,9 +142,9 @@ export default defineComponent({
 					},
 					body: JSON.stringify({
 						data: {
-							name: this.routine?.attributes.name,
-							day: this.routine?.attributes.day,
-							exercises: updatedEntries
+							name: this.routine.attributes.name,
+							day: this.routine.attributes.day,
+							entries: updatedEntries
 						}
 					})
 				}).then(response => {
@@ -153,16 +153,16 @@ export default defineComponent({
 					console.log('ENTRY UPDATE FAILED:', error);
 				});
 			} else {
-				const currentStorage: Routine[] = JSON.parse(localStorage.getItem('routines') || '[]');
-				const newStorage: Routine[] = [];
+				const currentStorage: RoutineData[] = JSON.parse(localStorage.getItem('routines') || '[]');
+				const newStorage: RoutineData[] = [];
 
 				for (let i = 0; i < currentStorage.length; i++) {
-					if (currentStorage[i].id === this.routine?.id) {
+					if (currentStorage[i].id === this.routine.id) {
 						newStorage.push({
 							id: currentStorage[i].id,
 							attributes: {
 								name: currentStorage[i].attributes.name,
-								day: (this.routine?.attributes.day || 'Sunday'),
+								day: (this.routine.attributes.day || 'Sunday'),
 								entries: updatedEntries
 							}
 						});
