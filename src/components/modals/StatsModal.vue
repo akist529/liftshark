@@ -164,43 +164,36 @@ export default defineComponent({
 		addStat (e: MouseEvent) {
 			e.preventDefault();
 
-			const statType = (() => {
-				switch (this.stat) {
-					case 'Weight':
-						return 'weight';
-					case 'Measurements':
-						return 'measurement';
-					case 'PRs':
-						return 'record';
-					default:
-						return '';
-				}
-			})();
+			switch (this.stat) {
+				case 'Weight':
+					this.addWeight();
+					break;
+				case 'Measurements':
+					this.addMeasurement();
+					break;
+				case 'PRs':
+					this.addRecord();
+					break;
+				default:
+					break;
+			}
 
-			const statNum = (() => {
-				switch (this.stat) {
-					case 'Weight':
-						return this.weight;
-					case 'Measurements':
-						return this.measurement;
-					case 'PRs':
-						return this.record;
-					default:
-						return 0;
-				}
-			})();
-
-			const statInfo = ({
-				date: `${new Date().getFullYear()}-${new Date().getMonth()}-${new Date().getDate()}`,
-				type: statType,
-				stat: statNum
-			});
-
-			console.log(statInfo);
 			this.dialog = false;
 			this.snackbarStore.text = 'Stat successfully added';
 			this.snackbarStore.color = 'success';
 			this.snackbarStore.open = true;
+		},
+		addWeight () {
+			this.statStore.addWeight(this.weight);
+		},
+		addMeasurement () {
+			this.statStore.addMeasurement(this.muscle, this.measurement);
+		},
+		addRecord () {
+			const exercise = this.data?.results.find(exercise => exercise.name === this.exercise);
+			if (!exercise) return;
+
+			this.statStore.addRecord(exercise.exercise_base, this.record);
 		}
 	}
 })

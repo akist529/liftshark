@@ -12,19 +12,23 @@ export const useStatStore = defineStore('statStore', {
         weights: [] as WeightData[],
         measurements: [] as MeasurementData[],
         records: [] as RecordData[],
-        loading: false
+        loading: false,
+        date: new Date().toISOString().split('T')[0]
     }),
     actions: {
-        async addWeight (weight: Weight) {
+        async addWeight (weight: number) {
             if (token) {
-                await fetch('http://localhost:1337/apis/weights', {
+                await fetch('http://localhost:1337/api/weights', {
                     method: 'POST',
                     headers: {
                         Authorization: `Bearer ${token}`,
                         'Content-Type': 'application/json'
                     },
                     body: JSON.stringify({
-                        data: weight
+                        data: {
+                            date: this.date,
+                            measurement: weight
+                        }
                     })
                 })
             } else {
@@ -32,7 +36,10 @@ export const useStatStore = defineStore('statStore', {
 
                 weights.push({
                     id: weights.length,
-                    attributes: weight
+                    attributes: {
+                        date: this.date,
+                        measurement: weight
+                    }
                 });
 
                 localStorage.setItem('weights', JSON.stringify(weights));
@@ -40,16 +47,20 @@ export const useStatStore = defineStore('statStore', {
 
             this.getStats();
         },
-        async addMeasurement (measurement: Measurement) {
+        async addMeasurement (muscle: string, measurement: number) {
             if (token) {
-                await fetch('http://localhost:1337/apis/measurements', {
+                await fetch('http://localhost:1337/api/measurements', {
                     method: 'POST',
                     headers: {
                         Authorization: `Bearer ${token}`,
                         'Content-Type': 'application/json'
                     },
                     body: JSON.stringify({
-                        data: measurement
+                        data: {
+                            date: this.date,
+                            muscle,
+                            measurement
+                        }
                     })
                 })
             } else {
@@ -57,7 +68,11 @@ export const useStatStore = defineStore('statStore', {
 
                 measurements.push({
                     id: measurements.length,
-                    attributes: measurement
+                    attributes: {
+                        date: this.date,
+                        muscle,
+                        measurement
+                    }
                 });
 
                 localStorage.setItem('measurements', JSON.stringify(measurements));
@@ -65,16 +80,20 @@ export const useStatStore = defineStore('statStore', {
 
             this.getStats();
         },
-        async addRecord (record: Record) {
+        async addRecord (exercise: number, max: number) {
             if (token) {
-                await fetch('http://localhost:1337/apis/records', {
+                await fetch('http://localhost:1337/api/records', {
                     method: 'POST',
                     headers: {
                         Authorization: `Bearer ${token}`,
                         'Content-Type': 'application/json'
                     },
                     body: JSON.stringify({
-                        data: record
+                        data: {
+                            date: this.date,
+                            exercise,
+                            max
+                        }
                     })
                 })
             } else {
@@ -82,7 +101,11 @@ export const useStatStore = defineStore('statStore', {
 
                 records.push({
                     id: records.length,
-                    attributes: record
+                    attributes: {
+                        date: this.date,
+                        exercise,
+                        max
+                    }
                 });
 
                 localStorage.setItem('records', JSON.stringify(records));
@@ -94,7 +117,7 @@ export const useStatStore = defineStore('statStore', {
             const weights = this.weights.filter(weight => weight.id !== idToDelete);
 
             if (token) {
-                await fetch('http://localhost:1337/apis/weights', {
+                await fetch('http://localhost:1337/api/weights', {
                     method: 'PUT',
                     headers: {
                         Authorization: `Bearer ${token}`,
@@ -114,7 +137,7 @@ export const useStatStore = defineStore('statStore', {
             const measurements = this.measurements.filter(measurement => measurement.id !== idToDelete);
 
             if (token) {
-                await fetch('http://localhost:1337/apis/measurements', {
+                await fetch('http://localhost:1337/api/measurements', {
                     method: 'PUT',
                     headers: {
                         Authorization: `Bearer ${token}`,
@@ -134,7 +157,7 @@ export const useStatStore = defineStore('statStore', {
             const records = this.records.filter(record => record.id !== idToDelete);
 
             if (token) {
-                await fetch('http://localhost:1337/apis/records', {
+                await fetch('http://localhost:1337/api/records', {
                     method: 'PUT',
                     headers: {
                         Authorization: `Bearer ${token}`,
@@ -155,7 +178,7 @@ export const useStatStore = defineStore('statStore', {
             weights.push(weight);
 
             if (token) {
-                await fetch('http://localhost:1337/apis/weights', {
+                await fetch('http://localhost:1337/api/weights', {
                     method: 'PUT',
                     headers: {
                         Authorization: `Bearer ${token}`,
@@ -176,7 +199,7 @@ export const useStatStore = defineStore('statStore', {
             measurements.push(measurement);
 
             if (token) {
-                await fetch('http://localhost:1337/apis/measurements', {
+                await fetch('http://localhost:1337/api/measurements', {
                     method: 'PUT',
                     headers: {
                         Authorization: `Bearer ${token}`,
@@ -197,7 +220,7 @@ export const useStatStore = defineStore('statStore', {
             records.push(record);
 
             if (token) {
-                await fetch('http://localhost:1337/apis/records', {
+                await fetch('http://localhost:1337/api/records', {
                     method: 'PUT',
                     headers: {
                         Authorization: `Bearer ${token}`,
