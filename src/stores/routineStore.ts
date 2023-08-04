@@ -1,7 +1,7 @@
 // Pinia imports
 import { defineStore } from 'pinia';
 // Type interfaces
-import { RoutineData, Entry } from '@/types/index';
+import { RoutineData, Routine, Entry } from '@/types/index';
 // Third-party libraries
 import Cookies from 'js-cookie';
 
@@ -62,20 +62,18 @@ export const useRoutineStore = defineStore('routineStore', {
         }
     },
     actions: {
-        async addRoutine () {
+        async addRoutine (routine: Routine) {
+            this.loading = true;
+
             if (token) {
 				await fetch('http://localhost:1337/api/routines', {
 					method: 'POST',
 					headers: {
-                        Authorization: `Bearer ${Cookies.get('token')}`,
+                        Authorization: `Bearer ${token}`,
                         'Content-Type': 'application/json'
 					},
 					body: JSON.stringify({
-                        data: {
-                            name: 'New Routine',
-                            day: this.activeDay,
-                            exercises: []
-                        }
+                        data: routine
 					})
 				}).then(response => {
 					console.log(response);
@@ -83,15 +81,11 @@ export const useRoutineStore = defineStore('routineStore', {
 					console.log(error);
 				});
 			} else {
-				const localRoutines: RoutineData[] = JSON.parse(localStorage.getItem('routines') || '[]');
+				const localRoutines = JSON.parse(localStorage.getItem('routines') || '[]');
 
 				localRoutines.push({
-					id: JSON.parse(localStorage.getItem('routines') || '[]').length,
-					attributes: {
-						name: 'New Routine',
-						day: this.activeDay,
-						entries: []
-					}
+					id: localRoutines.length,
+					attributes: routine
 				});
 
 				localStorage.setItem('routines', JSON.stringify(localRoutines));
