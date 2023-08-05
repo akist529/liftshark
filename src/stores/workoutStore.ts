@@ -1,7 +1,10 @@
+// Vue imports
+import { ref } from 'vue';
 // Pinia imports
 import { defineStore } from 'pinia';
 // Type interfaces
 import { WorkoutData, Workout } from '@/types/index';
+import type { DatePickerInstance } from '@vuepic/vue-datepicker';
 // Third-party libraries
 import Cookies from 'js-cookie';
 
@@ -12,25 +15,16 @@ export const useWorkoutStore = defineStore('workoutStore', {
         workouts: [] as WorkoutData[],
         months: ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'],
         days: ['Sunday', 'Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday'],
-        selectedDate: new Date().getDate(),
-        selectedMonth: new Date().getMonth(),
-        selectedYear: new Date().getFullYear(),
         calendarOpen: false,
         loading: false,
-        date: new Date()
+        date: ref(new Date()),
+        dateVal: new Date().getDate(),
+        datepicker: ref<DatePickerInstance>(null)
     }),
     getters: {
-        getDay: (state) => {
-            const day = new Date(state.selectedYear, state.selectedMonth, state.selectedDate).getDay();
-
-            return state.days[day];
-        },
-        getMonth: (state) => {
-            return state.months[state.selectedMonth];
-        },
         activeWorkouts: (state) => {
             return state.workouts.filter((workout: WorkoutData) => {
-                return workout.attributes.date === new Date(state.selectedYear, state.selectedMonth, state.selectedDate, 0).toISOString().split('T')[0];
+                return workout.attributes.date === state.date.toISOString().split('T')[0];
             });
         },
         getToday: (state) => {
@@ -42,46 +36,22 @@ export const useWorkoutStore = defineStore('workoutStore', {
             return state.workouts.filter((workout: WorkoutData) => {
                 return workout.attributes.date === `${year}-${month}-${date}`;
             });
-        },
-        firstDayInMonth: (state) => {
-            return new Date(state.selectedYear, state.selectedMonth + 2, 1).getDay();
-        },
-        lastDateInPreviousMonth: (state) => {
-            return new Date(state.selectedYear, state.selectedMonth, 0).getDate();
-        },
-        daysInMonth: (state) => {
-            return new Date(state.selectedYear, state.selectedMonth + 1, 0).getDate();
         }
     },
     actions: {
-        openCalendar () {
-            this.calendarOpen = true;
-        },
-        closeCalendar () {
-            this.calendarOpen = false;
-        },
 		changeDateBack () {
-			this.selectedDate -= 1;
+            const prevDate = this.date.getDate();
+			const newDate = this.date;
+            newDate.setDate(prevDate - 1);
+            this.date = newDate;
+            this.dateVal = newDate.getDate();
 		},
 		changeDateForward () {
-			this.selectedDate += 1;
-		},
-        changeMonthBack () {
-			const lastSeenMonth = this.selectedMonth;
-
-			this.selectedMonth = ((this.selectedMonth += 12) - 1) % 12;
-
-			if (this.selectedMonth > lastSeenMonth) this.selectedYear--;
-		},
-		changeMonthForward () {
-			const lastSeenMonth = this.selectedMonth;
-
-			this.selectedMonth = ((this.selectedMonth += 12) + 1) % 12;
-
-			if (this.selectedMonth < lastSeenMonth) this.selectedYear++;
-		},
-        setSelectedDate (date: number) {
-			this.selectedDate = date;
+            const prevDate = this.date.getDate();
+			const newDate = this.date;
+            newDate.setDate(prevDate + 1);
+            this.date = newDate;
+            this.dateVal = newDate.getDate();
 		},
         async addWorkout (workout: Workout) {
             this.loading = true;

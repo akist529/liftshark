@@ -1,16 +1,16 @@
 <template>
-<button
-    title="Next Month"
-    class="DateRightButton"
-    @click="workoutStore.changeDateForward"
-></button>
+<th class="PrevMonthButton">
+    <button title="Previous Month" @click="workoutStore.changeMonthBack">
+        <span>{{ workoutStore.months[(workoutStore.selectedMonth + 12 - 1) % 12] }}</span>
+    </button>
+</th>
 </template>
 
 <script lang="ts">
 // Vue imports
 import { defineComponent } from 'vue';
 // Pinia stores
-import { useWorkoutStore } from '@/stores/workoutStore';
+import { useWorkoutStore } from '../../../stores/workoutStore';
 
 export default defineComponent({
     data () {
@@ -24,12 +24,11 @@ export default defineComponent({
 </script>
 
 <style scoped lang="scss">
-.DateRightButton {
+th button {
     /* Positioning */
     display: flex;
         justify-content: center;
         align-items: center;
-        gap: 5px;
 
     /* Visual */
     background: none;
@@ -37,7 +36,7 @@ export default defineComponent({
     cursor: pointer;
 
     &::after {
-        background-image: url('/public/images/icons/chevron_right.svg');
+        background-image: url('/public/images/icons/chevron_left.svg');
             background-size: contain;
             background-repeat: no-repeat;
             background-position: center;

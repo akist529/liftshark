@@ -9,7 +9,7 @@
 	<v-card v-if="exerciseQuery.isSuccess" class="d-flex justify-center align-center pa-2 rounded-lg bg-blue-grey-lighten-3 text-black">
 		<v-card-title class="d-flex flex-column justify-center align-center">
 			<h1>New Workout</h1>
-			<h2>{{ workoutStore.getDay }}, {{ workoutStore.getMonth }} {{ workoutStore.selectedDate }}, {{ workoutStore.selectedYear }}</h2>
+			<h2>{{ workoutStore.months[workoutStore.date.getDay()] }}, {{ workoutStore.date.getMonth() }} {{ workoutStore.date.getDate() }}, {{ workoutStore.date.getFullYear() }}</h2>
 		</v-card-title>
 		<v-card-actions>
 			<v-btn
@@ -98,7 +98,7 @@ export default defineComponent({
 			e.preventDefault();
 
 			const workout = ({
-				date: new Date(this.workoutStore.selectedYear, this.workoutStore.selectedMonth, this.workoutStore.selectedDate).toISOString().split('T')[0],
+				date: this.workoutStore.date.toISOString().split('T')[0],
 				entries: [] as Entry[]
 			});
 

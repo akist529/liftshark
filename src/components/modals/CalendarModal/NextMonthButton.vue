@@ -10,7 +10,7 @@
 // Vue imports
 import { defineComponent } from 'vue';
 // Pinia stores
-import { useWorkoutStore } from '@/stores/workoutStore';
+import { useWorkoutStore } from '../../../stores/workoutStore';
 
 export default defineComponent({
     data () {

@@ -1,17 +1,60 @@
 <template>
-<v-container class="WorkoutsView">
+<main class="WorkoutsView">
 	<h1>My Workouts</h1>
-	<DatePicker />
-	<ModalBackground v-if="workoutStore.calendarOpen">
-		<CalendarModal />
-	</ModalBackground>
-	<RoutineSelect v-if="routineStore.routines.length" />
-	<WorkoutLog v-for="workout in workoutStore.workouts"
-		:key="workout.id"
-		:workout="workout" />
+	<v-row>
+		<v-col>
+			<v-btn
+				variant="plain"
+				title="Last Month"
+				@click="workoutStore.changeDateBack">
+				<v-icon
+					icon="mdi-chevron-left"
+					size="xxx-large"
+				></v-icon>
+			</v-btn>
+		</v-col>
+		<v-col>
+			<CalendarModal />
+		</v-col>
+		<v-col>
+			<v-btn
+				variant="plain"
+				title="Next Month"
+				@click="workoutStore.changeDateForward">
+				<v-icon
+					icon="mdi-chevron-right"
+					size="xxx-large"
+				></v-icon>
+			</v-btn>
+		</v-col>
+	</v-row>
+	<v-row v-if="routineStore.routines.length">
+		<v-col>
+			<v-select
+				name="routine"
+				id="routine"
+				ref="routine"
+				v-model="name"
+				:items="routineStore.routines.map(routine => routine.attributes.name)">
+				<template v-slot:append>
+					<v-btn
+						title="Log Routine as Workout"
+						@click="useRoutine"
+					></v-btn>
+				</template>
+			</v-select>
+		</v-col>
+	</v-row>
+	<v-row v-if="workoutStore.workouts.length">
+		<v-col>
+			<WorkoutLog v-for="workout in workoutStore.workouts"
+				:key="workout.id"
+				:workout="workout" />
+		</v-col>
+	</v-row>
 	<WorkoutModal
 		@showSnackBar="showSnackBar = true" />
-</v-container>
+</main>
 </template>
 
 <script lang="ts">
@@ -25,12 +68,9 @@ import { useRoutineStore } from '@/stores/routineStore';
 // Mixins
 import { fetchImages } from '@/mixins/fetchImages';
 // Local components
-import DatePicker from '@/components/ui/WorkoutsView/DatePicker.vue';
-import CalendarModal from '@/components/ui/WorkoutsView/CalendarModal.vue';
 import WorkoutLog from '@/components/ui/WorkoutsView/WorkoutLog.vue';
-import ModalBackground from '@/components/ModalBackground.vue';
-import RoutineSelect from '@/components/ui/WorkoutsView/RoutineSelect.vue';
 import WorkoutModal from '@/components/modals/WorkoutModal.vue';
+import CalendarModal from '@/components/modals/CalendarModal.vue';
 
 export default defineComponent({
 	data () {
@@ -46,30 +86,13 @@ export default defineComponent({
 			showSnackBar: false
 		});
 	},
-	watch: {
-		selectedDate (date: number) {
-			if (date < 1) {
-				this.workoutStore.selectedMonth = ((this.workoutStore.selectedMonth += 12) - 1) % 12;
-				this.workoutStore.selectedDate = this.daysInMonth(this.selectedYear, this.selectedMonth + 1);
-			} else if (date > this.daysInMonth(this.selectedYear, this.selectedMonth + 1)) {
-				this.workoutStore.selectedMonth = ((this.workoutStore.selectedMonth += 12) + 1) % 12;
-				this.workoutStore.selectedDate = 1;
-			}
-		}
-	},
 	components: {
-		DatePicker,
-		CalendarModal,
 		WorkoutLog,
-		ModalBackground,
-		RoutineSelect,
-		WorkoutModal
+		WorkoutModal,
+		CalendarModal
 	},
 	mixins: [fetchImages],
 	methods: {
-		daysInMonth (year: number, month: number) {
-			return new Date(year, month, 0).getDate();
-		},
 		updateUserToken () {
 			if (this.userToken !== Cookies.get('token')) {
 				this.userToken = Cookies.get('token');
