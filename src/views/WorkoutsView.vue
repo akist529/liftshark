@@ -44,7 +44,7 @@
 		</v-col>
 	</v-row>
 	<v-row v-if="workoutStore.workouts.length">
-		<v-col v-for="workout in workoutStore.workouts" :key="workout.id">
+		<v-col v-for="workout in workoutStore.activeWorkouts" :key="workout.id">
 			<WorkoutLog
 				:workout="workout" />
 		</v-col>
@@ -111,7 +111,7 @@ export default defineComponent({
 
 			if (routine) {
 				const workout = ({
-					date: this.workoutStore.date.toISOString().split('T')[0],
+					date: this.workoutStore.date.toLocaleDateString('en-CA').split('T')[0],
 					entries: routine.attributes.entries
 				} as Workout);
 

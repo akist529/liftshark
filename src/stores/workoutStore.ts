@@ -19,12 +19,13 @@ export const useWorkoutStore = defineStore('workoutStore', {
         loading: false,
         date: ref(new Date()),
         dateVal: new Date().getDate(),
+        dateString: new Date().toLocaleDateString('en-CA').split('T')[0],
         datepicker: ref<DatePickerInstance>(null)
     }),
     getters: {
         activeWorkouts: (state) => {
             return state.workouts.filter((workout: WorkoutData) => {
-                return workout.attributes.date === state.date.toISOString().split('T')[0];
+                return workout.attributes.date === state.dateString;
             });
         },
         getToday: (state) => {
@@ -45,6 +46,7 @@ export const useWorkoutStore = defineStore('workoutStore', {
             newDate.setDate(prevDate - 1);
             this.date = newDate;
             this.dateVal = newDate.getDate();
+            this.dateString = newDate.toLocaleDateString('en-CA').split('T')[0];
 		},
 		changeDateForward () {
             const prevDate = this.date.getDate();
@@ -52,6 +54,7 @@ export const useWorkoutStore = defineStore('workoutStore', {
             newDate.setDate(prevDate + 1);
             this.date = newDate;
             this.dateVal = newDate.getDate();
+            this.dateString = newDate.toLocaleDateString('en-CA').split('T')[0];
 		},
         async addWorkout (workout: Workout) {
             this.loading = true;

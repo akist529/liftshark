@@ -77,6 +77,7 @@ export default defineComponent({
 		handleDate (modelData) {
 			this.workoutStore.date = modelData;
 			this.workoutStore.dateVal = this.workoutStore.date.getDate();
+			this.workoutStore.dateString = modelData.toLocaleDateString('en-CA').split('T')[0];
 			this.dialog = false;
 		}
 	}
