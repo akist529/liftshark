@@ -17,9 +17,9 @@
 	</v-row>
 	<v-row>
 		<v-col>
-			<MyRoutine v-for="routine in routineStore.activeDayRoutines"
+			<WorkoutLog v-for="routine in routineStore.activeDayRoutines"
 				:routine="routine"
-				:exercises="exercises.data?.results || []"
+				:preview="false"
 				:key="routine.id" />
 		</v-col>
 	</v-row>
@@ -45,8 +45,8 @@ import { ExerciseData, RoutineData } from '@/types/index';
 // Pinia stores
 import { useRoutineStore } from '@/stores/routineStore';
 // Local components
-import MyRoutine from '@/components/ui/RoutinesView/MyRoutine.vue';
 import RoutineModal from '@/components/modals/RoutineModal.vue';
+import WorkoutLog from '@/components/ui/WorkoutsView/WorkoutLog.vue';
 
 const getData = async (): Promise<ExerciseData> => {
 	return await fetch('https://wger.de/api/v2/exercise?limit=999&language=2')
@@ -86,8 +86,8 @@ export default defineComponent({
 		}
 	},
 	components: {
-		MyRoutine,
-		RoutineModal
+		RoutineModal,
+		WorkoutLog
 	},
 	async created () {
 		window.setInterval(this.updateUserToken, 100); // Routinely check if user signs in or out

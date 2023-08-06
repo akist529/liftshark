@@ -1,17 +1,18 @@
 <template>
-<v-card v-if="workout" class="bg-blue-grey rounded">
+<v-card v-if="workout || routine" class="bg-blue-grey rounded">
 	<v-card-actions v-if="!preview">
 		<DeleteButton
-			title="Delete Workout"
+			:title="workout ? 'Delete Workout' : 'Delete Routine'"
 			:style="{position: 'absolute', top: '5px', right: '5px'}"
-			@click="workoutStore.deleteWorkout(workout.id)" />
+			@click="deleteItem" />
 	</v-card-actions>
 	<v-card-title class="d-flex justify-center align-center">
-		<span>{{ workoutStore.days[workoutStore.date.getDay()] }}, {{ workoutStore.months[workoutStore.date.getMonth()] }} {{ workoutStore.date.getDate() }}, {{ workoutStore.date.getFullYear() }}</span>
+		<span v-if="workout">{{ workoutStore.days[workoutStore.date.getDay()] }}, {{ workoutStore.months[workoutStore.date.getMonth()] }} {{ workoutStore.date.getDate() }}, {{ workoutStore.date.getFullYear() }}</span>
+		<span v-else-if="routine">{{ routine.attributes.name }}</span>
 	</v-card-title>
 	<v-card-text>
 		<v-list>
-			<v-list-item v-for="entry in workout.attributes.entries" :key="entry.key">
+			<v-list-item v-for="entry in entries" :key="entry.key">
 				<v-table>
 					<caption>{{ entry.name }}</caption>
 					<tbody>
@@ -37,18 +38,21 @@
 // Vue imports
 import { defineComponent, PropType } from 'vue';
 // Type interfaces
-import { WorkoutData } from '@/types/index';
+import { WorkoutData, RoutineData } from '@/types/index';
 // Pinia stores
 import { useWorkoutStore } from '@/stores/workoutStore';
+import { useRoutineStore } from '@/stores/routineStore';
 // Local components
 import DeleteButton from '@/components/buttons/DeleteButton.vue';
 
 export default defineComponent({
 	data () {
 		const workoutStore = useWorkoutStore();
+		const routineStore = useRoutineStore();
 
 		return ({
-			workoutStore
+			workoutStore,
+			routineStore
 		});
 	},
 	components: {
@@ -57,11 +61,33 @@ export default defineComponent({
 	props: {
 		workout: {
 			type: Object as PropType<WorkoutData>,
-			required: true
+			required: false
+		},
+		routine: {
+			type: Object as PropType<RoutineData>,
+			required: false
 		},
 		preview: {
 			type: Boolean as PropType<boolean>,
 			required: true
+		}
+	},
+	methods: {
+		deleteItem () {
+			if (this.workout) {
+				this.workoutStore.deleteWorkout(this.workout.id);
+			} else if (this.routine) {
+				this.routineStore.deleteRoutine(this.routine.id);
+			}
+		}
+	},
+	computed: {
+		entries () {
+			if (this.workout) {
+				return this.workout.attributes.entries;
+			} else if (this.routine) {
+				return this.routine.attributes.entries;
+			} else return [];
 		}
 	}
 });
