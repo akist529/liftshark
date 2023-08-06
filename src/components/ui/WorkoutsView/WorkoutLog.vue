@@ -1,6 +1,14 @@
 <template>
 <v-card v-if="workout || routine" class="bg-blue-grey rounded">
 	<v-card-actions v-if="!preview">
+		<v-btn
+			:title="workout ? 'Edit Workout' : 'Edit Routine'"
+			variant="plain"
+			width="24"
+			height="24"
+			:style="{position: 'absolute', top: '5px', left: '5px'}">
+			<v-icon icon="mdi-book-edit" size="large"></v-icon>
+		</v-btn>
 		<DeleteButton
 			:title="workout ? 'Delete Workout' : 'Delete Routine'"
 			:style="{position: 'absolute', top: '5px', right: '5px'}"
