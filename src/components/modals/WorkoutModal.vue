@@ -1,5 +1,5 @@
 <template>
-<v-dialog :fullscreen="windowStore.width < 600" scrollable persistent v-model="dialog" class="WorkoutModal w-100 h-100" max-width="400px">
+<v-dialog :fullscreen="windowStore.width < 600" scrollable persistent v-model="dialog" class="WorkoutModal w-100 h-100" :max-width="windowStore.width >= 600 ? '400px' : '100%'">
 	<template v-slot:activator="{ props }">
 		<AddButton
 			v-bind="props"
@@ -9,7 +9,7 @@
 	<v-card v-if="exerciseQuery.isSuccess" class="d-flex justify-center align-center pa-2 rounded-lg bg-blue-grey-lighten-3 text-black">
 		<v-card-title class="d-flex flex-column justify-center align-center">
 			<h1>New Workout</h1>
-			<h2>{{ workoutStore.months[workoutStore.date.getDay()] }}, {{ workoutStore.date.getMonth() }} {{ workoutStore.date.getDate() }}, {{ workoutStore.date.getFullYear() }}</h2>
+			<h2>{{ workoutStore.days[workoutStore.date.getDay()] }}, {{ workoutStore.months[workoutStore.date.getMonth()] }} {{ workoutStore.date.getDate() }}, {{ workoutStore.date.getFullYear() }}</h2>
 		</v-card-title>
 		<v-card-actions>
 			<v-btn

@@ -1,48 +1,46 @@
 <template>
-<main class="WorkoutsView">
+<v-container class="WorkoutsView">
 	<h1>My Workouts</h1>
-	<v-row>
-		<v-col>
+	<v-row class="d-flex justify-center">
+		<v-col cols="3" class="d-flex justify-center">
 			<v-btn
 				variant="plain"
-				title="Last Month"
 				@click="workoutStore.changeDateBack">
-				<v-icon
-					icon="mdi-chevron-left"
-					size="xxx-large"
-				></v-icon>
+				<template v-slot:prepend>
+					<v-icon icon="mdi-chevron-left" size="xxx-large"></v-icon>
+				</template>
+				<span v-if="windowStore.width >= 600">Back</span>
 			</v-btn>
 		</v-col>
-		<v-col>
+		<v-col cols="6" class="d-flex justify-center">
 			<CalendarModal />
 		</v-col>
-		<v-col>
+		<v-col cols="3" class="d-flex justify-center">
 			<v-btn
 				variant="plain"
-				title="Next Month"
 				@click="workoutStore.changeDateForward">
-				<v-icon
-					icon="mdi-chevron-right"
-					size="xxx-large"
-				></v-icon>
+				<span v-if="windowStore.width >= 600">Forward</span>
+				<template v-slot:append>
+					<v-icon icon="mdi-chevron-right" size="xxx-large"></v-icon>
+				</template>
 			</v-btn>
 		</v-col>
 	</v-row>
-	<v-row v-if="routineStore.routines.length">
+	<v-row v-if="routineStore.routines.length" class="d-flex flex-wrap justify-center align-center">
 		<v-col>
 			<v-select
 				name="routine"
 				id="routine"
 				ref="routine"
-				v-model="name"
+				v-model="routineName"
+				label="Select Routine"
 				:items="routineStore.routines.map(routine => routine.attributes.name)">
-				<template v-slot:append>
-					<v-btn
-						title="Log Routine as Workout"
-						@click="useRoutine"
-					></v-btn>
-				</template>
 			</v-select>
+			<v-btn
+				title="Log Routine as Workout"
+				@click="useRoutine"
+				append-icon="mdi-notebook"
+			>Log Routine as Workout</v-btn>
 		</v-col>
 	</v-row>
 	<v-row v-if="workoutStore.workouts.length">
@@ -54,7 +52,7 @@
 	</v-row>
 	<WorkoutModal
 		@showSnackBar="showSnackBar = true" />
-</main>
+</v-container>
 </template>
 
 <script lang="ts">
@@ -65,25 +63,31 @@ import Cookies from 'js-cookie';
 // Pinia stores
 import { useWorkoutStore } from '@/stores/workoutStore';
 import { useRoutineStore } from '@/stores/routineStore';
+import { useWindowStore } from '@/stores/windowStore';
 // Mixins
 import { fetchImages } from '@/mixins/fetchImages';
 // Local components
 import WorkoutLog from '@/components/ui/WorkoutsView/WorkoutLog.vue';
 import WorkoutModal from '@/components/modals/WorkoutModal.vue';
 import CalendarModal from '@/components/modals/CalendarModal.vue';
+// Type interfaces
+import { Workout } from '@/types/index';
 
 export default defineComponent({
 	data () {
 		const userToken = Cookies.get('token');
 		const workoutStore = useWorkoutStore();
 		const routineStore = useRoutineStore();
+		const windowStore = useWindowStore();
 
 		return ({
 			workoutStore,
 			routineStore,
+			windowStore,
 			months: workoutStore.months,
 			userToken,
-			showSnackBar: false
+			showSnackBar: false,
+			routineName: ''
 		});
 	},
 	components: {
@@ -102,6 +106,18 @@ export default defineComponent({
 			return this.routineStore.routines.filter(routine => {
 				return routine.attributes.day === day;
 			});
+		},
+		useRoutine () {
+			const routine = this.routineStore.getRoutineByName(this.routineName);
+
+			if (routine) {
+				const workout = ({
+					date: this.workoutStore.date.toISOString().split('T')[0],
+					entries: routine.attributes.entries
+				} as Workout);
+
+				this.workoutStore.addWorkout(workout);
+			}
 		}
 	},
 	created () {

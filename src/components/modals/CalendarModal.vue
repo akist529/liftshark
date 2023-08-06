@@ -1,5 +1,5 @@
 <template>
-<v-dialog scrollable persistent v-model="dialog" class="CalendarModal w-100 h-100" max-width="400px">
+<v-dialog scrollable persistent v-model="dialog" class="CalendarModal w-100 h-100" :max-width="windowStore.width >= 600 ? '400px' : '100%'">
 	<template v-slot:activator="{ props }">
 		<v-btn
 			v-bind="props"
@@ -38,6 +38,7 @@
 import { defineComponent } from 'vue';
 // Pinia stores
 import { useWorkoutStore } from '@/stores/workoutStore';
+import { useWindowStore } from '@/stores/windowStore';
 // Local components
 import CloseButton from '@/components/buttons/CloseButton.vue';
 // Third-party components
@@ -47,9 +48,11 @@ import '@vuepic/vue-datepicker/dist/main.css';
 export default defineComponent({
 	data () {
 		const workoutStore = useWorkoutStore();
+		const windowStore = useWindowStore();
 
 		return ({
 			workoutStore,
+			windowStore,
 			dialog: false
 		});
 	},

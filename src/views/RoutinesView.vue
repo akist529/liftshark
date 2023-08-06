@@ -11,6 +11,7 @@
 				ref="day"
 				:items="routineStore.weekdays"
 				prepend-icon="mdi-calendar-star"
+				v-model="routineStore.activeDay"
 			></v-select>
 		</v-col>
 	</v-row>

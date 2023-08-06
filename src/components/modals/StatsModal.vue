@@ -1,5 +1,5 @@
 <template>
-<v-dialog scrollable persistent v-model="dialog" class="StatsModal w-100 h-100" max-width="400px">
+<v-dialog scrollable persistent v-model="dialog" class="StatsModal w-100 h-100" :max-width="windowStore.width >= 600 ? '400px' : '100%'">
 	<template v-slot:activator="{ props }">
 		<AddButton
 			v-bind="props"
@@ -107,6 +107,7 @@ import { useQuery } from 'vue-query';
 import { useStatStore } from '@/stores/statStore';
 import { useExerciseStore } from '@/stores/exerciseStore';
 import { useSnackbarStore } from '@/stores/snackbarStore';
+import { useWindowStore } from '@/stores/windowStore';
 // Local components
 import CloseButton from '../buttons/CloseButton.vue';
 import AddButton from '../buttons/AddButton.vue';
@@ -124,6 +125,7 @@ export default defineComponent({
         const statStore = useStatStore();
 		const exerciseStore = useExerciseStore();
 		const snackbarStore = useSnackbarStore();
+		const windowStore = useWindowStore();
 		const weight = 0;
 		const muscle = 'Upper Arm';
 		const measurement = 0;
@@ -135,6 +137,7 @@ export default defineComponent({
             statStore,
 			exerciseStore,
 			snackbarStore,
+			windowStore,
 			dialog: false,
 			weight,
 			muscle,

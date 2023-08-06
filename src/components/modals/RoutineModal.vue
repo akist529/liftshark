@@ -1,5 +1,5 @@
 <template>
-<v-dialog :fullscreen="windowStore.width < 600" scrollable persistent v-model="dialog" class="RoutineModal w-100 h-100" max-width="400px">
+<v-dialog :fullscreen="windowStore.width < 600" scrollable persistent v-model="dialog" class="RoutineModal w-100 h-100" :max-width="windowStore.width >= 600 ? '400px' : '100%'">
 	<template v-slot:activator="{ props }">
 		<AddButton
 			v-bind="props"
