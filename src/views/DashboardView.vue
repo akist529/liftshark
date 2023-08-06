@@ -1,6 +1,5 @@
 <template>
 <main class="DashboardView" ref="view">
-    <ModeButton v-if="windowStore.width >= 992" />
     <header>
         <h1 v-if="isMorning">Good morning, Alex!</h1>
         <h1 v-else-if="isNoon">Good afternoon, Alex!</h1>
@@ -50,7 +49,6 @@ import { useWorkoutStore } from '@/stores/workoutStore';
 import { useWindowStore } from '@/stores/windowStore';
 // Local components
 import RoutinePreview from '@/components/ui/DashboardView/RoutinePreview.vue';
-import ModeButton from '@/components/buttons/ModeButton.vue';
 import WorkoutLog from '@/components/ui/WorkoutsView/WorkoutLog.vue';
 
 const getData = async (): Promise<ExerciseData> => {
@@ -94,7 +92,6 @@ export default defineComponent({
     },
     components: {
         RoutinePreview,
-        ModeButton,
         WorkoutLog
     }
 });

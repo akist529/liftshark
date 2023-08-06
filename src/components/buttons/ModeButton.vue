@@ -3,7 +3,7 @@
 	inset
 	color="info"
 	@click="modeStore.toggleDarkMode"
-	class="d-flex justify-start align-center">
+	class="d-inline-flex  justify-center align-center">
 	<template v-slot:prepend>
 		<v-icon
 			icon="mdi-weather-sunny"
@@ -33,13 +33,3 @@ export default defineComponent({
 	}
 });
 </script>
-
-<style scoped lang="scss">
-@media only screen and (min-width: 992px) {
-	.ModeButton {
-		position: absolute;
-		top: 10px;
-		left: 10px;
-	}
-}
-</style>

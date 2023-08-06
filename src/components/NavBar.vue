@@ -2,6 +2,9 @@
 <nav class="NavBar">
     <ModeButton v-if="windowWidth >= 600 && windowWidth < 992" />
     <ul>
+        <li v-if="windowWidth >= 992">
+            <ModeButton />
+        </li>
         <li>
             <router-link class="link" to="/">
                 <span
@@ -174,7 +177,7 @@ export default defineComponent({
         padding: 0;
 
         ul {
-            grid-template-columns: repeat(5, 1fr);
+            grid-template-columns: repeat(6, 1fr);
             grid-template-rows: 1fr;
             margin-top: 0;
             height: 100%;
@@ -182,6 +185,9 @@ export default defineComponent({
             li {
                 padding: 0;
                 height: 100%;
+                display: flex;
+                justify-content: center;
+                align-items: center;
 
                 a {
                     flex-direction: row;
