@@ -87,26 +87,21 @@ export const useWorkoutStore = defineStore('workoutStore', {
         async deleteWorkout (idToDelete: number) {
             this.loading = true;
 
-            const workouts = this.workouts.filter(workout => workout.id !== idToDelete);
-
             if (token) {
-				await fetch('http://localhost:1337/api/workouts', {
-					method: 'PUT',
+				await fetch(`http://localhost:1337/api/workouts/${idToDelete}`, {
+					method: 'DELETE',
 					headers: {
 						Authorization: `Bearer ${token}`,
 						'Content-Type': 'application/json'
-					},
-					body: JSON.stringify({
-                        data: {
-                            workouts
-                        }
-					})
+					}
 				}).then(response => {
 					console.log(response);
 				}).catch(error => {
 					console.log(error);
 				});
 			} else {
+                const workouts = this.workouts.filter(workout => workout.id !== idToDelete);
+
 				localStorage.setItem('workouts', JSON.stringify(workouts));
 			}
 

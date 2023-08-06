@@ -1,5 +1,5 @@
 <template>
-<v-container class="WorkoutsView">
+<main class="WorkoutsView w-100">
 	<h1>My Workouts</h1>
 	<v-row class="d-flex justify-center">
 		<v-col cols="3" class="d-flex justify-center">
@@ -44,15 +44,14 @@
 		</v-col>
 	</v-row>
 	<v-row v-if="workoutStore.workouts.length">
-		<v-col>
-			<WorkoutLog v-for="workout in workoutStore.workouts"
-				:key="workout.id"
+		<v-col v-for="workout in workoutStore.workouts" :key="workout.id">
+			<WorkoutLog
 				:workout="workout" />
 		</v-col>
 	</v-row>
 	<WorkoutModal
 		@showSnackBar="showSnackBar = true" />
-</v-container>
+</main>
 </template>
 
 <script lang="ts">

@@ -1,5 +1,5 @@
 <template>
-<v-container class="StatsView">
+<main class="StatsView">
     <ul>
         <li>
             <v-btn
@@ -43,7 +43,7 @@
             <li>Tape icon by Smashicons</li>
         </ul>
     </footer>
-</v-container>
+</main>
 </template>
 
 <script lang="ts">

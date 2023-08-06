@@ -1,5 +1,5 @@
 <template>
-<v-container class="RoutinesView d-flex flex-column justify-start align-center">
+<main class="RoutinesView d-flex flex-column justify-start align-center">
 	<v-row cols="1">
 		<v-col class="d-flex flex-column justify-center align-center" :style="{gap: '10px'}">
 			<h1>My Routines</h1>
@@ -30,7 +30,7 @@
 			<li>Report icon by nawicon</li>
 		</ul>
 	</footer>
-</v-container>
+</main>
 </template>
 
 <script lang="ts">
