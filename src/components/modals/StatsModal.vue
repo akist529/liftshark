@@ -61,6 +61,7 @@
 					label="Measurement (in)"
 					class="w-100"
 					append-icon="mdi-tape-measure"
+					:min="1"
 				></v-text-field>
 			</v-form>
 			<v-form v-else class="w-75">

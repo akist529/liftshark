@@ -1,5 +1,5 @@
 <template>
-<v-container>
+<main>
 	<LoadIcon v-if="!isLoaded && !isError" />
 	<h1 v-if="isError">Error!</h1>
 	<article v-if="isLoaded && !isError && exercise.data && muscles.data && equipment.data" class="ExerciseView">
@@ -57,7 +57,7 @@
 				:id="exercise.data.id" />
 		</footer>
 	</article>
-</v-container>
+</main>
 </template>
 
 <script lang="ts">
