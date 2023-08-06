@@ -46,7 +46,8 @@
 	<v-row v-if="workoutStore.workouts.length">
 		<v-col v-for="workout in workoutStore.activeWorkouts" :key="workout.id">
 			<WorkoutLog
-				:workout="workout" />
+				:workout="workout"
+				:preview="false" />
 		</v-col>
 	</v-row>
 	<WorkoutModal

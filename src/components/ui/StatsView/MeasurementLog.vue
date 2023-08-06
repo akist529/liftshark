@@ -7,7 +7,8 @@
         <v-select
             v-model="muscle"
             label="Muscle"
-            :items="['Upper Arm', 'Forearm', 'Chest', 'Thigh', 'Calf', 'Waist', 'Shoulder']"
+            :placeholder="items[0]"
+            :items="items"
         ></v-select>
     </v-card-actions>
     <v-card-text>
@@ -38,10 +39,12 @@ export default defineComponent({
     data () {
         const statStore = useStatStore();
         const muscle = '';
+        const items = ['Upper Arm', 'Forearm', 'Chest', 'Thigh', 'Calf', 'Waist', 'Shoulder'];
 
         return ({
             statStore,
-            muscle
+            muscle,
+            items
         });
     },
     computed: {

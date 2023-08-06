@@ -7,6 +7,7 @@
         <v-select
             v-model="exercise"
             label="Exercise"
+            :placeholder="data.results[0].name"
             :items="data.results.map(exercise => exercise.name)"
         ></v-select>
     </v-card-actions>

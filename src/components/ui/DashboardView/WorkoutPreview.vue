@@ -1,6 +1,8 @@
 <template>
-<div v-if="workout" class="WorkoutPreview">
-    <h3>{{ workout.attributes.date }}</h3>
+<v-card v-if="workout" class="WorkoutPreview">
+    <v-card-title>
+        <h3>{{ workout.attributes.date }}</h3>
+    </v-card-title>
     <ul v-if="workout.attributes.entries && workout.attributes.entries.length > 0" class="exercise-list">
         <li v-for="entry in workout.attributes.entries" :key="entry.key">
             <h4>{{ entry.name }}</h4>
@@ -12,7 +14,7 @@
             </ul>
         </li>
     </ul>
-</div>
+</v-card>
 </template>
 
 <script lang="ts">

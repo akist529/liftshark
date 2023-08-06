@@ -13,9 +13,10 @@
     <div v-if="workoutStore.activeWorkouts.length">
         <h2 v-if="workoutStore.activeWorkouts.length > 1">Today's Workouts</h2>
         <h2 v-else>Today's Workout</h2>
-        <WorkoutPreview v-for="workout in workoutStore.activeWorkouts"
-            :key="workout.id"
-            :workout="workout" />
+        <WorkoutLog v-for="workout in workoutStore.activeWorkouts"
+			:key="workout.id"
+            :workout="workout"
+            :preview="true" />
     </div>
     <div v-else-if="routineStore.activeDayRoutines.length">
         <h2 v-if="routineStore.activeDayRoutines.length > 1">Today's Routines</h2>
@@ -49,8 +50,8 @@ import { useWorkoutStore } from '@/stores/workoutStore';
 import { useWindowStore } from '@/stores/windowStore';
 // Local components
 import RoutinePreview from '@/components/ui/DashboardView/RoutinePreview.vue';
-import WorkoutPreview from '@/components/ui/DashboardView/WorkoutPreview.vue';
 import ModeButton from '@/components/buttons/ModeButton.vue';
+import WorkoutLog from '@/components/ui/WorkoutsView/WorkoutLog.vue';
 
 const getData = async (): Promise<ExerciseData> => {
 	return await fetch('https://wger.de/api/v2/exercise?limit=999&language=2')
@@ -93,8 +94,8 @@ export default defineComponent({
     },
     components: {
         RoutinePreview,
-        WorkoutPreview,
-        ModeButton
+        ModeButton,
+        WorkoutLog
     }
 });
 </script>

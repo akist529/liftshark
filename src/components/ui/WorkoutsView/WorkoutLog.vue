@@ -1,6 +1,6 @@
 <template>
 <v-card v-if="workout" class="bg-blue-grey rounded">
-	<v-card-actions>
+	<v-card-actions v-if="!preview">
 		<DeleteButton
 			title="Delete Workout"
 			:style="{position: 'absolute', top: '5px', right: '5px'}"
@@ -57,6 +57,10 @@ export default defineComponent({
 	props: {
 		workout: {
 			type: Object as PropType<WorkoutData>,
+			required: true
+		},
+		preview: {
+			type: Boolean as PropType<boolean>,
 			required: true
 		}
 	}
