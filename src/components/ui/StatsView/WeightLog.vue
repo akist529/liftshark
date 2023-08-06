@@ -4,7 +4,7 @@
         <h1>Weight Log</h1>
     </v-card-title>
     <v-card-text>
-        <v-table>
+        <v-table v-if="statStore.weights.length">
             <tbody>
                 <tr>
                     <th>DATE</th>
@@ -16,6 +16,7 @@
                 </tr>
             </tbody>
         </v-table>
+        <strong v-else>No measurements logged.</strong>
     </v-card-text>
 </v-card>
 </template>
