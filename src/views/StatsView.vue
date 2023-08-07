@@ -1,48 +1,39 @@
 <template>
 <main class="StatsView">
-    <ul>
-        <li>
-            <v-btn
-                @click="setPageShown('Weight')"
-                prepend-icon="mdi-scale-bathroom"
-                variant="flat"
-                :class="(pageShown === 'Weight') ? 'bg-blue-lighten-3' : 'bg-grey-lighten-2'"
-                :stacked="windowStore.width < 600"
-            >Weight</v-btn>
-        </li>
-        <li>
-            <v-btn
-                @click="setPageShown('Measurements')"
-                prepend-icon="mdi-tape-measure"
-                variant="flat"
-                :class="(pageShown === 'Measurements') ? 'bg-blue-lighten-3' : 'bg-grey-lighten-2'"
-                :stacked="windowStore.width < 600"
-            >Measurements</v-btn>
-        </li>
-        <li>
-            <v-btn
-                @click="setPageShown('PRs')"
-                prepend-icon="mdi-weight-lifter"
-                variant="flat"
-                :class="(pageShown === 'PRs') ? 'bg-blue-lighten-3' : 'bg-grey-lighten-2'"
-                :stacked="windowStore.width < 600"
-            >PRs</v-btn>
-        </li>
-    </ul>
-    <hr/>
-    <WeightLog v-if="pageShown === 'Weight'" />
-    <MeasurementLog v-if="pageShown === 'Measurements'" />
-    <PRLog v-if="pageShown === 'PRs'" />
+    <v-tabs v-model="tab" bg-color="primary">
+        <v-tab
+            value="weight"
+            prepend-icon="mdi-scale-bathroom"
+            :stacked="windowStore.width < 600"
+        >Weight</v-tab>
+        <v-tab
+            value="measurement"
+            prepend-icon="mdi-tape-measure"
+            :stacked="windowStore.width < 600"
+        >Measurements</v-tab>
+        <v-tab
+            value="record"
+            prepend-icon="mdi-weight-lifter"
+            :stacked="windowStore.width < 600"
+        >PRs</v-tab>
+    </v-tabs>
+    <v-window v-model="tab">
+        <v-window-item value="weight">
+            <WeightLog />
+        </v-window-item>
+        <v-window-item value="measurement">
+            <MeasurementLog />
+        </v-window-item>
+        <v-window-item value="record">
+            <PRLog />
+        </v-window-item>
+    </v-window>
     <StatsModal
         :stat="pageShown"
         @weight="setPageShown('Weight')"
         @measure="setPageShown('Measurements')"
         @prs="setPageShown('PRs')" />
-    <footer>
-        <ul>
-            <li>Tape icon by Smashicons</li>
-        </ul>
-    </footer>
+    <footer>Tape icon by Smashicons</footer>
 </main>
 </template>
 
@@ -69,7 +60,8 @@ export default defineComponent({
 			statPages,
 			pageShown,
             statStore,
-            windowStore
+            windowStore,
+            tab: null
 		});
 	},
 	methods: {
