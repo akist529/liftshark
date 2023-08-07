@@ -1,7 +1,7 @@
 <template>
-<button
+<v-btn
     class="SubmitButton"
-></button>
+></v-btn>
 </template>
 
 <style scoped lang="scss">

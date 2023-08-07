@@ -1,7 +1,7 @@
 <template>
-<button class="GenericButton">
+<v-btn class="GenericButton">
     <slot></slot>
-</button>
+</v-btn>
 </template>
 
 <style scoped lang="scss">

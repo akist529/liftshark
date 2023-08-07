@@ -16,7 +16,7 @@
                 </tr>
             </tbody>
         </v-table>
-        <strong v-else>No measurements logged.</strong>
+        <strong v-else>No weights logged.</strong>
     </v-card-text>
 </v-card>
 </template>
@@ -34,6 +34,9 @@ export default defineComponent({
         return ({
             statStore
         });
+    },
+    created () {
+        console.log(this.statStore.weights);
     }
 });
 </script>

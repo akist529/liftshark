@@ -1,7 +1,7 @@
 <template>
-<button class="StrongButton">
+<v-btn class="StrongButton">
     <slot></slot>
-</button>
+</v-btn>
 </template>
 
 <style scoped lang="scss">

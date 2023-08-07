@@ -12,13 +12,13 @@
         ></v-select>
     </v-card-actions>
     <v-card-text>
-        <v-table v-if="filteredMeasurements.length">
+        <v-table v-if="filteredMeasurements().length">
             <tbody>
                 <tr>
                     <th>DATE</th>
                     <th>MEASUREMENT</th>
                 </tr>
-                <tr v-for="measurement in filteredMeasurements" :key="measurement.id">
+                <tr v-for="measurement in filteredMeasurements()" :key="measurement.id">
                     <td>{{ measurement.attributes.date }}</td>
                     <td>{{ `${measurement.attributes.measurement}"` }}</td>
                 </tr>
@@ -47,9 +47,10 @@ export default defineComponent({
             items
         });
     },
-    computed: {
+    methods: {
         filteredMeasurements () {
-            return this.statStore.measurements.filter(measurement => measurement.attributes.muscle === this.muscle);
+            const muscle = this.muscle;
+            return this.statStore.measurements.filter(measurement => measurement.attributes.muscle === muscle);
         }
     }
 });

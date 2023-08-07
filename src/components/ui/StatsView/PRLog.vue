@@ -12,13 +12,13 @@
         ></v-select>
     </v-card-actions>
     <v-card-text>
-        <v-table v-if="filteredRecords?.length">
+        <v-table v-if="filteredRecords()?.length">
             <tbody>
                 <tr>
                     <th>DATE</th>
                     <th>PR (LBS.)</th>
                 </tr>
-                <tr v-for="record in filteredRecords" :key="record.id">
+                <tr v-for="record in filteredRecords()" :key="record.id">
                     <td>{{ record.attributes.date }}</td>
                     <td>{{ record.attributes.max }}</td>
                 </tr>
@@ -65,7 +65,7 @@ export default defineComponent({
             refetch
         });
     },
-    computed: {
+    methods: {
         filteredRecords () {
 			const exercise = this.data?.results.find(exercise => exercise.name === this.exercise);
 			if (!exercise) return;
