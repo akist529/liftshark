@@ -13,7 +13,8 @@ export const useStatStore = defineStore('statStore', {
         measurements: [] as MeasurementData[],
         records: [] as RecordData[],
         loading: false,
-        date: new Date().toISOString().split('T')[0]
+        date: new Date().toISOString().split('T')[0],
+        tab: ''
     }),
     actions: {
         async addWeight (weight: number) {

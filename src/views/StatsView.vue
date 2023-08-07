@@ -1,6 +1,6 @@
 <template>
 <main class="StatsView">
-    <v-tabs v-model="tab" bg-color="primary">
+    <v-tabs v-model="statStore.tab" bg-color="primary">
         <v-tab
             value="weight"
             prepend-icon="mdi-scale-bathroom"
@@ -17,7 +17,7 @@
             :stacked="windowStore.width < 600"
         >PRs</v-tab>
     </v-tabs>
-    <v-window v-model="tab">
+    <v-window v-model="statStore.tab">
         <v-window-item value="weight">
             <WeightLog />
         </v-window-item>
@@ -29,7 +29,6 @@
         </v-window-item>
     </v-window>
     <StatsModal
-        :stat="pageShown"
         @weight="setPageShown('Weight')"
         @measure="setPageShown('Measurements')"
         @prs="setPageShown('PRs')" />
@@ -60,8 +59,7 @@ export default defineComponent({
 			statPages,
 			pageShown,
             statStore,
-            windowStore,
-            tab: null
+            windowStore
 		});
 	},
 	methods: {

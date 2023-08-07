@@ -11,77 +11,84 @@
 			<h1>Log Statistic</h1>
 		</v-card-title>
 		<v-card-actions class="d-flex flex-wrap justify-center align-center w-100" :style="{gap: '10px'}">
-			<v-btn
-				prepend-icon="mdi-scale-bathroom"
-				stacked
-				@click="$emit('weight')"
-				variant="flat"
-				:class="(stat === 'Weight') ? 'bg-blue-lighten-3' : 'bg-grey-lighten-2'"
-			>Weight</v-btn>
-			<v-btn
-				prepend-icon="mdi-tape-measure"
-				stacked
-				@click="$emit('measure')"
-				variant="flat"
-				:class="(stat === 'Measurements') ? 'bg-blue-lighten-3' : 'bg-grey-lighten-2'"
-			>Measurements</v-btn>
-			<v-btn
-				prepend-icon="mdi-weight-lifter"
-				stacked
-				@click="$emit('prs')"
-				variant="flat"
-				:class="(stat === 'PRs') ? 'bg-blue-lighten-3' : 'bg-grey-lighten-2'"
-			>PRs</v-btn>
+			<v-tabs v-model="statStore.tab" bg-color="primary">
+				<v-tab
+					value="weight"
+					prepend-icon="mdi-scale-bathroom"
+					:stacked="windowStore.width < 600"
+					@click="$emit('weight')"
+				>Weight</v-tab>
+				<v-tab
+					value="measurement"
+					prepend-icon="mdi-tape-measure"
+					:stacked="windowStore.width < 600"
+					@click="$emit('measure')"
+				>Measurements</v-tab>
+				<v-tab
+					value="record"
+					prepend-icon="mdi-weight-lifter"
+					:stacked="windowStore.width < 600"
+					@click="$emit('prs')"
+				>PRs</v-tab>
+			</v-tabs>
 			<CloseButton
 				@click="dialog = false" />
 		</v-card-actions>
 		<v-card-text v-if="isSuccess && data" class="d-flex justify-center align-center w-100">
-			<v-form v-if="stat === 'Weight'" class="w-75">
-				<v-text-field
-					v-model="weight"
-					hide-details="auto"
-					density="compact"
-					type="number"
-					label="Weight (lbs)"
-					append-icon="mdi-weight-pound"
-				></v-text-field>
-			</v-form>
-			<v-form v-else-if="stat === 'Measurements'" class="w-75">
-				<v-select
-					v-model="muscle"
-					label="Muscle"
-					:items="['Upper Arm', 'Forearm', 'Chest', 'Thigh', 'Calf', 'Waist', 'Shoulder']"
-					append-icon="mdi-arm-flex"
-				></v-select>
-				<v-text-field
-					v-model="measurement"
-					hide-details="auto"
-					density="compact"
-					type="number"
-					label="Measurement (in)"
-					class="w-100"
-					append-icon="mdi-tape-measure"
-					:min="1"
-				></v-text-field>
-			</v-form>
-			<v-form v-else class="w-75">
-				<v-select
-					v-model="exercise"
-					label="Exercise"
-					:placeholder="data.results[0].name"
-					:items="data.results.map(exercise => exercise.name)"
-					append-icon="mdi-dumbbell"
-				></v-select>
-				<v-text-field
-					v-model="record"
-					hide-details="auto"
-					density="compact"
-					type="number"
-					label="New Record (lbs)"
-					class="w-100"
-					append-icon="mdi-medal"
-				></v-text-field>
-			</v-form>
+			<v-window v-model="statStore.tab">
+				<v-window-item value="weight">
+					<v-form class="w-75">
+						<v-text-field
+							v-model="weight"
+							hide-details="auto"
+							density="compact"
+							type="number"
+							label="Weight (lbs)"
+							append-icon="mdi-weight-pound"
+						></v-text-field>
+					</v-form>
+				</v-window-item>
+				<v-window-item value="measurement">
+					<v-form class="w-75">
+						<v-select
+							v-model="muscle"
+							label="Muscle"
+							:items="['Upper Arm', 'Forearm', 'Chest', 'Thigh', 'Calf', 'Waist', 'Shoulder']"
+							append-icon="mdi-arm-flex"
+						></v-select>
+						<v-text-field
+							v-model="measurement"
+							hide-details="auto"
+							density="compact"
+							type="number"
+							label="Measurement (in)"
+							class="w-100"
+							append-icon="mdi-tape-measure"
+							:min="1"
+						></v-text-field>
+					</v-form>
+				</v-window-item>
+				<v-window-item value="record">
+					<v-form class="w-75">
+						<v-select
+							v-model="exercise"
+							label="Exercise"
+							:placeholder="data.results[0].name"
+							:items="data.results.map(exercise => exercise.name)"
+							append-icon="mdi-dumbbell"
+						></v-select>
+						<v-text-field
+							v-model="record"
+							hide-details="auto"
+							density="compact"
+							type="number"
+							label="New Record (lbs)"
+							class="w-100"
+							append-icon="mdi-medal"
+						></v-text-field>
+					</v-form>
+				</v-window-item>
+			</v-window>
 		</v-card-text>
 		<v-card-actions>
 			<v-btn
@@ -101,7 +108,7 @@
 
 <script lang="ts">
 // Vue imports
-import { defineComponent, PropType } from 'vue';
+import { defineComponent } from 'vue';
 // Vue Query imports
 import { useQuery } from 'vue-query';
 // Pinia stores
@@ -158,24 +165,18 @@ export default defineComponent({
         CloseButton,
 		AddButton
     },
-	props: {
-		stat: {
-			type: String as PropType<string>,
-			required: true
-		}
-	},
 	methods: {
 		addStat (e: MouseEvent) {
 			e.preventDefault();
 
-			switch (this.stat) {
-				case 'Weight':
+			switch (this.statStore.tab) {
+				case 'weight':
 					this.addWeight();
 					break;
-				case 'Measurements':
+				case 'measurement':
 					this.addMeasurement();
 					break;
-				case 'PRs':
+				case 'record':
 					this.addRecord();
 					break;
 				default:
