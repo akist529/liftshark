@@ -130,7 +130,7 @@ export default defineComponent({
 		const weight = 0;
 		const muscle = 'Upper Arm';
 		const measurement = 0;
-		const { error, isError, isLoading, isFetching, isSuccess, data, refetch } = useQuery(['exercises', exerciseStore.url], () => getData(exerciseStore.url));
+		const { error, isError, isLoading, isFetching, isSuccess, data, refetch } = useQuery('exercises', () => getData('https://wger.de/api/v2/exercise/?language=2&limit=999'));
 		const exercise = '';
 		const record = 0;
 

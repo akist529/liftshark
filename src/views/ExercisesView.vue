@@ -1,19 +1,52 @@
 <template>
-<main class="ExercisesView" ref="view">
+<main class="ExercisesView w-100" ref="view">
 	<h1>Exercises</h1>
-	<ExerciseNavBar v-if="isSuccess && data"
-		:data="data"
-		:refetch="refetch" />
-	<h1 v-if="error || isError">Error!</h1>
-	<LoadIcon v-if="isLoading || isFetching" />
-	<ul v-if="isSuccess && data" class="exercise-list">
-		<MyExercise v-for="exercise in data.results"
-			:key="exercise.id"
-			:exercise="exercise" />
-	</ul>
-	<ExerciseNavBar v-if="isSuccess && data"
-		:data="data"
-		:refetch="refetch" />
+	<v-container class="d-flex flex-column justify-center align-center w-100">
+		<!-- <ExerciseNavBar
+			v-if="exercises.isSuccess && exercises.data"
+			:data="exercises.data"
+			:refetch="exercises.refetch" /> -->
+		<v-pagination
+			v-if="exercises.isSuccess && exercises.data"
+			v-model="exerciseStore.page"
+			:length="Math.ceil(exercises.data.count / 20)"
+			:total-visible="7"
+			rounded="circle"
+		></v-pagination>
+		<v-row v-if="exercises.error || exercises.isError">
+			<v-col>
+				<h1>Error!</h1>
+			</v-col>
+		</v-row>
+		<v-row v-if="exercises.isLoading || muscles.isLoading || equipment.isLoading">
+			<v-col>
+				<LoadIcon />
+			</v-col>
+		</v-row>
+		<v-row v-if="exercises.isSuccess && exercises.data && muscles.isSuccess && muscles.data && equipment.isSuccess && equipment.data">
+			<v-col>
+				<v-container class="d-flex flex-wrap justify-center align-center">
+					<v-row>
+						<v-col v-for="exercise in exercises.data.results" :key="exercise.id" cols="4">
+							<router-link :to="{ name: 'Exercise - Gym Tracker', params: { id: exercise.name.toLowerCase().replaceAll(' ', '-') } }">
+								<ExerciseCard
+									:exercise="exercise"
+									:muscles="muscles.data.results"
+									:equipment="equipment.data.results" />
+							</router-link>
+						</v-col>
+					</v-row>
+				</v-container>
+			</v-col>
+		</v-row>
+		<v-pagination
+			v-if="exercises.isSuccess && exercises.data"
+			v-model="exerciseStore.page"
+			:length="Math.ceil(exercises.data.count / 20)"
+			:total-visible="7"
+			rounded="circle"
+		></v-pagination>
+	</v-container>
 	<MyFooter />
 </main>
 </template>
@@ -25,15 +58,20 @@ import { defineComponent } from 'vue';
 import { useQuery } from 'vue-query';
 // Pinia stores
 import { useExerciseStore } from '@/stores/exerciseStore';
-// Type interfaces
-import { ExerciseData } from '@/types/index';
 // Local components
-import MyExercise from '@/components/ui/ExercisesView/MyExercise.vue';
+import ExerciseCard from '@/components/ui/ExercisesView/ExerciseCard.vue';
 import MyFooter from '@/components/ui/ExercisesView/MyFooter.vue';
 import LoadIcon from '@/components/LoadIcon.vue';
-import ExerciseNavBar from '@/components/ui/ExercisesView/ExerciseNavBar.vue';
+// Type interfaces
+import { ExerciseData } from '@/types/index';
 
-const getData = async (url: string): Promise<ExerciseData> => {
+const getExerciseData = async (page: number): Promise<ExerciseData> => {
+	return await fetch(`https://wger.de/api/v2/exercise/?language=2&limit=20&offset=${(page - 1) * 20}`)
+		.then(res => res.json())
+		.catch(err => console.log(err));
+}
+
+const getData = async (url: string): Promise<any> => {
 	return await fetch(url)
 		.then(res => res.json())
 		.catch(err => console.log(err));
@@ -42,54 +80,31 @@ const getData = async (url: string): Promise<ExerciseData> => {
 export default defineComponent({
 	data () {
 		const exerciseStore = useExerciseStore();
-		const url = exerciseStore.url;
-		const count = exerciseStore.count;
 
-		const { error, isError, isLoading, isFetching, isSuccess, data, refetch } = useQuery(['exercises', exerciseStore.url], () => getData(exerciseStore.url));
+		const exercises = useQuery(['exercises', exerciseStore.page], () => getExerciseData(exerciseStore.page));
+		const muscles = useQuery('muscles', () => getData('https://wger.de/api/v2/muscle?limit=999'));
+		const equipment = useQuery('equipment', () => getData('https://wger.de/api/v2/equipment?limit=999'));
 
 		return ({
 			exerciseStore,
-			url,
-			count,
-			error,
-			isError,
-			isLoading,
-			isFetching,
-			isSuccess,
-			data,
-			refetch
+			exercises,
+			muscles,
+			equipment
 		});
-	},
-	methods: {
-		nextPage () {
-			if (this.data && this.data.next !== null) {
-				this.exerciseStore.updateUrl(this.data.next);
-			}
-		},
-		previousPage () {
-			if (this.data && this.data.previous !== null) {
-				this.exerciseStore.updateUrl(this.data.previous);
-			}
-		},
-		goToPage (page: number) {
-			const offset = (page - 1) * 20;
-			this.exerciseStore.updateUrl(`https://wger.de/api/v2/exercise/?limit=20&offset=${offset}&language=2`);
-		}
 	},
 	watch: {
 		exerciseStore: {
 			deep: true,
 			handler () {
-				this.refetch();
+				this.exercises.refetch();
 				(this.$refs.view as HTMLDivElement).scrollTo({ top: 0, behavior: 'smooth' });
 			}
 		}
 	},
 	components: {
-		MyExercise,
+		ExerciseCard,
 		MyFooter,
-		LoadIcon,
-		ExerciseNavBar
+		LoadIcon
 	}
 });
 </script>
@@ -122,13 +137,6 @@ export default defineComponent({
 				background-size: contain;
 				background-position: center;
 		}
-	}
-
-	.exercise-list {
-		display: grid;
-			grid-template-rows: repeat(auto-fill, auto);
-			grid-template-columns: auto;
-			gap: 20px;
 	}
 }
 </style>

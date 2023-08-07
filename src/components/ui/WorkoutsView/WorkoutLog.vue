@@ -42,7 +42,7 @@
 </v-card>
 </template>
 
-<script scoped lang="ts">
+<script lang="ts">
 // Vue imports
 import { defineComponent, PropType } from 'vue';
 // Type interfaces

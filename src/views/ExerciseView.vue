@@ -43,7 +43,7 @@
 			</li>
 		</ul>
 		<BurgerMenu v-if="menuOpen" />
-		<footer class="exercise-btns">
+		<footer>
 			<BackButton
 				class="back-btn"
 				@click="$router.back()" />
@@ -65,8 +65,6 @@
 import { defineComponent } from 'vue';
 // Vue Query imports
 import { useQuery } from 'vue-query';
-// Mixins
-import { fetchImages } from '@/mixins/fetchImages';
 // Type interfaces
 import { Muscle, Equipment, Category, Exercise } from '@/types/index';
 // Local components
@@ -183,6 +181,9 @@ export default defineComponent({
 		const muscles = useQuery('muscles', () => getData('https://wger.de/api/v2/muscle?limit=999'));
 		const equipment = useQuery('equipment', () => getData('https://wger.de/api/v2/equipment?limit=999'));
 		const images = useQuery(['images', this.exerciseBase], () => getData(`https://wger.de/api/v2/exerciseimage/?limit=999&exercise_base=${this.exerciseBase}`), { enabled: false });
+		const displayName = (this.$route.params.id as string).split('-').map(word => {
+				return word[0].toUpperCase() + word.slice(1);
+			}).join(' ');
 
 		return ({
 			exercise,
@@ -193,7 +194,8 @@ export default defineComponent({
 			menuOpen: false,
 			routerName: this.$route.params.id as string,
 			exerciseBase: 0,
-			error: true
+			error: true,
+			displayName
 		});
 	},
 	components: {
@@ -203,7 +205,6 @@ export default defineComponent({
 		LoadIcon,
 		BurgerMenu
 	},
-	mixins: [fetchImages],
 	methods: {
 		getMuscleName (item: number) {
 			const muscle = this.muscles.data.results.find((muscle: Muscle) => muscle.id === item);
@@ -230,13 +231,6 @@ export default defineComponent({
 		}
 	},
 	computed: {
-		displayName: function () {
-			const displayName = this.routerName.split('-').map(word => {
-				return word[0].toUpperCase() + word.slice(1);
-			}).join(' ');
-
-			return displayName;
-		},
 		isLoaded () {
 			if (this.exercise.isLoading || this.muscles.isLoading || this.equipment.isLoading) {
 				return false;

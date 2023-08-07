@@ -1,16 +1,23 @@
 <template>
-<nav class="ExerciseNavBar">
-    <BackButton
-        @click="previousPage()" />
-    <div class="page-buttons">
-        <ExerciseNavButton v-for="page in Math.ceil((data.count / 20))"
-            :key="page"
-            :page="page"
-            @click="goToPage(page)" />
-    </div>
-    <ForwardButton
-        @click="nextPage()" />
-</nav>
+<v-row class="d-flex justify-center align-center">
+	<v-col cols="1">
+		<BackButton
+			@click="previousPage()" />
+	</v-col>
+	<v-col cols="10">
+		<v-list class="d-inline-flex flex-wrap justify-center align-center w-100">
+			<v-list-item v-for="page in Math.ceil((data.count / 20))" :key="page">
+				<ExerciseNavButton
+					:page="page"
+					@click="goToPage(page)" />
+			</v-list-item>
+		</v-list>
+	</v-col>
+	<v-col cols="1">
+		<ForwardButton
+			@click="nextPage()" />
+	</v-col>
+</v-row>
 </template>
 
 <script lang="ts">

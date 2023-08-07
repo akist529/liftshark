@@ -10,9 +10,8 @@ const token: string = Cookies.get('token');
 export const useExerciseStore = defineStore('exerciseStore', {
     state: () => ({
         favorites: [] as FavoriteData[],
-        url: 'https://wger.de/api/v2/exercise/?language=2',
-        count: 0,
-        loading: false
+        loading: false,
+        page: 1
     }),
     actions: {
         async addToFavorites (id: number) {
@@ -90,12 +89,6 @@ export const useExerciseStore = defineStore('exerciseStore', {
             }
 
             this.loading = false;
-        },
-        updateUrl (url: string) {
-            this.url = url;
-        },
-        updateCount (count: number) {
-            this.count = count;
         }
     }
 });

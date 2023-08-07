@@ -36,7 +36,6 @@ import { defineComponent } from 'vue';
 import { useQuery } from 'vue-query';
 // Pinia stores
 import { useStatStore } from '@/stores/statStore';
-import { useExerciseStore } from '@/stores/exerciseStore';
 // Type interfaces
 import { ExerciseData } from '@/types/index';
 
@@ -49,9 +48,8 @@ const getData = async (url: string): Promise<ExerciseData> => {
 export default defineComponent({
     data () {
         const statStore = useStatStore();
-        const exerciseStore = useExerciseStore();
         const exercise = '';
-		const { error, isError, isLoading, isFetching, isSuccess, data, refetch } = useQuery(['exercises', exerciseStore.url], () => getData(exerciseStore.url));
+		const { error, isError, isLoading, isFetching, isSuccess, data, refetch } = useQuery('exercises', () => getData('https://wger.de/api/v2/exercise/?language=2&limit=999'));
 
         return ({
             statStore,

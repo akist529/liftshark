@@ -32,11 +32,25 @@ export interface Muscle {
     image_url_main: string
     // eslint-disable-next-line camelcase
     image_url_secondary: string
-  }
+}
+
+export interface MuscleData {
+    count: number,
+    next: string | null,
+    previous: string | null,
+    results: Muscle[]
+}
 
 export interface Equipment {
     id: number,
     name: string
+}
+
+export interface EquipmentData {
+    count: number,
+    next: string | null,
+    previous: string | null,
+    results: Equipment[]
 }
 
 export interface Category {
@@ -58,6 +72,13 @@ export interface Image {
     license_author: string,
     // eslint-disable-next-line camelcase
     author_history: string[]
+}
+
+export interface ImageData {
+    count: number,
+    next: string | null,
+    previous: string | null,
+    results: Image[]
 }
 
 export interface Set {
@@ -140,4 +161,11 @@ export interface Favorite {
 export interface FavoriteData {
     id: number,
     attributes: Favorite
+}
+
+export interface APIData {
+    count: number,
+    next: string | null,
+    previous: string | null,
+    results: Muscle[] | Equipment[] | Image[]
 }
