@@ -10,7 +10,7 @@ const token: string = Cookies.get('token');
 export const useRoutineStore = defineStore('routineStore', {
     state: () => ({
         routines: <RoutineData[]>[],
-        activeDay: ['Sunday', 'Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday'][new Date().getDay()],
+        activeDay: new Date().getDay(),
         weekdays: ['Sunday', 'Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday'],
         loading: false
     }),
@@ -22,7 +22,7 @@ export const useRoutineStore = defineStore('routineStore', {
         },
         activeDayRoutines: (state) => {
             return state.routines.filter((routine: RoutineData) => {
-                return routine.attributes.day === state.activeDay;
+                return routine.attributes.day === state.weekdays[state.activeDay];
             });
         },
         getSunday: (state) => {
@@ -159,13 +159,13 @@ export const useRoutineStore = defineStore('routineStore', {
 
             this.getRoutineData();
         },
-        updateActiveDay (day: string) {
+        updateActiveDay (day: number) {
             this.activeDay = day;
         },
         async getRoutineData () {
             this.loading = true;
 
-            const activeDay = this.weekdays[new Date().getDay()];
+            const activeDay = new Date().getDay();
             this.activeDay = activeDay;
 
             if (token) {

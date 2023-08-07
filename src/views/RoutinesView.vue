@@ -3,16 +3,15 @@
 	<v-row cols="1">
 		<v-col class="d-flex flex-column justify-center align-center" :style="{gap: '10px'}">
 			<h1>My Routines</h1>
-			<v-select
-				class="w-100"
-				label="Select Day"
-				name="day"
-				id="day"
-				ref="day"
-				:items="routineStore.weekdays"
-				prepend-icon="mdi-calendar-star"
-				v-model="routineStore.activeDay"
-			></v-select>
+			<v-tabs v-model="routineStore.activeDay" bg-color="primary">
+				<v-tab :value="0">Sunday</v-tab>
+				<v-tab :value="1">Monday</v-tab>
+				<v-tab :value="2">Tuesday</v-tab>
+				<v-tab :value="3">Wednesday</v-tab>
+				<v-tab :value="4">Thursday</v-tab>
+				<v-tab :value="5">Friday</v-tab>
+				<v-tab :value="6">Saturday</v-tab>
+			</v-tabs>
 		</v-col>
 	</v-row>
 	<v-row>
@@ -25,11 +24,7 @@
 	</v-row>
 	<RoutineModal
 		@showSnackBar="showSnackBar = true" />
-	<footer>
-		<ul>
-			<li>Report icon by nawicon</li>
-		</ul>
-	</footer>
+	<footer>Report icon by nawicon</footer>
 </main>
 </template>
 
@@ -63,7 +58,6 @@ export default defineComponent({
 		return ({
 			routineStore,
 			weekdays: routineStore.weekdays as string[],
-			activeDay: routineStore.activeDay as string,
 			routines: routineStore.routines as RoutineData[],
 			getRoutineData: routineStore.getRoutineData,
 			deleteRoutine: routineStore.deleteRoutine,

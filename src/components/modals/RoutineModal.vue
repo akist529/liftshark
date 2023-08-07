@@ -108,7 +108,7 @@ export default defineComponent({
 
 			const routine = ({
 				name: this.name,
-				day: this.routineStore.activeDay,
+				day: this.routineStore.weekdays[this.routineStore.activeDay],
 				entries: [] as Entry[]
 			});
 
