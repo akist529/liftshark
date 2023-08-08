@@ -1,70 +1,72 @@
 <template>
-<v-card class="bg-blue-grey rounded pa-3" :style="{height: '500px', overflow: 'scroll'}">
-	<v-card-title>
-		<h2>{{ name }}</h2>
-	</v-card-title>
-	<v-card-text v-if="images.isLoading" class="d-flex justify-center align-center">
+<v-card class="d-flex flex-column justify-center align-center bg-blue-grey-darken-4" max-width="400">
+	<v-card-item class="d-flex justify-center align-center w-100 text-white bg-primary" height="200">
+		<v-card-title>{{ name }}</v-card-title>
+	</v-card-item>
+	<v-card-actions v-if="images.isLoading" class="d-flex justify-center align-center pa-3">
 		<v-progress-circular
 			indeterminate
 			color="primary"
 		></v-progress-circular>
-	</v-card-text>
+	</v-card-actions>
 	<v-card-text v-if="images.isError" class="d-flex justify-center align-center">
 		<strong>Error!</strong>
 	</v-card-text>
-	<v-card-text v-if="images.isSuccess && images.data">
-		<v-container>
-			<v-row>
-				<v-col>
-					<h3>Primary Muscles</h3>
-					<v-divider></v-divider>
-					<v-list v-if="exercise.muscles.length">
-						<v-list-item v-for="muscle in exercise.muscles" :key="muscle">
-							<span :style="getLocalImage('muscles', getSlug(getMuscleName(muscle)))"></span>
-							{{ getMuscleName(muscle) }}
-						</v-list-item>
-					</v-list>
-					<span v-else>None</span>
-				</v-col>
-			</v-row>
-			<v-row>
-				<v-col>
-					<h3>Secondary Muscles</h3>
-					<v-divider></v-divider>
-					<v-list v-if="exercise.muscles_secondary.length">
-						<v-list-item v-for="muscle in exercise.muscles_secondary" :key="muscle">
-							<span :style="getLocalImage('muscles', getSlug(getMuscleName(muscle)))"></span>
-							{{ getMuscleName(muscle) }}
-						</v-list-item>
-					</v-list>
-					<span v-else>None</span>
-				</v-col>
-			</v-row>
-			<v-row>
-				<v-col>
-					<h3>Equipment</h3>
-					<v-divider></v-divider>
-					<v-list v-if="exercise.equipment.length">
-						<v-list-item v-for="item in exercise.equipment" :key="item">
-							<span :style="getLocalImage('equipment', getSlug(getEquipmentName(item)))"></span>
-							{{ getEquipmentName(item) }}
-						</v-list-item>
-					</v-list>
-					<span v-else>None</span>
-				</v-col>
-			</v-row>
-			<v-row>
-				<v-col>
-					<v-img
-						v-if="images.data.results.length"
-						:max-width="250"
-						:src="images.data.results[0].image"
-						alt="Exercise Image"
-					></v-img>
-				</v-col>
-			</v-row>
-		</v-container>
+	<v-sheet :height="200" width="100%" class="d-flex justify-center align-center bg-light-blue-lighten-4 pa-2">
+		<v-img
+			v-if="images.data && images.data.results.length"
+			max-width="100%"
+			height="100%"
+			:src="images.data.results[0].image"
+			alt="Exercise Image"
+		></v-img>
+		<span v-else>NO IMAGE AVAILABLE</span>
+	</v-sheet>
+	<v-card-text v-if="images.isSuccess && images.data" class="w-100">
+		<v-card-subtitle>Primary Muscles</v-card-subtitle>
+		<v-divider></v-divider>
+		<v-sheet class="d-flex justify-center align-center bg-blue-grey-darken-3 w-100 pa-2" :height="48">
+			<v-slide-group class="d-flex justify-center align-center w-100" v-if="exercise.muscles.length" show-arrows>
+				<v-slide-group-item v-for="muscle in exercise.muscles" :key="muscle">
+					<span
+						:style="getLocalImage('muscles', getSlug(getMuscleName(muscle)))"
+					></span>
+					<span :style="{fontSize: '24px'}">{{ getMuscleName(muscle) }}</span>
+				</v-slide-group-item>
+			</v-slide-group>
+			<span v-else :style="{fontSize: '24px'}">None</span>
+		</v-sheet>
+		<v-card-subtitle>Secondary Muscles</v-card-subtitle>
+		<v-divider></v-divider>
+		<v-sheet class="d-flex justify-center align-center bg-blue-grey-darken-3 w-100 pa-2" :height="48">
+			<v-slide-group class="d-flex justify-center align-center w-100" v-if="exercise.muscles_secondary.length" show-arrows>
+				<v-slide-group-item v-for="muscle in exercise.muscles_secondary" :key="muscle">
+					<span
+						:style="getLocalImage('muscles', getSlug(getMuscleName(muscle)))"
+					></span>
+					<span :style="{fontSize: '24px'}">{{ getMuscleName(muscle) }}</span>
+				</v-slide-group-item>
+			</v-slide-group>
+			<span v-else :style="{fontSize: '24px'}">None</span>
+		</v-sheet>
+		<v-card-subtitle>Equipment</v-card-subtitle>
+		<v-divider></v-divider>
+		<v-sheet class="d-flex justify-center align-center bg-blue-grey-darken-3 w-100 pa-2" :height="48">
+			<v-slide-group class="d-flex justify-center align-center w-100" v-if="exercise.equipment.length" show-arrows>
+				<v-slide-group-item v-for="item in exercise.equipment" :key="item">
+					<span
+						:style="getLocalImage('equipment', getSlug(getEquipmentName(item)))"
+					></span>
+					<span :style="{fontSize: '24px'}">{{ getEquipmentName(item) }}</span>
+				</v-slide-group-item>
+			</v-slide-group>
+			<span v-else :style="{fontSize: '24px'}">None</span>
+		</v-sheet>
 	</v-card-text>
+	<router-link class="w-100" :to="{ name: 'Exercise - Gym Tracker', params: { id: exercise.name.toLowerCase().replaceAll(' ', '-') } }">
+		<v-card-actions class="d-flex justify-center align-center bg-indigo"
+		>SEE MORE</v-card-actions>
+	</router-link>
 </v-card>
 </template>
 
@@ -124,7 +126,14 @@ export default defineComponent({
 				else return piece.name;
 		},
 		getLocalImage (folder: string, name: string) {
-			return { 'background-image': `url('/images/${folder}/${this.getSlug(name)}.webp')` };
+			return ({
+				backgroundImage: `url('/images/${folder}/${this.getSlug(name)}.webp')`,
+				backgroundSize: 'contain',
+				backgroundPosition: 'center',
+				width: '32px',
+				height: '32px',
+				display: 'inline-block'
+			});
 		}
 	},
 	computed: {

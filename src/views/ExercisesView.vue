@@ -1,18 +1,14 @@
 <template>
 <main class="ExercisesView w-100" ref="view">
 	<h1>Exercises</h1>
-	<v-container class="d-flex flex-column justify-center align-center w-100">
-		<!-- <ExerciseNavBar
-			v-if="exercises.isSuccess && exercises.data"
-			:data="exercises.data"
-			:refetch="exercises.refetch" /> -->
-		<v-pagination
-			v-if="exercises.isSuccess && exercises.data"
-			v-model="exerciseStore.page"
-			:length="Math.ceil(exercises.data.count / 20)"
-			:total-visible="7"
-			rounded="circle"
-		></v-pagination>
+	<v-pagination
+		v-if="exercises.isSuccess && exercises.data"
+		v-model="exerciseStore.page"
+		:length="Math.ceil(exercises.data.count / 20)"
+		:total-visible="7"
+		rounded="circle"
+	></v-pagination>
+	<v-container>
 		<v-row v-if="exercises.error || exercises.isError">
 			<v-col>
 				<h1>Error!</h1>
@@ -25,28 +21,26 @@
 		</v-row>
 		<v-row v-if="exercises.isSuccess && exercises.data && muscles.isSuccess && muscles.data && equipment.isSuccess && equipment.data">
 			<v-col>
-				<v-container class="d-flex flex-wrap justify-center align-center">
+				<v-container>
 					<v-row>
-						<v-col v-for="exercise in exercises.data.results" :key="exercise.id" cols="4">
-							<router-link :to="{ name: 'Exercise - Gym Tracker', params: { id: exercise.name.toLowerCase().replaceAll(' ', '-') } }">
-								<ExerciseCard
-									:exercise="exercise"
-									:muscles="muscles.data.results"
-									:equipment="equipment.data.results" />
-							</router-link>
+						<v-col v-for="exercise in exercises.data.results" :key="exercise.id" :cols="cols">
+							<ExerciseCard
+								:exercise="exercise"
+								:muscles="muscles.data.results"
+								:equipment="equipment.data.results" />
 						</v-col>
 					</v-row>
 				</v-container>
 			</v-col>
 		</v-row>
-		<v-pagination
-			v-if="exercises.isSuccess && exercises.data"
-			v-model="exerciseStore.page"
-			:length="Math.ceil(exercises.data.count / 20)"
-			:total-visible="7"
-			rounded="circle"
-		></v-pagination>
 	</v-container>
+	<v-pagination
+		v-if="exercises.isSuccess && exercises.data"
+		v-model="exerciseStore.page"
+		:length="Math.ceil(exercises.data.count / 20)"
+		:total-visible="7"
+		rounded="circle"
+	></v-pagination>
 	<MyFooter />
 </main>
 </template>
@@ -58,6 +52,7 @@ import { defineComponent } from 'vue';
 import { useQuery } from 'vue-query';
 // Pinia stores
 import { useExerciseStore } from '@/stores/exerciseStore';
+import { useWindowStore } from '@/stores/windowStore';
 // Local components
 import ExerciseCard from '@/components/ui/ExercisesView/ExerciseCard.vue';
 import MyFooter from '@/components/ui/ExercisesView/MyFooter.vue';
@@ -80,6 +75,7 @@ const getData = async (url: string): Promise<any> => {
 export default defineComponent({
 	data () {
 		const exerciseStore = useExerciseStore();
+		const windowStore = useWindowStore();
 
 		const exercises = useQuery(['exercises', exerciseStore.page], () => getExerciseData(exerciseStore.page));
 		const muscles = useQuery('muscles', () => getData('https://wger.de/api/v2/muscle?limit=999'));
@@ -87,6 +83,7 @@ export default defineComponent({
 
 		return ({
 			exerciseStore,
+			windowStore,
 			exercises,
 			muscles,
 			equipment
@@ -105,6 +102,17 @@ export default defineComponent({
 		ExerciseCard,
 		MyFooter,
 		LoadIcon
+	},
+	computed: {
+		cols () {
+			if (this.windowStore.width < 800) {
+				return 12;
+			} else if (this.windowStore.width < 992) {
+				return 6;
+			} else {
+				return 4;
+			}
+		}
 	}
 });
 </script>
