@@ -9,17 +9,25 @@
 		rounded="circle"
 	></v-pagination>
 	<v-container>
-		<v-row v-if="exercises.error || exercises.isError">
+		<v-row v-if="error">
 			<v-col>
-				<h1>Error!</h1>
+				<v-alert
+					:max-width="650"
+					border="start"
+					border-color="red-accent-1"
+					elevation="2"
+					type="error"
+					title="Error"
+					text="There is an issue communicating with the server. Please try again later."
+				></v-alert>
 			</v-col>
 		</v-row>
-		<v-row v-if="exercises.isLoading || muscles.isLoading || equipment.isLoading">
+		<v-row v-if="(exercises.isLoading || muscles.isLoading || equipment.isLoading) && !error">
 			<v-col>
 				<LoadIcon />
 			</v-col>
 		</v-row>
-		<v-row v-if="exercises.isSuccess && exercises.data && muscles.isSuccess && muscles.data && equipment.isSuccess && equipment.data">
+		<v-row v-if="(exercises.isSuccess && exercises.data && muscles.isSuccess && muscles.data && equipment.isSuccess && equipment.data) && !error">
 			<v-col>
 				<v-container>
 					<v-row>
@@ -77,9 +85,9 @@ export default defineComponent({
 		const exerciseStore = useExerciseStore();
 		const windowStore = useWindowStore();
 
-		const exercises = useQuery(['exercises', exerciseStore.page], () => getExerciseData(exerciseStore.page));
-		const muscles = useQuery('muscles', () => getData('https://wger.de/api/v2/muscle?limit=999'));
-		const equipment = useQuery('equipment', () => getData('https://wger.de/api/v2/equipment?limit=999'));
+		const exercises = useQuery(['exercises', exerciseStore.page], () => getExerciseData(exerciseStore.page), { onError: (error) => console.log('ERROR', error) });
+		const muscles = useQuery('muscles', () => getData('https://wger.de/api/v2/muscle?limit=999'), { useErrorBoundary: true });
+		const equipment = useQuery('equipment', () => getData('https://wger.de/api/v2/equipment?limit=999'), { useErrorBoundary: true });
 
 		return ({
 			exerciseStore,
@@ -96,13 +104,19 @@ export default defineComponent({
 				this.exercises.refetch();
 				(this.$refs.view as HTMLDivElement).scrollTo({ top: 0, behavior: 'smooth' });
 			}
+		},
+		exercises: {
+			deep: true,
+			handler () {
+				console.log(this.exercises.data);
+			}
 		}
 	},
 	components: {
-		ExerciseCard,
-		MyFooter,
-		LoadIcon
-	},
+    ExerciseCard,
+    MyFooter,
+    LoadIcon
+},
 	computed: {
 		cols () {
 			if (this.windowStore.width < 800) {
@@ -111,6 +125,27 @@ export default defineComponent({
 				return 6;
 			} else {
 				return 4;
+			}
+		},
+		error () {
+			if (this.exercises.error ||
+			this.exercises.isError ||
+			this.exercises.isLoadingError ||
+			(this.exercises.isSuccess && !this.exercises.data) ||
+			this.muscles.error ||
+			this.muscles.isError ||
+			this.muscles.isLoadingError ||
+			(this.muscles.isSuccess && !this.muscles.data) ||
+			this.equipment.error ||
+			this.equipment.isError ||
+			this.equipment.isLoadingError ||
+			(this.equipment.isSuccess && !this.equipment.data) ||
+			(!this.exercises.isLoading && !this.exercises.isSuccess) ||
+			(!this.muscles.isLoading && !this.muscles.isSuccess) ||
+			(!this.equipment.isLoading && !this.equipment.isSuccess)) {
+				return true;
+			} else {
+				return false;
 			}
 		}
 	}
