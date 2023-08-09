@@ -1,23 +1,46 @@
 <template>
 <main class="StatsView">
-    <v-tabs v-model="statStore.tab" bg-color="primary">
-        <v-tab
-            value="weight"
-            prepend-icon="mdi-scale-bathroom"
-            :stacked="windowStore.width < 600"
-        >Weight</v-tab>
-        <v-tab
-            value="measurement"
-            prepend-icon="mdi-tape-measure"
-            :stacked="windowStore.width < 600"
-        >Measurements</v-tab>
-        <v-tab
-            value="record"
-            prepend-icon="mdi-weight-lifter"
-            :stacked="windowStore.width < 600"
-        >PRs</v-tab>
-    </v-tabs>
-    <v-window v-model="statStore.tab">
+    <v-toolbar
+        color="primary"
+        :height="72"
+		extended
+    >
+        <v-spacer></v-spacer>
+        <v-toolbar-title>
+            <h1>My Stats</h1>
+        </v-toolbar-title>
+        <v-spacer></v-spacer>
+        <template v-slot:extension>
+            <v-tabs
+                v-model="statStore.tab"
+                bg-color="primary"
+                class="w-100"
+                align-tabs="center"
+                fixed-tabs
+				show-arrows
+            >
+                <v-tab
+                    value="weight"
+                    prepend-icon="mdi-scale-bathroom"
+                    :stacked="windowStore.width < 600"
+                >Weight</v-tab>
+                <v-tab
+                    value="measurement"
+                    prepend-icon="mdi-tape-measure"
+                    :stacked="windowStore.width < 600"
+                >Measurements</v-tab>
+                <v-tab
+                    value="record"
+                    prepend-icon="mdi-weight-lifter"
+                    :stacked="windowStore.width < 600"
+                >PRs</v-tab>
+            </v-tabs>
+        </template>
+    </v-toolbar>
+    <v-window
+        v-model="statStore.tab"
+        class="w-100"
+    >
         <v-window-item value="weight">
             <WeightLog />
         </v-window-item>
@@ -98,18 +121,24 @@ export default defineComponent({
 })
 </script>
 
-<style lang="scss">
-.StatsView {
-    ul {
-        /* Positioning */
-        display: flex;
-            flex-wrap: wrap;
-            justify-content: center;
-            align-items: center;
-            gap: 10px;
+<style scoped lang="scss">
+h1 {
+    display: flex;
+        justify-content: center;
+        align-items: center;
+        gap: 20px;
+    font-family: var(--title-font);
+        font-weight: 700;
 
-        /* Visual */
-        list-style-type: none;
+    &::after {
+        display: inline-block;
+        content: '';
+        width: 64px;
+        height: 64px;
+        background-image: url('/public/images/icons/workout.webp');
+            background-repeat: no-repeat;
+            background-size: contain;
+            background-position: center;
     }
 }
 </style>

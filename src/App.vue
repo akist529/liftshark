@@ -114,7 +114,6 @@ export default defineComponent({
 
 		/* Visual */
 		font-family: var(--content-font);
-		padding: 20px;
 	}
 }
 

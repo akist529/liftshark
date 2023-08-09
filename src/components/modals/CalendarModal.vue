@@ -4,8 +4,7 @@
 		<v-btn
 			v-bind="props"
 			:prepend-icon="dateIsToday ? 'mdi-calendar-today' : 'mdi-calendar'"
-			class="bg-blue-lighten-4"
-			variant="tonal"
+			variant="plain"
 			title="Change Date">
 			<span v-if="dateIsToday">Today</span>
 			<div v-else>

@@ -195,6 +195,7 @@ export default defineComponent({
 						gap: 10px;
                     padding: 20px 30px;
                     color: white;
+                    width: 100%;
 
                     img {
                         filter: invert(1);

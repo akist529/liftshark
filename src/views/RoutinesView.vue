@@ -1,19 +1,33 @@
 <template>
 <main class="RoutinesView d-flex flex-column justify-start align-center">
-	<v-row cols="1">
-		<v-col class="d-flex flex-column justify-center align-center" :style="{gap: '10px'}">
+	<v-toolbar
+		color="primary"
+		:height="72"
+		extended
+	>
+		<v-spacer></v-spacer>
+		<v-toolbar-title>
 			<h1>My Routines</h1>
-			<v-tabs v-model="routineStore.activeDay" bg-color="primary">
-				<v-tab :value="0">Sunday</v-tab>
-				<v-tab :value="1">Monday</v-tab>
-				<v-tab :value="2">Tuesday</v-tab>
-				<v-tab :value="3">Wednesday</v-tab>
-				<v-tab :value="4">Thursday</v-tab>
-				<v-tab :value="5">Friday</v-tab>
-				<v-tab :value="6">Saturday</v-tab>
+		</v-toolbar-title>
+		<v-spacer></v-spacer>
+		<template v-slot:extension>
+			<v-tabs
+				v-model="routineStore.activeDay"
+				bg-color="primary"
+				class="w-100"
+				align-tabs="center"
+				fixed-tabs
+				show-arrows
+				:direction="windowStore.isTablet ? 'vertical' : 'horizontal'"
+			>
+				<RoutineTab
+					v-for="(day, index) in routineStore.weekdays"
+					:key="index"
+					:day="day"
+					:index="index" />
 			</v-tabs>
-		</v-col>
-	</v-row>
+		</template>
+	</v-toolbar>
 	<v-row>
 		<v-col>
 			<WorkoutLog v-for="routine in routineStore.activeDayRoutines"
@@ -39,9 +53,11 @@ import Cookies from 'js-cookie';
 import { ExerciseData, RoutineData } from '@/types/index';
 // Pinia stores
 import { useRoutineStore } from '@/stores/routineStore';
+import { useWindowStore } from '@/stores/windowStore';
 // Local components
 import RoutineModal from '@/components/modals/RoutineModal.vue';
 import WorkoutLog from '@/components/ui/WorkoutsView/WorkoutLog.vue';
+import RoutineTab from '@/components/ui/RoutinesView/RoutineTab.vue';
 
 const getData = async (): Promise<ExerciseData> => {
 	return await fetch('https://wger.de/api/v2/exercise?limit=999&language=2')
@@ -52,11 +68,13 @@ const getData = async (): Promise<ExerciseData> => {
 export default defineComponent({
 	data () {
 		const routineStore = useRoutineStore();
+		const windowStore = useWindowStore();
 		const userToken = Cookies.get('token');
 		const exercises = useQuery('exercises', () => getData());
 
 		return ({
 			routineStore,
+			windowStore,
 			weekdays: routineStore.weekdays as string[],
 			routines: routineStore.routines as RoutineData[],
 			getRoutineData: routineStore.getRoutineData,
@@ -81,7 +99,8 @@ export default defineComponent({
 	},
 	components: {
 		RoutineModal,
-		WorkoutLog
+		WorkoutLog,
+		RoutineTab
 	},
 	async created () {
 		window.setInterval(this.updateUserToken, 100); // Routinely check if user signs in or out
@@ -95,7 +114,9 @@ export default defineComponent({
 		display: flex;
 			justify-content: center;
 			align-items: center;
-			gap: 10px;
+			gap: 20px;
+		font-family: var(--title-font);
+			font-weight: 700;
 
 		&::after {
 			display: inline-block;

@@ -1,6 +1,18 @@
 <template>
 <main class="ExercisesView w-100" ref="view">
-	<h1>Exercises</h1>
+	<v-toolbar
+        color="primary"
+        :height="72"
+		extended
+    >
+        <v-spacer></v-spacer>
+        <v-toolbar-title>
+            <h1>My Exercises</h1>
+        </v-toolbar-title>
+        <v-spacer></v-spacer>
+        <template v-slot:extension>
+        </template>
+    </v-toolbar>
 	<v-pagination
 		v-if="exercises.isSuccess && exercises.data"
 		v-model="exerciseStore.page"
@@ -166,7 +178,7 @@ export default defineComponent({
 		display: flex;
 			justify-content: center;
 			align-items: center;
-			gap: 10px;
+			gap: 20px;
 		font-family: var(--title-font);
 			font-weight: 700;
 

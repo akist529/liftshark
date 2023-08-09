@@ -1,14 +1,22 @@
 <template>
 <main class="DashboardView" ref="view">
-    <header>
-        <h1 v-if="isMorning">Good morning, Alex!</h1>
-        <h1 v-else-if="isNoon">Good afternoon, Alex!</h1>
-        <h1 v-else>Good evening, Alex!</h1>
-        <span
-            class="icon"
-            :style="{backgroundImage: `url(${icon})`}"
-        ></span>
-    </header>
+    <v-toolbar
+		color="primary"
+		:height="72"
+		extended
+	>
+		<v-spacer></v-spacer>
+		<v-toolbar-title class="d-flex justify-center align-center">
+            <h1 v-if="isMorning">Good morning, Alex!</h1>
+            <h1 v-else-if="isNoon">Good afternoon, Alex!</h1>
+            <h1 v-else>Good evening, Alex!</h1>
+            <span
+                class="icon"
+                :style="{backgroundImage: `url(${icon})`}"
+            ></span>
+		</v-toolbar-title>
+		<v-spacer></v-spacer>
+	</v-toolbar>
     <div v-if="workoutStore.activeWorkouts.length">
         <h2 v-if="workoutStore.activeWorkouts.length > 1">Today's Workouts</h2>
         <h2 v-else>Today's Workout</h2>
@@ -102,23 +110,16 @@ export default defineComponent({
     gap: 20px;
     text-align: center;
 
-    header {
-        display: flex;
+    .icon {
+        display: inline-block;
             justify-content: center;
             align-items: center;
-            gap: 10px;
-
-        .icon {
-            display: inline-flex;
-                justify-content: center;
-                align-items: center;
-            content: '';
-            width: 64px;
-            height: 64px;
-            background-repeat: no-repeat;
-                background-size: contain;
-                background-position: center;
-        }
+        content: '';
+        width: 48px;
+        height: 48px;
+        background-repeat: no-repeat;
+            background-size: contain;
+            background-position: center;
     }
 
     h2 {
