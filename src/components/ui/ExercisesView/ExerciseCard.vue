@@ -26,7 +26,7 @@
 		<v-card-subtitle>Primary Muscles</v-card-subtitle>
 		<v-divider></v-divider>
 		<v-sheet class="d-flex justify-center align-center bg-blue-grey-darken-3 w-100 pa-2" :height="48">
-			<v-slide-group class="d-flex justify-center align-center w-100" v-if="exercise.muscles.length" show-arrows>
+			<v-slide-group v-if="exercise.muscles.length" show-arrows>
 				<v-slide-group-item v-for="muscle in exercise.muscles" :key="muscle">
 					<span
 						:style="getLocalImage('muscles', getSlug(getMuscleName(muscle)))"
@@ -39,7 +39,7 @@
 		<v-card-subtitle>Secondary Muscles</v-card-subtitle>
 		<v-divider></v-divider>
 		<v-sheet class="d-flex justify-center align-center bg-blue-grey-darken-3 w-100 pa-2" :height="48">
-			<v-slide-group class="d-flex justify-center align-center w-100" v-if="exercise.muscles_secondary.length" show-arrows>
+			<v-slide-group v-if="exercise.muscles_secondary.length" show-arrows>
 				<v-slide-group-item v-for="muscle in exercise.muscles_secondary" :key="muscle">
 					<span
 						:style="getLocalImage('muscles', getSlug(getMuscleName(muscle)))"
@@ -52,7 +52,7 @@
 		<v-card-subtitle>Equipment</v-card-subtitle>
 		<v-divider></v-divider>
 		<v-sheet class="d-flex justify-center align-center bg-blue-grey-darken-3 w-100 pa-2" :height="48">
-			<v-slide-group class="d-flex justify-center align-center w-100" v-if="exercise.equipment.length" show-arrows>
+			<v-slide-group v-if="exercise.equipment.length" show-arrows>
 				<v-slide-group-item v-for="item in exercise.equipment" :key="item">
 					<span
 						:style="getLocalImage('equipment', getSlug(getEquipmentName(item)))"
@@ -116,8 +116,8 @@ export default defineComponent({
 
 			if (!muscle) return '';
 				else if (muscle.name_en) {
-					return muscle.name_en;
-				} else return muscle.name;
+					return muscle.name_en.split(' ')[0];
+				} else return muscle.name.split(' ')[0];
 		},
 		getEquipmentName (item: number) {
 			const piece = this.equipment.find((piece: Equipment) => piece.id === item);

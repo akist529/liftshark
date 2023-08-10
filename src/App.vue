@@ -104,9 +104,6 @@ export default defineComponent({
 		/* Positioning */
 		grid-row: 2 / 3;
 		grid-column: 1 / -1;
-		display: flex;
-			flex-direction: column;
-			align-items: center;
 		overflow-x: hidden;
 		overflow-y: scroll;
 		position: relative;

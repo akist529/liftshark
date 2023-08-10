@@ -1,24 +1,38 @@
 <template>
-<main class="RoutinesView d-flex flex-column justify-start align-center">
-	<v-toolbar
-		color="primary"
-		:height="72"
-		extended
-	>
-		<v-spacer></v-spacer>
-		<v-toolbar-title>
+<v-container fluid style="height: 100vh;">
+	<v-row no-gutters>
+		<v-toolbar
+			color="primary"
+			:height="windowStore.isTablet ? '72px' : 'auto'"
+			:extended="windowStore.isTablet ? false : true"
+		>
+			<v-spacer></v-spacer>
 			<h1>My Routines</h1>
-		</v-toolbar-title>
-		<v-spacer></v-spacer>
-		<template v-slot:extension>
+			<v-spacer></v-spacer>
+			<template v-slot:extension v-if="!windowStore.isTablet">
+				<v-tabs
+					v-model="routineStore.activeDay"
+					bg-color="primary"
+					class="w-100"
+					align-tabs="center"
+					fixed-tabs
+					show-arrows
+				>
+					<RoutineTab
+						v-for="(day, index) in routineStore.weekdays"
+						:key="index"
+						:day="day"
+						:index="index" />
+				</v-tabs>
+			</template>
+		</v-toolbar>
+	</v-row>
+	<v-row no-gutters>
+		<v-col cols="auto" v-if="windowStore.isTablet">
 			<v-tabs
 				v-model="routineStore.activeDay"
 				bg-color="primary"
-				class="w-100"
-				align-tabs="center"
-				fixed-tabs
-				show-arrows
-				:direction="windowStore.isTablet ? 'vertical' : 'horizontal'"
+				direction="vertical"
 			>
 				<RoutineTab
 					v-for="(day, index) in routineStore.weekdays"
@@ -26,20 +40,22 @@
 					:day="day"
 					:index="index" />
 			</v-tabs>
-		</template>
-	</v-toolbar>
-	<v-row>
-		<v-col>
+		</v-col>
+		<v-col class="bg-blue">
 			<WorkoutLog v-for="routine in routineStore.activeDayRoutines"
 				:routine="routine"
 				:preview="false"
 				:key="routine.id" />
 		</v-col>
 	</v-row>
+	<v-row no-gutters>
+		<v-col>
+			<footer class="bg-green">Report icon by nawicon</footer>
+		</v-col>
+	</v-row>
 	<RoutineModal
 		@showSnackBar="showSnackBar = true" />
-	<footer>Report icon by nawicon</footer>
-</main>
+</v-container>
 </template>
 
 <script lang="ts">
@@ -109,25 +125,37 @@ export default defineComponent({
 </script>
 
 <style scoped lang="scss">
-.RoutinesView {
-	h1 {
-		display: flex;
-			justify-content: center;
-			align-items: center;
-			gap: 20px;
-		font-family: var(--title-font);
-			font-weight: 700;
+main {
+	display: grid;
+	grid-template-rows: auto 1fr;
+	grid-template-columns: 1fr;
 
-		&::after {
-			display: inline-block;
-			content: '';
-			width: 64px;
-			height: 64px;
-			background-image: url('/public/images/icons/report.webp');
-				background-repeat: no-repeat;
-				background-size: contain;
-				background-position: center;
-		}
+	.v-container {
+		grid-row: 2 / 3;
 	}
+}
+
+h1 {
+	display: flex;
+		justify-content: center;
+		align-items: center;
+		gap: 20px;
+	font-family: var(--title-font);
+		font-weight: 700;
+
+	&::after {
+		display: inline-block;
+		content: '';
+		width: 64px;
+		height: 64px;
+		background-image: url('/public/images/icons/report.webp');
+			background-repeat: no-repeat;
+			background-size: contain;
+			background-position: center;
+	}
+}
+
+.v-container {
+	padding: 0;
 }
 </style>

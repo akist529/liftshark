@@ -28,8 +28,8 @@ export default defineComponent({
 <style scoped lang="scss">
 .icon {
     background-position: center;
-    background-size: contain;
-    background-repeat: no-repeat;
+        background-size: contain;
+        background-repeat: no-repeat;
     content: '';
     width: 32px;
     height: 32px;

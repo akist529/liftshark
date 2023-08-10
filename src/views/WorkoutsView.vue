@@ -6,9 +6,7 @@
 		extended
 	>
 		<v-spacer></v-spacer>
-		<v-toolbar-title>
-			<h1>My Workouts</h1>
-		</v-toolbar-title>
+		<h1>My Workouts</h1>
 		<v-spacer></v-spacer>
 		<template v-slot:extension>
 			<v-toolbar-items class="w-100 d-flex justify-space-evenly align-center">
@@ -18,13 +16,13 @@
 					<template v-slot:prepend>
 						<v-icon icon="mdi-chevron-left" size="xxx-large"></v-icon>
 					</template>
-					<span v-if="windowStore.width >= 600">Back</span>
+					<span v-if="windowStore.width >= 400">Back</span>
 				</v-btn>
 				<CalendarModal />
 				<v-btn
 					variant="plain"
 					@click="workoutStore.changeDateForward">
-					<span v-if="windowStore.width >= 600">Forward</span>
+					<span v-if="windowStore.width >= 400">Forward</span>
 					<template v-slot:append>
 						<v-icon icon="mdi-chevron-right" size="xxx-large"></v-icon>
 					</template>
@@ -70,8 +68,6 @@ import Cookies from 'js-cookie';
 import { useWorkoutStore } from '@/stores/workoutStore';
 import { useRoutineStore } from '@/stores/routineStore';
 import { useWindowStore } from '@/stores/windowStore';
-// Mixins
-import { fetchImages } from '@/mixins/fetchImages';
 // Local components
 import WorkoutLog from '@/components/ui/WorkoutsView/WorkoutLog.vue';
 import WorkoutModal from '@/components/modals/WorkoutModal.vue';
@@ -101,7 +97,6 @@ export default defineComponent({
 		WorkoutModal,
 		CalendarModal
 	},
-	mixins: [fetchImages],
 	methods: {
 		updateUserToken () {
 			if (this.userToken !== Cookies.get('token')) {

@@ -3,7 +3,7 @@ import { defineStore } from 'pinia';
 // Third-party libraries
 import Cookies from 'js-cookie';
 // Type interfaces
-import { FavoriteData } from '@/types/index';
+import { FavoriteData, Muscle, Equipment } from '@/types/index';
 
 const token: string = Cookies.get('token');
 
@@ -11,7 +11,9 @@ export const useExerciseStore = defineStore('exerciseStore', {
     state: () => ({
         favorites: [] as FavoriteData[],
         loading: false,
-        page: 1
+        page: 1,
+        filteredMuscle: <Muscle | null>null,
+        filteredEquipment: <Equipment | null>null
     }),
     actions: {
         async addToFavorites (id: number) {

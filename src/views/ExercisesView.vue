@@ -1,18 +1,24 @@
 <template>
 <main class="ExercisesView w-100" ref="view">
-	<v-toolbar
-        color="primary"
-        :height="72"
-		extended
-    >
-        <v-spacer></v-spacer>
-        <v-toolbar-title>
-            <h1>My Exercises</h1>
-        </v-toolbar-title>
-        <v-spacer></v-spacer>
-        <template v-slot:extension>
-        </template>
-    </v-toolbar>
+	<h1 class="bg-primary">My Exercises</h1>
+	<v-sheet class="w-100 bg-primary d-flex flex-column justify-space-evenly align-center pa-3">
+		<v-chip-group v-if="muscles.isSuccess && muscles.data">
+			<v-chip
+				v-for="(muscle, index) in (muscles.data.results as Muscle[])"
+				:key="index"
+				label
+				@click="filterMuscle(muscle)"
+			>{{ muscle.name_en ? muscle.name_en : muscle.name }}</v-chip>
+		</v-chip-group>
+		<v-chip-group v-if="equipment.isSuccess && equipment.data">
+			<v-chip
+				v-for="(item, index) in (equipment.data.results as Equipment[])"
+				:key="index"
+				label
+				@click="filterEquipment(item)"
+			>{{ item.name }}</v-chip>
+		</v-chip-group>
+	</v-sheet>
 	<v-pagination
 		v-if="exercises.isSuccess && exercises.data"
 		v-model="exerciseStore.page"
@@ -78,10 +84,22 @@ import ExerciseCard from '@/components/ui/ExercisesView/ExerciseCard.vue';
 import MyFooter from '@/components/ui/ExercisesView/MyFooter.vue';
 import LoadIcon from '@/components/LoadIcon.vue';
 // Type interfaces
-import { ExerciseData } from '@/types/index';
+import { ExerciseData, Muscle, Equipment } from '@/types/index';
 
-const getExerciseData = async (page: number): Promise<ExerciseData> => {
-	return await fetch(`https://wger.de/api/v2/exercise/?language=2&limit=20&offset=${(page - 1) * 20}`)
+const getExerciseData = async (page: number, muscle: Muscle | null, equipment: Equipment | null): Promise<ExerciseData> => {
+	let url = `https://wger.de/api/v2/exercise/?language=2&limit=20&offset=${(page - 1) * 20}`;
+
+	if (muscle) {
+		url = url + `&muscles=${muscle.id}`;
+	}
+
+	if (equipment) {
+		url = url + `&equipment=${equipment.id}`;
+	}
+
+	console.log(url);
+
+	return await fetch(url)
 		.then(res => res.json())
 		.catch(err => console.log(err));
 }
@@ -97,7 +115,7 @@ export default defineComponent({
 		const exerciseStore = useExerciseStore();
 		const windowStore = useWindowStore();
 
-		const exercises = useQuery(['exercises', exerciseStore.page], () => getExerciseData(exerciseStore.page), { onError: (error) => console.log('ERROR', error) });
+		const exercises = useQuery(['exercises', exerciseStore], () => getExerciseData(exerciseStore.page, exerciseStore.filteredMuscle, exerciseStore.filteredEquipment), { onError: (error) => console.log('ERROR', error) });
 		const muscles = useQuery('muscles', () => getData('https://wger.de/api/v2/muscle?limit=999'), { useErrorBoundary: true });
 		const equipment = useQuery('equipment', () => getData('https://wger.de/api/v2/equipment?limit=999'), { useErrorBoundary: true });
 
@@ -116,19 +134,13 @@ export default defineComponent({
 				this.exercises.refetch();
 				(this.$refs.view as HTMLDivElement).scrollTo({ top: 0, behavior: 'smooth' });
 			}
-		},
-		exercises: {
-			deep: true,
-			handler () {
-				console.log(this.exercises.data);
-			}
 		}
 	},
 	components: {
     ExerciseCard,
     MyFooter,
     LoadIcon
-},
+	},
 	computed: {
 		cols () {
 			if (this.windowStore.width < 800) {
@@ -158,6 +170,22 @@ export default defineComponent({
 				return true;
 			} else {
 				return false;
+			}
+		}
+	},
+	methods: {
+		filterMuscle (muscle: Muscle) {
+			if (this.exerciseStore.filteredMuscle?.id === muscle.id) {
+				this.exerciseStore.filteredMuscle = null;
+			} else {
+				this.exerciseStore.filteredMuscle = muscle;
+			}
+		},
+		filterEquipment (item: Equipment) {
+			if (this.exerciseStore.filteredEquipment?.id === item.id) {
+				this.exerciseStore.filteredEquipment = null;
+			} else {
+				this.exerciseStore.filteredEquipment = item;
 			}
 		}
 	}
@@ -193,5 +221,9 @@ export default defineComponent({
 				background-position: center;
 		}
 	}
+}
+
+.v-toolbar__extension {
+	height: auto;
 }
 </style>
