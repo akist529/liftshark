@@ -43,6 +43,7 @@
 			class="w-75"
 		></v-select>
 	</v-sheet>
+	<LoginBanner v-if="!token" />
 	<v-pagination
 		v-if="exercises.isSuccess && exercises.data"
 		v-model="exerciseStore.page"
@@ -106,8 +107,11 @@ import { useWindowStore } from '@/stores/windowStore';
 import ExerciseCard from '@/components/ui/ExercisesView/ExerciseCard.vue';
 import LoadIcon from '@/components/LoadIcon.vue';
 import MyFooter from '@/components/MyFooter.vue';
+import LoginBanner from '@/components/banners/LoginBanner.vue';
 // Type interfaces
 import { ExerciseData, Muscle, Equipment } from '@/types/index';
+// Third-party libraries
+import Cookies from 'js-cookie';
 
 const getExerciseData = async (page: number, muscle: Muscle | null, equipment: Equipment | null): Promise<ExerciseData> => {
 	let url = `https://wger.de/api/v2/exercise/?language=2&limit=20&offset=${(page - 1) * 20}`;
@@ -147,7 +151,8 @@ export default defineComponent({
 			windowStore,
 			exercises,
 			muscles,
-			equipment
+			equipment,
+			token: Cookies.get('token')
 		});
 	},
 	watch: {
@@ -160,9 +165,10 @@ export default defineComponent({
 		}
 	},
 	components: {
-    ExerciseCard,
-    LoadIcon,
-	MyFooter
+		ExerciseCard,
+		LoadIcon,
+		MyFooter,
+		LoginBanner
 	},
 	computed: {
 		cols () {
