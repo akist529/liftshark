@@ -17,6 +17,7 @@
 		</v-toolbar-title>
 		<v-spacer></v-spacer>
 	</v-toolbar>
+    <LoginBanner v-if="!token" />
     <div v-if="workoutStore.activeWorkouts.length">
         <h2 v-if="workoutStore.activeWorkouts.length > 1">Today's Workouts</h2>
         <h2 v-else>Today's Workout</h2>
@@ -35,12 +36,7 @@
     <div v-else>
         <h2>Nothing logged for today.</h2>
     </div>
-    <footer>
-        <ul>
-            <li>Sunrise & evening icons by Freepik</li>
-            <li>Afternoon icon by muh zakaria</li>
-        </ul>
-    </footer>
+    <MyFooter />
 </main>
 </template>
 
@@ -58,6 +54,10 @@ import { useWindowStore } from '@/stores/windowStore';
 // Local components
 import RoutinePreview from '@/components/ui/DashboardView/RoutinePreview.vue';
 import WorkoutLog from '@/components/ui/WorkoutsView/WorkoutLog.vue';
+import LoginBanner from '@/components/banners/LoginBanner.vue';
+import MyFooter from '@/components/MyFooter.vue';
+// Third-party libraries
+import Cookies from 'js-cookie';
 
 const getData = async (): Promise<ExerciseData> => {
 	return await fetch('https://wger.de/api/v2/exercise?limit=999&language=2')
@@ -76,7 +76,8 @@ export default defineComponent({
             routineStore,
             workoutStore,
             windowStore,
-            exercises
+            exercises,
+            token: Cookies.get('token')
         });
     },
     computed: {
@@ -100,7 +101,9 @@ export default defineComponent({
     },
     components: {
         RoutinePreview,
-        WorkoutLog
+        WorkoutLog,
+        LoginBanner,
+        MyFooter
     }
 });
 </script>

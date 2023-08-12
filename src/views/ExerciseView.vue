@@ -1,63 +1,151 @@
 <template>
-<main>
-	<LoadIcon v-if="!isLoaded && !isError" />
-	<h1 v-if="isError">Error!</h1>
-	<article v-if="isLoaded && !isError && exercise.data && muscles.data && equipment.data" class="ExerciseView">
-		<h1>{{ exercise.data.name }}</h1>
-		<h2 v-if="exercise.data.muscles.length">Primary Muscles</h2>
-		<ul v-if="exercise.data.muscles.length">
-			<li v-for="muscle in exercise.data.muscles" :key="muscle">
-				<span
-					:style="getLocalImage('muscles', getSlug(getMuscleName(muscle)))"
-				></span>
-				{{ getMuscleName(muscle) }}
-			</li>
-		</ul>
-		<h2 v-if="exercise.data.muscles_secondary.length">Secondary Muscles</h2>
-		<ul v-if="exercise.data.muscles_secondary.length">
-			<li v-for="muscle in exercise.data.muscles_secondary" :key="muscle">
-				<span
-					:style="getLocalImage('muscles', getSlug(getMuscleName(muscle)))"
-				></span>
-				{{ getMuscleName(muscle) }}
-			</li>
-		</ul>
-		<h2 v-if="exercise.data.equipment.length">Equipment</h2>
-		<ul v-if="exercise.data.equipment.length">
-			<li v-for="item in exercise.data.equipment" :key="item">
-				<span
-					:style="getLocalImage('equipment', getSlug(getEquipmentName(item)))"
-				></span>
-				{{ getEquipmentName(item) }}
-			</li>
-		</ul>
-		<p v-if="exercise.data.description" :innerHTML="exercise.data.description"></p>
-		<ul v-if="images.isSuccess && images.data.results.length" class="exercise-pics">
-			<li v-for="image in images.data.results" :key="image.id">
+<section class="bg-grey-darken-4">
+	<LoadIcon
+		v-if="!isLoaded && !isError"
+	/>
+	<v-alert
+		v-if="isError"
+		:max-width="650"
+		border="start"
+		border-color="red-accent-1"
+		elevation="2"
+		type="error"
+		title="Error"
+		text="There is an issue communicating with the server. Please try again later."
+	></v-alert>
+	<header>
+		<v-toolbar
+			v-if="isLoaded && !isError && exercise.data && muscles.data && equipment.data"
+			class="bg-primary"
+			density="compact"
+		>
+			<v-btn
+				variant="plain"
+				@click="$router.back()"
+			>
+				<v-icon
+					icon="mdi-chevron-left"
+					size="xxx-large"
+				></v-icon>
+			</v-btn>
+			<v-spacer></v-spacer>
+			<v-toolbar-title>{{ exercise.data.name }}</v-toolbar-title>
+		</v-toolbar>
+		<LoginBanner v-if="!token" />
+	</header>
+	<article
+		v-if="isLoaded && !isError && exercise.data && muscles.data && equipment.data"
+		class="w-75 mx-auto my-5 d-flex flex-column justify-center align-center bg-blue-lighten-4"
+	>
+		<v-list
+			density="compact"
+		>
+			<v-list-subheader>Primary Muscles</v-list-subheader>
+			<v-list-item
+				v-for="(muscle, i) in exercise.data.muscles"
+				:key="i"
+				:value="getMuscleName(muscle)"
+				color="primary"
+			>
+				<template
+					v-slot:prepend
+				>
+					<span
+						:style="getIcon('muscles', getSlug(getMuscleName(muscle)))"
+					></span>
+				</template>
+				<v-list-item-title
+					v-text="getMuscleName(muscle)"
+				></v-list-item-title>
+			</v-list-item>
+			<v-list-subheader>Secondary Muscles</v-list-subheader>
+			<v-list-item
+				v-for="(muscle, i) in exercise.data.muscles_secondary"
+				:key="i"
+				:value="getMuscleName(muscle)"
+				color="primary"
+			>
+				<template
+					v-slot:prepend
+				>
+					<span
+						:style="getIcon('muscles', getSlug(getMuscleName(muscle)))"
+					></span>
+				</template>
+				<v-list-item-title
+					v-text="getMuscleName(muscle)"
+				></v-list-item-title>
+			</v-list-item>
+			<v-list-subheader>Equipment</v-list-subheader>
+			<v-list-item
+				v-for="(item, i) in exercise.data.equipment"
+				:key="i"
+				:value="getEquipmentName(item)"
+				color="primary"
+			>
+				<template
+					v-slot:prepend
+				>
+					<span
+						:style="getIcon('equipment', getSlug(getEquipmentName(item)))"
+					></span>
+				</template>
+				<v-list-item-title
+					v-text="getEquipmentName(item)"
+				></v-list-item-title>
+			</v-list-item>
+		</v-list>
+		<v-sheet
+			v-if="exercise.data.description"
+			border="md"
+			class="pa-6 text-white mx-auto"
+			color="#141518"
+			max-width="400"
+		>
+			<p
+				class="mb-8"
+				:innerHTML="exercise.data.description"
+			></p>
+		</v-sheet>
+		<v-list
+			v-if="images.isSuccess && images.data.results.length"
+			class="exercise-pics"
+		>
+			<v-list-item
+				v-for="image in images.data.results"
+				:key="image.id"
+			>
 				<figure>
-					<img
+					<v-img
 						alt="Exercise Example"
-						:src="image.image" />
+						:src="image.image"
+						:max-width="250"
+					></v-img>
 					<figcaption>Example of {{ exercise.data.name }}</figcaption>
 				</figure>
-			</li>
-		</ul>
-		<BurgerMenu v-if="menuOpen" />
-		<footer>
-			<BackButton
-				class="back-btn"
-				@click="$router.back()" />
-			<div class="burger-column">
-				<BurgerButton
-					:menuOpen="menuOpen"
-					@setMenuOpen="setMenuOpen" />
-			</div>
-			<BookmarkButton
-				class="bookmark-btn"
-				:id="exercise.data.id" />
-		</footer>
+			</v-list-item>
+		</v-list>
+		<v-toolbar>
+			<v-toolbar-title>Actions</v-toolbar-title>
+			<v-toolbar-items>
+				<ExerciseRoutineModal />
+				<ExerciseWorkoutModal />
+				<v-btn
+					title="Add to Workout"
+				>
+					<v-icon
+						icon="mdi-dumbbell"
+						size="xx-large"
+					></v-icon>
+				</v-btn>
+				<BookmarkButton
+					class="bookmark-btn"
+					:id="exercise.data.id" />
+			</v-toolbar-items>
+		</v-toolbar>
 	</article>
-</main>
+	<MyFooter />
+</section>
 </template>
 
 <script lang="ts">
@@ -69,10 +157,12 @@ import { useQuery } from 'vue-query';
 import { Muscle, Equipment, Category, Exercise } from '@/types/index';
 // Local components
 import BookmarkButton from '@/components/buttons/BookmarkButton.vue';
-import BackButton from '@/components/buttons/BackButton.vue';
-import BurgerButton from '@/components/buttons/BurgerButton.vue';
 import LoadIcon from '@/components/LoadIcon.vue';
-import BurgerMenu from '@/components/ui/ExerciseView/BurgerMenu.vue';
+import ExerciseRoutineModal from '@/components/modals/ExerciseRoutineModal.vue';
+import LoginBanner from '@/components/banners/LoginBanner.vue';
+import MyFooter from '@/components/MyFooter.vue';
+// Third-party libraries
+import Cookies from 'js-cookie';
 
 const getData = async (url: string): Promise<any> => {
 	return await fetch(url)
@@ -195,15 +285,16 @@ export default defineComponent({
 			routerName: this.$route.params.id as string,
 			exerciseBase: 0,
 			error: true,
-			displayName
+			displayName,
+			token: Cookies.get('token')
 		});
 	},
 	components: {
 		BookmarkButton,
-		BackButton,
-		BurgerButton,
 		LoadIcon,
-		BurgerMenu
+		ExerciseRoutineModal,
+		LoginBanner,
+		MyFooter
 	},
 	methods: {
 		getMuscleName (item: number) {
@@ -226,8 +317,17 @@ export default defineComponent({
 		getSlug (name: string) {
 			return name.split(' ').join('-').replaceAll('(', '').replaceAll(')', '').toLowerCase();
 		},
-		getLocalImage (folder: string, name: string) {
-			return { 'background-image': `url('/images/${folder}/${this.getSlug(name)}.webp')` };
+		getIcon (folder: string, name: string) {
+			return {
+				backgroundImage: `url('/images/${folder}/${this.getSlug(name)}.webp')`,
+				backgroundRepeat: 'no-repeat',
+				backgroundSize: 'contain',
+				backgroundPosition: 'center',
+				content: '',
+				width: '32px',
+				height: '32px',
+				display: 'inline-block'
+			};
 		}
 	},
 	computed: {
@@ -258,118 +358,3 @@ export default defineComponent({
 	}
 });
 </script>
-
-<style scoped lang="scss">
-.ExerciseView {
-	/* Positioning */
-	display: flex;
-		flex-direction: column;
-		justify-content: flex-start;
-		gap: 10px;
-	position: relative;
-	width: 100%;
-	height: calc(100vh - 120px);
-		min-height: calc(100vh - 120px);
-	overflow: scroll;
-
-	/* Visual */
-	padding: 10px;
-		padding-bottom: 100px;
-	font-family: var(--content-font);
-
-	h1 {
-		font-family: var(--title-font);
-			font-weight: 700;
-			font-size: 6vw;
-		text-align: center;
-			text-transform: uppercase;
-	}
-
-	h2 {
-		font-weight: 500;
-		text-align: center;
-	}
-
-	ul {
-		/* Positioning */
-		display: flex;
-			flex-wrap: wrap;
-			justify-content: center;
-			align-items: center;
-			gap: 10px;
-
-		/* Visual */
-		list-style-type: none;
-		font-weight: 300;
-
-		li {
-			display: flex;
-				flex-direction: column;
-				justify-content: center;
-				align-items: center;
-
-			span {
-				display: inline-block;
-				background-size: contain;
-					background-repeat: no-repeat;
-					background-position: center;
-				width: 32px;
-				height: 40px;
-				content: '';
-			}
-		}
-	}
-
-	.add-buttons {
-		display: flex;
-			justify-content: space-evenly;
-		width: 100%;
-	}
-
-	.exercise-pics {
-		/* Positioning */
-		display: flex;
-			flex-direction: column;
-			justify-content: center;
-			align-items: center;
-
-		/* Visual */
-		list-style-type: none;
-
-		li {
-			img {
-				max-width: 250px;
-			}
-		}
-	}
-
-	.exercise-btns {
-		/* Positioning */
-		display: flex;
-			justify-content: space-between;
-		position: fixed;
-			left: 0;
-			right: 0;
-			bottom: 70px;
-
-		/* Visual */
-		padding: 10px;
-
-		img {
-			filter: invert(1);
-			width: 40px;
-		}
-	}
-
-	.abs {
-		display: inline-block;
-		background-image: url('/public/images/ui/exercises/abs.webp');
-			background-size: contain;
-			background-repeat: no-repeat;
-			background-position: center;
-		width: 32px;
-		height: 32px;
-		content: '';
-	}
-}
-</style>

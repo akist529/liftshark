@@ -1,42 +1,31 @@
 <template>
 <main class="StatsView">
-    <v-toolbar
-        color="primary"
-        :height="72"
-		extended
+    <h1 class="bg-primary">My Stats</h1>
+    <v-tabs
+        v-model="statStore.tab"
+        bg-color="primary"
+        class="w-100 bg-primary"
+        align-tabs="center"
+        fixed-tabs
+        show-arrows
     >
-        <v-spacer></v-spacer>
-        <v-toolbar-title>
-            <h1>My Stats</h1>
-        </v-toolbar-title>
-        <v-spacer></v-spacer>
-        <template v-slot:extension>
-            <v-tabs
-                v-model="statStore.tab"
-                bg-color="primary"
-                class="w-100"
-                align-tabs="center"
-                fixed-tabs
-				show-arrows
-            >
-                <v-tab
-                    value="weight"
-                    prepend-icon="mdi-scale-bathroom"
-                    :stacked="windowStore.width < 600"
-                >Weight</v-tab>
-                <v-tab
-                    value="measurement"
-                    prepend-icon="mdi-tape-measure"
-                    :stacked="windowStore.width < 600"
-                >Measurements</v-tab>
-                <v-tab
-                    value="record"
-                    prepend-icon="mdi-weight-lifter"
-                    :stacked="windowStore.width < 600"
-                >PRs</v-tab>
-            </v-tabs>
-        </template>
-    </v-toolbar>
+        <v-tab
+            value="weight"
+            prepend-icon="mdi-scale-bathroom"
+            :stacked="windowStore.width < 600"
+        >Weight</v-tab>
+        <v-tab
+            value="measurement"
+            prepend-icon="mdi-tape-measure"
+            :stacked="windowStore.width < 600"
+        >Measurements</v-tab>
+        <v-tab
+            value="record"
+            prepend-icon="mdi-weight-lifter"
+            :stacked="windowStore.width < 600"
+        >PRs</v-tab>
+    </v-tabs>
+    <LoginBanner v-if="!token" />
     <v-window
         v-model="statStore.tab"
         class="w-100"
@@ -55,7 +44,7 @@
         @weight="setPageShown('Weight')"
         @measure="setPageShown('Measurements')"
         @prs="setPageShown('PRs')" />
-    <footer>Tape icon by Smashicons</footer>
+    <MyFooter />
 </main>
 </template>
 
@@ -70,6 +59,10 @@ import WeightLog from '@/components/ui/StatsView/WeightLog.vue';
 import MeasurementLog from '@/components/ui/StatsView/MeasurementLog.vue';
 import PRLog from '@/components/ui/StatsView/PRLog.vue';
 import StatsModal from '@/components/modals/StatsModal.vue';
+import LoginBanner from '@/components/banners/LoginBanner.vue';
+import MyFooter from '@/components/MyFooter.vue';
+// Third-party libraries
+import Cookies from 'js-cookie';
 
 export default defineComponent({
 	data () {
@@ -82,7 +75,8 @@ export default defineComponent({
 			statPages,
 			pageShown,
             statStore,
-            windowStore
+            windowStore,
+            token: Cookies.get('token')
 		});
 	},
 	methods: {
@@ -99,7 +93,9 @@ export default defineComponent({
 		WeightLog,
 		MeasurementLog,
 		PRLog,
-        StatsModal
+        StatsModal,
+        LoginBanner,
+        MyFooter
 	},
     computed: {
         addButtonTitle () {
@@ -129,6 +125,7 @@ h1 {
         gap: 20px;
     font-family: var(--title-font);
         font-weight: 700;
+    padding: 20px;
 
     &::after {
         display: inline-block;

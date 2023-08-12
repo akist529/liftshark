@@ -1,12 +1,12 @@
 <template>
 <v-btn
-    class="rounded-circle"
+    :title="isFavorited ? 'Remove from Favorites' : 'Add to Favorites'"
     width="64"
     height="64"
     @click="isFavorited ? exerciseStore.removeFromFavorites(id) : exerciseStore.addToFavorites(id)">
     <v-icon
         :icon="isFavorited ? 'mdi-heart' : 'mdi-heart-plus'"
-        size="xxx-large"
+        size="xx-large"
     ></v-icon>
 </v-btn>
 </template>

@@ -30,6 +30,7 @@
 			</v-toolbar-items>
 		</template>
 	</v-toolbar>
+	<LoginBanner v-if="!token" />
 	<v-row v-if="routineStore.routines.length" class="d-flex flex-wrap justify-center align-center">
 		<v-col>
 			<v-select
@@ -56,6 +57,7 @@
 	</v-row>
 	<WorkoutModal
 		@showSnackBar="showSnackBar = true" />
+	<MyFooter />
 </main>
 </template>
 
@@ -72,12 +74,13 @@ import { useWindowStore } from '@/stores/windowStore';
 import WorkoutLog from '@/components/ui/WorkoutsView/WorkoutLog.vue';
 import WorkoutModal from '@/components/modals/WorkoutModal.vue';
 import CalendarModal from '@/components/modals/CalendarModal.vue';
+import LoginBanner from '@/components/banners/LoginBanner.vue';
+import MyFooter from '@/components/MyFooter.vue';
 // Type interfaces
 import { Workout } from '@/types/index';
 
 export default defineComponent({
 	data () {
-		const userToken = Cookies.get('token');
 		const workoutStore = useWorkoutStore();
 		const routineStore = useRoutineStore();
 		const windowStore = useWindowStore();
@@ -87,20 +90,22 @@ export default defineComponent({
 			routineStore,
 			windowStore,
 			months: workoutStore.months,
-			userToken,
 			showSnackBar: false,
-			routineName: ''
+			routineName: '',
+			token: Cookies.get('token')
 		});
 	},
 	components: {
 		WorkoutLog,
 		WorkoutModal,
-		CalendarModal
+		CalendarModal,
+		LoginBanner,
+		MyFooter
 	},
 	methods: {
 		updateUserToken () {
-			if (this.userToken !== Cookies.get('token')) {
-				this.userToken = Cookies.get('token');
+			if (this.token !== Cookies.get('token')) {
+				this.token = Cookies.get('token');
 			}
 		},
 		routinesOfDay (day: string) {

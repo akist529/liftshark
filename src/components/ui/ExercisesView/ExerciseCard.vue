@@ -29,6 +29,7 @@
 			<v-slide-group v-if="exercise.muscles.length" show-arrows>
 				<v-slide-group-item v-for="muscle in exercise.muscles" :key="muscle">
 					<span
+						class="mr-2"
 						:style="getLocalImage('muscles', getSlug(getMuscleName(muscle)))"
 					></span>
 					<span :style="{fontSize: '24px'}">{{ getMuscleName(muscle) }}</span>
@@ -42,6 +43,7 @@
 			<v-slide-group v-if="exercise.muscles_secondary.length" show-arrows>
 				<v-slide-group-item v-for="muscle in exercise.muscles_secondary" :key="muscle">
 					<span
+						class="mr-2"
 						:style="getLocalImage('muscles', getSlug(getMuscleName(muscle)))"
 					></span>
 					<span :style="{fontSize: '24px'}">{{ getMuscleName(muscle) }}</span>
@@ -55,6 +57,7 @@
 			<v-slide-group v-if="exercise.equipment.length" show-arrows>
 				<v-slide-group-item v-for="item in exercise.equipment" :key="item">
 					<span
+						class="mr-2"
 						:style="getLocalImage('equipment', getSlug(getEquipmentName(item)))"
 					></span>
 					<span :style="{fontSize: '24px'}">{{ getEquipmentName(item) }}</span>
@@ -132,7 +135,8 @@ export default defineComponent({
 				backgroundPosition: 'center',
 				width: '32px',
 				height: '32px',
-				display: 'inline-block'
+				display: 'inline-block',
+				filter: 'invert(1)'
 			});
 		}
 	},
@@ -145,56 +149,12 @@ export default defineComponent({
 </script>
 
 <style scoped lang="scss">
-.ExerciseCard {
-	a {
-		color: black;
-		text-decoration: none;
+a {
+	color: black;
+	text-decoration: none;
 
-		display: flex;
-			flex-direction: column;
-			gap: 10px;
-	}
-
-	h2 {
-		margin: 0 auto;
-		font-size: 1.5rem;
-		text-align: center;
-	}
-
-	h3 {
-		font-size: 1.25rem;
-	}
-
-	.item-group {
-		display: flex;
-			flex-direction: column;
-			justify-content: center;
-			align-items: center;
-			gap: 5px;
-
-		ul {
-			display: grid;
-				grid-template-columns: repeat(3, minmax(0px, auto));
-				grid-row-gap: 5px;
-			margin: 0 auto;
-
-			li {
-				display: flex;
-					flex-direction: column;
-					justify-content: center;
-					align-items: center;
-
-				span {
-					display: inline-block;
-					background-size: contain;
-						background-repeat: no-repeat;
-						background-position: center;
-					width: 16px;
-					height: 20px;
-					content: '';
-				}
-			}
-		}
-	}
+	display: flex;
+		flex-direction: column;
+		gap: 10px;
 }
 </style>

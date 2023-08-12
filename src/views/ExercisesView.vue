@@ -1,29 +1,52 @@
 <template>
 <main class="ExercisesView w-100" ref="view">
 	<h1 class="bg-primary">My Exercises</h1>
-	<v-sheet class="w-100 bg-primary d-flex flex-column justify-space-evenly align-center pa-3">
+	<v-sheet v-if="windowStore.isDesktop" class="w-100 bg-primary d-flex flex-column justify-space-evenly align-center pa-3">
+		<label>Filter by Muscle</label>
 		<v-chip-group v-if="muscles.isSuccess && muscles.data">
 			<v-chip
 				v-for="(muscle, index) in (muscles.data.results as Muscle[])"
 				:key="index"
 				label
+				filter
 				@click="filterMuscle(muscle)"
 			>{{ muscle.name_en ? muscle.name_en : muscle.name }}</v-chip>
 		</v-chip-group>
+		<label>Filter by Equipment</label>
 		<v-chip-group v-if="equipment.isSuccess && equipment.data">
 			<v-chip
 				v-for="(item, index) in (equipment.data.results as Equipment[])"
 				:key="index"
 				label
+				filter
 				@click="filterEquipment(item)"
 			>{{ item.name }}</v-chip>
 		</v-chip-group>
+	</v-sheet>
+	<v-sheet v-if="!windowStore.isDesktop" class="bg-primary d-flex flex-column justify-center align-center">
+		<v-select
+			v-if="muscles.isSuccess && muscles.data"
+			v-model="exerciseStore.filteredMuscle"
+			label="Filter by Muscle"
+			:items="muscles.data.results"
+			item-title="name"
+			return-object
+			class="w-75"
+		></v-select>
+		<v-select
+			v-if="equipment.isSuccess && equipment.data"
+			v-model="exerciseStore.filteredEquipment"
+			label="Filter by Equipment"
+			:items="equipment.data.results"
+			item-title="name"
+			return-object
+			class="w-75"
+		></v-select>
 	</v-sheet>
 	<v-pagination
 		v-if="exercises.isSuccess && exercises.data"
 		v-model="exerciseStore.page"
 		:length="Math.ceil(exercises.data.count / 20)"
-		:total-visible="7"
 		rounded="circle"
 	></v-pagination>
 	<v-container>
@@ -81,8 +104,8 @@ import { useExerciseStore } from '@/stores/exerciseStore';
 import { useWindowStore } from '@/stores/windowStore';
 // Local components
 import ExerciseCard from '@/components/ui/ExercisesView/ExerciseCard.vue';
-import MyFooter from '@/components/ui/ExercisesView/MyFooter.vue';
 import LoadIcon from '@/components/LoadIcon.vue';
+import MyFooter from '@/components/MyFooter.vue';
 // Type interfaces
 import { ExerciseData, Muscle, Equipment } from '@/types/index';
 
@@ -138,8 +161,8 @@ export default defineComponent({
 	},
 	components: {
     ExerciseCard,
-    MyFooter,
-    LoadIcon
+    LoadIcon,
+	MyFooter
 	},
 	computed: {
 		cols () {
@@ -197,7 +220,6 @@ export default defineComponent({
 	/* Positioning */
 	display: flex;
 		flex-direction: column;
-		gap: 10px;
 
 	/* Visual */
 	font-family: var(--content-font);
@@ -209,6 +231,7 @@ export default defineComponent({
 			gap: 20px;
 		font-family: var(--title-font);
 			font-weight: 700;
+		padding: 20px;
 
 		&::after {
 			display: inline-block;

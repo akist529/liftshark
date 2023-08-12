@@ -93,23 +93,19 @@ export const useRoutineStore = defineStore('routineStore', {
 
             this.getRoutineData();
         },
-        async updateRoutine (id: number, name: string, day: string, entries: Entry[]) {
-            const routine = this.routines.find((routine: RoutineData) => routine.id === id);
+        async updateRoutine (newRoutine: RoutineData) {
+            const routine = this.routines.find((routine: RoutineData) => routine.id === newRoutine.id);
 
             if (routine) {
-                if (Cookies.get('token')) {
-                    await fetch(`http://localhost:1337/api/routines/${id}`, {
+                if (token) {
+                    await fetch(`http://localhost:1337/api/routines/${routine.id}`, {
                         method: 'PUT',
                         headers: {
                             Authorization: `Bearer ${Cookies.get('token')}`,
                             'Content-Type': 'application/json'
                         },
                         body: JSON.stringify({
-                            data: {
-                                name: name,
-                                day: day,
-                                entries: entries
-                            }
+                            data: newRoutine.attributes
                         })
                     }).then(response => {
                         console.log(response);
@@ -117,19 +113,15 @@ export const useRoutineStore = defineStore('routineStore', {
                         console.log(error);
                     });
                 } else {
-                    const routines = this.routines;
+                    const localRoutines: RoutineData[] = JSON.parse(localStorage.getItem('routines') || '[]');
 
-                    for (let i = 0; i < routines.length; i++) {
-                        if (routines[i].id === id) {
-                            routines[i].attributes = ({
-                                name: name,
-                                day: day,
-                                entries: entries
-                            });
+                    for (let i = 0; i < localRoutines.length; i++) {
+                        if (localRoutines[i].id === newRoutine.id) {
+                            localRoutines[i].attributes = newRoutine.attributes;
                         }
                     }
 
-                    localStorage.setItem('routines', JSON.stringify(routines));
+                    localStorage.setItem('routines', JSON.stringify(localRoutines));
                 }
             }
         },

@@ -6,6 +6,7 @@ import StatsView from '@/views/StatsView.vue';
 import ExercisesView from '@/views/ExercisesView.vue';
 import ExerciseView from '@/views/ExerciseView.vue';
 import PageErrorView from '@/views/PageErrorView.vue';
+import CreditsView from '@/views/CreditsView.vue';
 
 const routes: Array<RouteRecordRaw> = [
 	{
@@ -38,6 +39,11 @@ const routes: Array<RouteRecordRaw> = [
 		name: 'Exercise - Gym Tracker',
 		component: ExerciseView,
 		props: true
+	},
+	{
+		path: '/credits',
+		name: 'Credits - Gym Tracker',
+		component: CreditsView
 	},
 	{
 		path: '/:catchAll(.*)*',
