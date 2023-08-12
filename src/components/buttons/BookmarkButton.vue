@@ -7,6 +7,7 @@
     <v-icon
         :icon="isFavorited ? 'mdi-heart' : 'mdi-heart-plus'"
         size="xx-large"
+        :color="isFavorited ? 'pink' : ''"
     ></v-icon>
 </v-btn>
 </template>

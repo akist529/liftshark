@@ -158,14 +158,6 @@
 			<v-toolbar-items>
 				<ExerciseRoutineModal />
 				<ExerciseWorkoutModal />
-				<v-btn
-					title="Add to Workout"
-				>
-					<v-icon
-						icon="mdi-dumbbell"
-						size="xx-large"
-					></v-icon>
-				</v-btn>
 				<BookmarkButton
 					class="bookmark-btn"
 					:id="exercise.data.id" />
@@ -187,6 +179,7 @@ import { Muscle, Equipment, Category, Exercise } from '@/types/index';
 import BookmarkButton from '@/components/buttons/BookmarkButton.vue';
 import LoadIcon from '@/components/LoadIcon.vue';
 import ExerciseRoutineModal from '@/components/modals/ExerciseRoutineModal.vue';
+import ExerciseWorkoutModal from '@/components/modals/ExerciseWorkoutModal.vue';
 import LoginBanner from '@/components/banners/LoginBanner.vue';
 import MyFooter from '@/components/MyFooter.vue';
 // Third-party libraries
@@ -322,7 +315,8 @@ export default defineComponent({
 		LoadIcon,
 		ExerciseRoutineModal,
 		LoginBanner,
-		MyFooter
+		MyFooter,
+		ExerciseWorkoutModal
 	},
 	methods: {
 		getMuscleName (item: number) {

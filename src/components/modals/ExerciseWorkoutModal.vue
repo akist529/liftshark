@@ -1,20 +1,72 @@
 <template>
-<div>
-
-</div>
+<v-dialog
+    scrollable
+    persistent
+    v-model="dialog"
+    class="ExerciseWorkoutModal w-100 h-100"
+    :max-width="windowStore.width >= 600 ? '400px' : '100%'"
+>
+    <template v-slot:activator="{ props }">
+        <v-btn title="Add to Workout" v-bind="props">
+            <v-icon
+                icon="mdi-dumbbell"
+                size="xx-large"
+            ></v-icon>
+        </v-btn>
+    </template>
+    <v-card class="d-flex justify-center align-center pa-2 rounded-lg bg-blue-grey-lighten-3 text-black">
+        <v-card-title class="d-flex justify-center align-center w-100">
+            <h1>Add Exercise to Workout</h1>
+        </v-card-title>
+        <v-card-actions class="d-flex flex-wrap justify-center align-center w-100" :style="{gap: '10px'}">
+            <v-select
+                v-model="workout"
+                label="Select Workout"
+                :items="workoutStore.workouts"
+                :item-title="mappedNames"
+                no-data-text="No workouts available"
+                return-object
+                class="w-75"
+            ></v-select>
+            <v-btn
+                @click="workoutStore.updateWorkout(workout)"
+                variant="flat"
+                color="success"
+            >Add to Workout</v-btn>
+            <v-btn
+                @click="dialog = false"
+                variant="flat"
+                color="error"
+            >Close</v-btn>
+        </v-card-actions>
+    </v-card>
+</v-dialog>
 </template>
 
 <script lang="ts">
+// Vue imports
 import { defineComponent } from 'vue';
+// Pinia imports
+import { useWorkoutStore } from '@/stores/workoutStore';
+import { useWindowStore } from '@/stores/windowStore';
+// Type interfaces
+import { WorkoutData } from '@/types/index';
 
 export default defineComponent({
     data () {
-        
-        return ({});
+        return ({
+            workout: {} as WorkoutData,
+            workoutStore: useWorkoutStore(),
+            windowStore: useWindowStore(),
+            dialog: false
+        });
+    },
+    methods: {
+        mappedNames () {
+            return this.workoutStore.workouts.map(function (workout: WorkoutData) {
+                return workout.attributes.date;
+            });
+        }
     }
 })
 </script>
-
-<style scoped lang="scss">
-
-</style>
