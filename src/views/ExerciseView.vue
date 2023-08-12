@@ -58,6 +58,13 @@
 					v-text="getMuscleName(muscle)"
 				></v-list-item-title>
 			</v-list-item>
+			<v-list-item
+				v-if="!exercise.data.muscles.length"
+				color="primary"
+				disabled
+			>
+				<v-list-item-title>None</v-list-item-title>
+			</v-list-item>
 			<v-list-subheader>Secondary Muscles</v-list-subheader>
 			<v-list-item
 				v-for="(muscle, i) in exercise.data.muscles_secondary"
@@ -75,6 +82,13 @@
 				<v-list-item-title
 					v-text="getMuscleName(muscle)"
 				></v-list-item-title>
+			</v-list-item>
+			<v-list-item
+				v-if="!exercise.data.muscles_secondary.length"
+				color="primary"
+				disabled
+			>
+				<v-list-item-title>None</v-list-item-title>
 			</v-list-item>
 			<v-list-subheader>Equipment</v-list-subheader>
 			<v-list-item
@@ -94,6 +108,13 @@
 					v-text="getEquipmentName(item)"
 				></v-list-item-title>
 			</v-list-item>
+			<v-list-item
+				v-if="!exercise.data.equipment.length"
+				color="primary"
+				disabled
+			>
+				<v-list-item-title>None</v-list-item-title>
+			</v-list-item>
 		</v-list>
 		<v-sheet
 			v-if="exercise.data.description"
@@ -102,13 +123,13 @@
 			color="#141518"
 			max-width="400"
 		>
+			<label>Description</label>
 			<p
 				class="mb-8"
 				:innerHTML="exercise.data.description"
 			></p>
 		</v-sheet>
 		<v-list
-			v-if="images.isSuccess && images.data.results.length"
 			class="exercise-pics"
 		>
 			<v-list-item
@@ -123,6 +144,13 @@
 					></v-img>
 					<figcaption>Example of {{ exercise.data.name }}</figcaption>
 				</figure>
+			</v-list-item>
+			<v-list-item v-if="!images.data.results.length">
+				<v-sheet
+					:width="300"
+					:height="250"
+					class="d-flex justify-center align-center"
+				>NO IMAGE AVAILABLE</v-sheet>
 			</v-list-item>
 		</v-list>
 		<v-toolbar>
