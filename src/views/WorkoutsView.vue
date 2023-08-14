@@ -1,22 +1,40 @@
 <template>
-<main class="WorkoutsView w-100">
+<main
+	class="WorkoutsView
+	w-100"
+>
 	<v-toolbar
 		color="primary"
-		:height="72"
 		extended
 	>
-		<v-spacer></v-spacer>
-		<h1>My Workouts</h1>
-		<v-spacer></v-spacer>
-		<template v-slot:extension>
-			<v-toolbar-items class="w-100 d-flex justify-space-evenly align-center">
+		<v-toolbar-title
+			class="flex align-center text-center"
+		>
+			<v-icon
+				icon="mdi-weight-lifter"
+			></v-icon>
+			My Workouts
+		</v-toolbar-title>
+		<template
+			v-slot:extension
+		>
+			<v-toolbar-items
+				class="w-100 d-flex justify-space-evenly align-center"
+			>
 				<v-btn
 					variant="plain"
 					@click="workoutStore.changeDateBack">
-					<template v-slot:prepend>
-						<v-icon icon="mdi-chevron-left" size="xxx-large"></v-icon>
+					<template
+						v-slot:prepend
+					>
+						<v-icon
+							icon="mdi-chevron-left"
+							size="xxx-large"
+						></v-icon>
 					</template>
-					<span v-if="windowStore.width >= 400">Back</span>
+					<span
+						v-if="windowStore.width >= 400"
+					>Back</span>
 				</v-btn>
 				<CalendarModal />
 				<v-btn
@@ -132,26 +150,16 @@ export default defineComponent({
 })
 </script>
 
-<style scoped lang="scss">
-.WorkoutsView {
-	h1 {
-		display: flex;
-			justify-content: center;
-			align-items: center;
-			gap: 20px;
-		font-family: var(--title-font);
-			font-weight: 700;
+<style scoped>
+#icon {
+	display: inline-block;
+	content: '';
+	width: 48px;
+	height: 48px;
+	background-image: url('/public/images/icons/exercise.webp');
+		background-repeat: no-repeat;
+		background-size: contain;
+		background-position: center;
 
-		&::after {
-			display: inline-block;
-			content: '';
-			width: 64px;
-			height: 64px;
-			background-image: url('/public/images/icons/exercise.webp');
-				background-repeat: no-repeat;
-				background-size: contain;
-				background-position: center;
-		}
-	}
 }
 </style>

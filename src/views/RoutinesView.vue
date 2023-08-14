@@ -2,13 +2,19 @@
 <main class="RoutinesView">
 	<v-toolbar
 		color="primary"
-		:height="windowStore.isTablet ? '72px' : 'auto'"
-		:extended="windowStore.isTablet ? false : true"
+		extended
 	>
-		<v-spacer></v-spacer>
-		<h1>My Routines</h1>
-		<v-spacer></v-spacer>
-		<template v-slot:extension v-if="!windowStore.isTablet">
+		<v-toolbar-title
+			class="flex align-center text-center"
+		>
+			<v-icon
+				icon="mdi-notebook"
+			></v-icon>
+			My Routines
+		</v-toolbar-title>
+		<template
+			v-slot:extension
+		>
 			<v-tabs
 				v-model="routineStore.activeDay"
 				bg-color="primary"

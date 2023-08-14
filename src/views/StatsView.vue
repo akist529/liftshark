@@ -1,30 +1,48 @@
 <template>
-<section class="StatsView bg-blue-lighten-4">
-    <h1 class="bg-primary">My Stats</h1>
-    <v-tabs
-        v-model="statStore.tab"
-        bg-color="primary"
-        class="w-100 bg-primary"
-        align-tabs="center"
-        fixed-tabs
-        show-arrows
+<section
+    class="StatsView bg-blue-lighten-4"
+>
+    <v-toolbar
+        color="primary"
+		extended
     >
-        <v-tab
-            value="weight"
-            prepend-icon="mdi-scale-bathroom"
-            :stacked="windowStore.width < 600"
-        >Weight</v-tab>
-        <v-tab
-            value="measurement"
-            prepend-icon="mdi-tape-measure"
-            :stacked="windowStore.width < 600"
-        >Measurements</v-tab>
-        <v-tab
-            value="record"
-            prepend-icon="mdi-weight-lifter"
-            :stacked="windowStore.width < 600"
-        >PRs</v-tab>
-    </v-tabs>
+        <v-toolbar-title
+            class="flex align-center text-center"
+        >
+            <v-icon
+                icon="mdi-account-search"
+            ></v-icon>
+            My Stats
+        </v-toolbar-title>
+        <template
+            v-slot:extension
+        >
+            <v-tabs
+                v-model="statStore.tab"
+                bg-color="primary"
+                class="w-100 bg-primary"
+                align-tabs="center"
+                fixed-tabs
+                show-arrows
+            >
+                <v-tab
+                    value="weight"
+                    prepend-icon="mdi-scale-bathroom"
+                    :stacked="windowStore.width < 600"
+                >Weight</v-tab>
+                <v-tab
+                    value="measurement"
+                    prepend-icon="mdi-tape-measure"
+                    :stacked="windowStore.width < 600"
+                >Measurements</v-tab>
+                <v-tab
+                    value="record"
+                    prepend-icon="mdi-weight-lifter"
+                    :stacked="windowStore.width < 600"
+                >PRs</v-tab>
+            </v-tabs>
+        </template>
+    </v-toolbar>
     <LoginBanner v-if="!token" />
     <v-window
         v-model="statStore.tab"

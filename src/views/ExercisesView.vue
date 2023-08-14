@@ -1,48 +1,78 @@
 <template>
-<main class="ExercisesView" ref="view">
-	<h1 class="bg-primary">My Exercises</h1>
-	<v-sheet v-if="windowStore.isDesktop" class="w-100 bg-primary d-flex flex-column justify-space-evenly align-center pa-3">
-		<label>Filter by Muscle</label>
-		<v-chip-group v-if="muscles.isSuccess && muscles.data">
-			<v-chip
-				v-for="(muscle, index) in (muscles.data.results as Muscle[])"
-				:key="index"
-				label
-				filter
-				@click="filterMuscle(muscle)"
-			>{{ muscle.name_en ? muscle.name_en : muscle.name }}</v-chip>
-		</v-chip-group>
-		<label>Filter by Equipment</label>
-		<v-chip-group v-if="equipment.isSuccess && equipment.data">
-			<v-chip
-				v-for="(item, index) in (equipment.data.results as Equipment[])"
-				:key="index"
-				label
-				filter
-				@click="filterEquipment(item)"
-			>{{ item.name }}</v-chip>
-		</v-chip-group>
-	</v-sheet>
-	<v-sheet v-if="!windowStore.isDesktop" class="bg-primary d-flex flex-column justify-center align-center">
-		<v-select
-			v-if="muscles.isSuccess && muscles.data"
-			v-model="exerciseStore.filteredMuscle"
-			label="Filter by Muscle"
-			:items="muscles.data.results"
-			item-title="name"
-			return-object
-			class="w-75"
-		></v-select>
-		<v-select
-			v-if="equipment.isSuccess && equipment.data"
-			v-model="exerciseStore.filteredEquipment"
-			label="Filter by Equipment"
-			:items="equipment.data.results"
-			item-title="name"
-			return-object
-			class="w-75"
-		></v-select>
-	</v-sheet>
+<main
+	class="ExercisesView"
+	ref="view"
+>
+	<v-toolbar
+		color="primary"
+		extended
+		extension-height="auto"
+	>
+		<v-toolbar-title
+			class="flex align-center text-center"
+		>
+			<v-icon
+				icon="mdi-dumbbell"
+			></v-icon>
+			My Exercises
+		</v-toolbar-title>
+		<template
+			v-slot:extension
+		>
+			<v-sheet
+				v-if="windowStore.isDesktop"
+				class="w-100 bg-primary d-flex flex-column justify-space-evenly align-center pa-3"
+			>
+				<label>Filter by Muscle</label>
+				<v-chip-group
+					v-if="muscles.isSuccess && muscles.data"
+				>
+					<v-chip
+						v-for="(muscle, index) in (muscles.data.results as Muscle[])"
+						:key="index"
+						label
+						filter
+						@click="filterMuscle(muscle)"
+					>{{ muscle.name_en ? muscle.name_en : muscle.name }}</v-chip>
+				</v-chip-group>
+				<label>Filter by Equipment</label>
+				<v-chip-group
+					v-if="equipment.isSuccess && equipment.data"
+				>
+					<v-chip
+						v-for="(item, index) in (equipment.data.results as Equipment[])"
+						:key="index"
+						label
+						filter
+						@click="filterEquipment(item)"
+					>{{ item.name }}</v-chip>
+				</v-chip-group>
+			</v-sheet>
+			<v-sheet
+				v-if="!windowStore.isDesktop"
+				class="bg-primary d-flex flex-column justify-center align-center w-100"
+			>
+				<v-select
+					v-if="muscles.isSuccess && muscles.data"
+					v-model="exerciseStore.filteredMuscle"
+					label="Filter by Muscle"
+					:items="muscles.data.results"
+					item-title="name"
+					return-object
+					class="w-75"
+				></v-select>
+				<v-select
+					v-if="equipment.isSuccess && equipment.data"
+					v-model="exerciseStore.filteredEquipment"
+					label="Filter by Equipment"
+					:items="equipment.data.results"
+					item-title="name"
+					return-object
+					class="w-75"
+				></v-select>
+			</v-sheet>
+		</template>
+	</v-toolbar>
 	<LoginBanner
 		v-if="!token"
 	/>
@@ -53,7 +83,9 @@
 		rounded="circle"
 	></v-pagination>
 	<v-container>
-		<v-row v-if="error">
+		<v-row
+			v-if="error"
+		>
 			<v-col>
 				<v-alert
 					:max-width="650"
@@ -66,16 +98,24 @@
 				></v-alert>
 			</v-col>
 		</v-row>
-		<v-row v-if="(exercises.isLoading || muscles.isLoading || equipment.isLoading) && !error">
+		<v-row
+			v-if="(exercises.isLoading || muscles.isLoading || equipment.isLoading) && !error"
+		>
 			<v-col>
 				<LoadIcon />
 			</v-col>
 		</v-row>
-		<v-row v-if="(exercises.isSuccess && exercises.data && muscles.isSuccess && muscles.data && equipment.isSuccess && equipment.data) && !error">
+		<v-row
+			v-if="(exercises.isSuccess && exercises.data && muscles.isSuccess && muscles.data && equipment.isSuccess && equipment.data) && !error"
+		>
 			<v-col>
 				<v-container>
 					<v-row>
-						<v-col v-for="exercise in exercises.data.results" :key="exercise.id" :cols="cols">
+						<v-col
+							v-for="exercise in exercises.data.results"
+							:key="exercise.id"
+							:cols="cols"
+						>
 							<ExerciseCard
 								:exercise="exercise"
 								:muscles="muscles.data.results"
@@ -227,30 +267,5 @@ export default defineComponent({
 .ExercisesView {
 	/* Visual */
 	font-family: var(--content-font);
-
-	h1 {
-		display: flex;
-			justify-content: center;
-			align-items: center;
-			gap: 20px;
-		font-family: var(--title-font);
-			font-weight: 700;
-		padding: 20px;
-
-		&::after {
-			display: inline-block;
-			content: '';
-			width: 64px;
-			height: 64px;
-			background-image: url('/public/images/icons/exercises.webp');
-				background-repeat: no-repeat;
-				background-size: contain;
-				background-position: center;
-		}
-	}
-}
-
-.v-toolbar__extension {
-	height: auto;
 }
 </style>
