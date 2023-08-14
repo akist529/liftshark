@@ -172,7 +172,7 @@
 			</v-list>
 		</v-card>
 		<v-card
-			class="mx-auto pa-3"
+			class="mx-auto"
 			width="400"
 			prepend-icon="mdi-information"
 		>
@@ -180,6 +180,7 @@
 				Description
 			</template>
 			<v-card-text
+				class="pa-3"
 				:innerHTML="exercise.data.description"
 			></v-card-text>
 			<v-card-text
@@ -218,6 +219,41 @@
 				</v-list-item>
 			</v-list>
 		</v-card>
+		<v-card
+			class="mx-auto"
+			width="400"
+			prepend-icon="mdi-weight-lifter"
+		>
+			<template v-slot:title>
+				Workout History
+			</template>
+			<v-table v-if="records.length">
+				<thead>
+					<tr>
+						<th class="text-left">
+							Date
+						</th>
+						<th class="text-left">
+							Record (lbs)
+						</th>
+						<th class="text-left">
+							Record (reps)
+						</th>
+					</tr>
+				</thead>
+				<tbody>
+					<tr
+						v-for="record in records"
+						:key="record.id"
+					>
+						<td>{{ record.date }}</td>
+						<td>{{ record.weight }} lbs</td>
+						<td>{{ record.reps }} reps</td>
+					</tr>
+				</tbody>
+			</v-table>
+			<span v-else class="pa-3">No workout history for this exercise</span>
+		</v-card>
 		<v-toolbar>
 			<v-toolbar-title>Actions</v-toolbar-title>
 			<v-toolbar-items>
@@ -249,6 +285,8 @@ import LoginBanner from '@/components/banners/LoginBanner.vue';
 import MyFooter from '@/components/MyFooter.vue';
 // Third-party libraries
 import Cookies from 'js-cookie';
+// Pinia stores
+import { useWorkoutStore } from '@/stores/workoutStore';
 
 const getData = async (url: string): Promise<any> => {
 	return await fetch(url)
@@ -372,7 +410,8 @@ export default defineComponent({
 			exerciseBase: 0,
 			error: true,
 			displayName,
-			token: Cookies.get('token')
+			token: Cookies.get('token'),
+			workoutStore: useWorkoutStore()
 		});
 	},
 	components: {
@@ -428,6 +467,27 @@ export default defineComponent({
 			if (this.exercise.isError || this.muscles.isError || this.equipment.isError) {
 				return true;
 			} else return false;
+		},
+		records () {
+			const records: any[] = [];
+
+			for (const workout of this.workoutStore.workouts) {
+				for (const entry of workout.attributes.entries) {
+					if (entry.name === this.exercise.data?.name) {
+						const sortedSets = entry.sets.sort((a, b) => {
+							return b.weight - a.weight;
+						})
+
+						records.push({
+							date: workout.attributes.date,
+							weight: sortedSets[0].weight,
+							reps: sortedSets[0].reps
+						});
+					}
+				}
+			}
+
+			return records;
 		}
 	},
 	watch: {
