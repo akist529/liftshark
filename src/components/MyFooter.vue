@@ -1,7 +1,7 @@
 <template>
 <footer>
     <span>Gym Tracker © {{ new Date().getFullYear() }} Alex Kist</span><br />
-    <span>Built with <span class="logo" id="vue" aria-label="Vue"></span> with help from <span class="logo" id="vuetify" aria-label="Vuetify"></span></span>
+    <span>Built with <a class="logo" id="vue" aria-label="Vue" href="https://vuejs.org/" target="_blank"></a> with help from <a class="logo" id="vuetify" aria-label="Vuetify" href="https://vuetifyjs.com" target="_blank"></a></span>
 </footer>
 </template>
 

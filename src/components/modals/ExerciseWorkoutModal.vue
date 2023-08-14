@@ -15,10 +15,18 @@
         </v-btn>
     </template>
     <v-card class="d-flex justify-center align-center pa-2 rounded-lg bg-blue-grey-lighten-3 text-black">
-        <v-card-title class="d-flex justify-center align-center w-100">
-            <h1>Add Exercise to Workout</h1>
-        </v-card-title>
-        <v-card-actions class="d-flex flex-wrap justify-center align-center w-100" :style="{gap: '10px'}">
+        <template v-slot:prepend>
+            <v-icon
+                icon="mdi-dumbbell"
+            ></v-icon>
+        </template>
+        <template v-slot:title>
+            Add Exercise to Workout
+        </template>
+        <v-card-actions
+            class="d-flex flex-wrap justify-center align-center w-100"
+            :style="{gap: '10px'}"
+        >
             <v-select
                 v-model="workout"
                 label="Select Workout"

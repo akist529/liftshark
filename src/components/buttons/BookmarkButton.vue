@@ -1,8 +1,6 @@
 <template>
 <v-btn
     :title="isFavorited ? 'Remove from Favorites' : 'Add to Favorites'"
-    width="64"
-    height="64"
     @click="isFavorited ? exerciseStore.removeFromFavorites(id) : exerciseStore.addToFavorites(id)">
     <v-icon
         :icon="isFavorited ? 'mdi-heart' : 'mdi-heart-plus'"

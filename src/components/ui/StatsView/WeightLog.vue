@@ -1,8 +1,16 @@
 <template>
-<v-card class="WeightLog">
-    <v-card-title>
-        <h1>Weight Log</h1>
-    </v-card-title>
+<v-card
+    class="mx-auto"
+    width="400"
+>
+    <template v-slot:prepend>
+        <span
+            id="icon"
+        ></span>
+    </template>
+    <template v-slot:title>
+        Weight Log
+    </template>
     <v-card-text>
         <v-table v-if="statStore.weights.length">
             <tbody>
@@ -42,23 +50,21 @@ export default defineComponent({
 </script>
 
 <style scoped lang="scss">
-.WeightLog {
-    h1 {
-        display: flex;
-            justify-content: center;
-            align-items: center;
-            gap: 10px;
+h1 {
+    display: flex;
+        justify-content: center;
+        align-items: center;
+        gap: 10px;
+}
 
-        &::after {
-            display: inline-block;
-            content: '';
-            width: 48px;
-            height: 48px;
-            background-image: url('/public/images/icons/heart.webp');
-                background-repeat: no-repeat;
-                background-size: contain;
-                background-position: center;
-        }
-    }
+#icon {
+    display: inline-block;
+    content: '';
+    width: 48px;
+    height: 48px;
+    background-image: url('/public/images/icons/heart.webp');
+        background-repeat: no-repeat;
+        background-size: contain;
+        background-position: center;
 }
 </style>

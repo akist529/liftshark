@@ -1,5 +1,5 @@
 <template>
-<main class="ExercisesView w-100" ref="view">
+<main class="ExercisesView" ref="view">
 	<h1 class="bg-primary">My Exercises</h1>
 	<v-sheet v-if="windowStore.isDesktop" class="w-100 bg-primary d-flex flex-column justify-space-evenly align-center pa-3">
 		<label>Filter by Muscle</label>
@@ -43,7 +43,9 @@
 			class="w-75"
 		></v-select>
 	</v-sheet>
-	<LoginBanner v-if="!token" />
+	<LoginBanner
+		v-if="!token"
+	/>
 	<v-pagination
 		v-if="exercises.isSuccess && exercises.data"
 		v-model="exerciseStore.page"
@@ -223,10 +225,6 @@ export default defineComponent({
 
 <style scoped lang="scss">
 .ExercisesView {
-	/* Positioning */
-	display: flex;
-		flex-direction: column;
-
 	/* Visual */
 	font-family: var(--content-font);
 

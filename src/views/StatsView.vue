@@ -1,5 +1,5 @@
 <template>
-<main class="StatsView">
+<section class="StatsView bg-blue-lighten-4">
     <h1 class="bg-primary">My Stats</h1>
     <v-tabs
         v-model="statStore.tab"
@@ -45,7 +45,7 @@
         @measure="setPageShown('Measurements')"
         @prs="setPageShown('PRs')" />
     <MyFooter />
-</main>
+</section>
 </template>
 
 <script lang="ts">

@@ -1,6 +1,8 @@
 <template>
 <v-card class="d-flex flex-column justify-center align-center bg-blue-grey-darken-4" max-width="400">
-	<v-card-item class="d-flex justify-center align-center w-100 text-white bg-primary" height="200">
+	<v-card-item
+		class="d-flex justify-center align-center w-100 text-white bg-primary"
+	>
 		<v-card-title>{{ name }}</v-card-title>
 	</v-card-item>
 	<v-card-actions v-if="images.isLoading" class="d-flex justify-center align-center pa-3">
@@ -27,12 +29,18 @@
 		<v-divider></v-divider>
 		<v-sheet class="d-flex justify-center align-center bg-blue-grey-darken-3 w-100 pa-2" :height="48">
 			<v-slide-group v-if="exercise.muscles.length" show-arrows>
-				<v-slide-group-item v-for="muscle in exercise.muscles" :key="muscle">
+				<v-slide-group-item
+					v-for="muscle in exercise.muscles"
+					:key="muscle"
+				>
 					<span
 						class="mr-2"
 						:style="getLocalImage('muscles', getSlug(getMuscleName(muscle)))"
 					></span>
-					<span :style="{fontSize: '24px'}">{{ getMuscleName(muscle) }}</span>
+					<span
+						class="mr-2"
+						:style="{fontSize: '24px'}"
+					>{{ getMuscleName(muscle) }}</span>
 				</v-slide-group-item>
 			</v-slide-group>
 			<span v-else :style="{fontSize: '24px'}">None</span>
