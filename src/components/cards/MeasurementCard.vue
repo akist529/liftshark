@@ -50,9 +50,15 @@
                 </tr>
             </tbody>
         </v-table>
-        <strong
+        <v-alert
             v-else
-        >No measurements logged.</strong>
+            :max-width="650"
+            border="start"
+            border-color="red-accent-1"
+            elevation="2"
+            type="info"
+            title="No Measurements"
+        ></v-alert>
     </v-card-text>
 </v-card>
 </template>

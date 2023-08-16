@@ -25,8 +25,8 @@
             teleport-center
         />
         <v-table
-            v-if="statStore.weights.length"
-            class="text-center"
+            v-if="weights.length"
+            class="text-center mt-3"
         >
             <tbody>
                 <tr>
@@ -46,9 +46,16 @@
                 </tr>
             </tbody>
         </v-table>
-        <strong
+        <v-alert
             v-else
-        >No weights logged.</strong>
+            class="mt-3"
+            :max-width="650"
+            border="start"
+            border-color="red-accent-1"
+            elevation="2"
+            type="info"
+            title="No Weights"
+        ></v-alert>
     </v-card-text>
 </v-card>
 </template>
