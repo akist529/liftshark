@@ -157,9 +157,6 @@ export const useRoutineStore = defineStore('routineStore', {
         async getRoutineData () {
             this.loading = true;
 
-            const activeDay = new Date().getDay();
-            this.activeDay = activeDay;
-
             if (token) {
 				await fetch('http://localhost:1337/api/routines', {
 					method: 'GET',
@@ -196,6 +193,9 @@ export const useRoutineStore = defineStore('routineStore', {
 
             if (routine) return routine;
                 else return null;
+        },
+        getRoutinesByDay (day: string) {
+            return this.routines.filter(routine => routine.attributes.day === day);
         }
     }
 });

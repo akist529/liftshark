@@ -37,7 +37,9 @@
 		>{{ routine.attributes.name }}</span>
 	</v-card-title>
 	<v-card-text>
-		<v-list height="100%">
+		<v-list
+			height="100%"
+		>
 			<v-list-item
 				v-for="entry in entries"
 				:key="entry.key"
@@ -85,12 +87,9 @@ import DeleteButton from '@/components/buttons/DeleteButton.vue';
 
 export default defineComponent({
 	data () {
-		const workoutStore = useWorkoutStore();
-		const routineStore = useRoutineStore();
-
 		return ({
-			workoutStore,
-			routineStore
+			workoutStore: useWorkoutStore(),
+			routineStore: useRoutineStore()
 		});
 	},
 	components: {

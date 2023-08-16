@@ -1,13 +1,27 @@
 <template>
-<v-dialog :fullscreen="windowStore.width < 600" scrollable persistent v-model="dialog" class="RoutineModal w-100 h-100" :max-width="windowStore.width >= 600 ? '400px' : '100%'">
-	<template v-slot:activator="{ props }">
+<v-dialog
+	:fullscreen="windowStore.width < 600"
+	scrollable
+	persistent
+	v-model="dialog"
+	class="RoutineModal w-100 h-100"
+	:max-width="windowStore.width >= 600 ? '400px' : '100%'"
+>
+	<template
+		v-slot:activator="{ props }"
+	>
 		<AddButton
 			v-bind="props"
 			title="Add New Routine"
 			:style="{position: 'fixed', bottom: 30 + 'px', right: 30 + 'px'}" />
 	</template>
-	<v-card v-if="exerciseQuery.isSuccess" class="d-flex justify-center align-center pa-2 rounded-lg bg-blue-grey-lighten-3 text-black">
-		<v-card-title class="d-flex flex-column justify-center align-center w-75">
+	<v-card
+		v-if="exerciseQuery.isSuccess"
+		class="d-flex justify-center align-center pa-2 rounded-lg bg-blue-grey-lighten-3 text-black"
+	>
+		<v-card-title
+			class="d-flex flex-column justify-center align-center w-75"
+		>
 			<v-text-field
 				v-model="name"
 				hide-details="auto"
@@ -16,7 +30,7 @@
 				label="Name"
 				class="w-100"
 			></v-text-field>
-			<h2>{{ routineStore.activeDay }}</h2>
+			<h2>{{ routineStore.weekdays[routineStore.activeDay] }}</h2>
 		</v-card-title>
 		<v-card-actions>
 			<v-btn
@@ -28,10 +42,19 @@
 			<CloseButton
 				@click="dialog = false" />
 		</v-card-actions>
-		<v-card-text class="w-100 bg-blue-grey-lighten-1">
-			<v-form class="w-100">
-				<v-carousel class="rounded-lg w-100 h-100" show-arrows="hover" progress="primary">
-					<ExerciseForm v-for="exercise in entryCount"
+		<v-card-text
+			class="w-100 bg-blue-grey-lighten-1"
+		>
+			<v-form
+				class="w-100"
+			>
+				<v-carousel
+					class="rounded-lg w-100 h-100"
+					show-arrows="hover"
+					progress="primary"
+				>
+					<ExerciseForm
+						v-for="exercise in entryCount"
 						:key="exercise"
 						:exercises="exerciseQuery.data.results"
 						:count="exercise"

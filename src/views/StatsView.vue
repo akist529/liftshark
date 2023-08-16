@@ -1,6 +1,6 @@
 <template>
 <section
-    class="StatsView bg-blue-lighten-4"
+    class="bg-blue-lighten-4"
 >
     <v-toolbar
         color="primary"
@@ -48,7 +48,7 @@
     />
     <v-window
         v-model="statStore.tab"
-        class="d-flex justify-center align-center w-100 ma-5"
+        class="d-flex justify-center align-center w-100 pa-5"
     >
         <v-window-item
             value="weight"

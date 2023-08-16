@@ -1,5 +1,7 @@
 <template>
-<main class="RoutinesView">
+<section
+	class="RoutinesView"
+>
 	<v-toolbar
 		color="primary"
 		extended
@@ -27,12 +29,16 @@
 					v-for="(day, index) in routineStore.weekdays"
 					:key="index"
 					:day="day"
-					:index="index" />
+					:index="index"
+					:value="index" />
 			</v-tabs>
 		</template>
 	</v-toolbar>
-	<LoginBanner v-if="!token" />
-	<v-tabs v-if="windowStore.isTablet"
+	<LoginBanner
+		v-if="!token"
+	/>
+	<v-tabs
+		v-if="windowStore.isTablet"
 		v-model="routineStore.activeDay"
 		bg-color="primary"
 		direction="vertical"
@@ -41,17 +47,49 @@
 			v-for="(day, index) in routineStore.weekdays"
 			:key="index"
 			:day="day"
-			:index="index" />
+			:index="index"
+			:value="index"
+		/>
 	</v-tabs>
-	<WorkoutCard
-		v-for="routine in routineStore.activeDayRoutines"
-		:routine="routine"
-		:preview="false"
-		:key="routine.id" />
+	<v-window
+		v-model="routineStore.activeDay"
+		class="d-flex justify-center align-center w-100 pa-5"
+	>
+		<v-window-item
+			v-for="(day, index) in routineStore.weekdays"
+			:key="index"
+			:value="index"
+		>
+			<v-list
+				v-if="routineStore.getRoutinesByDay(day).length"
+				class="d-flex flex-wrap justify-center align-center"
+			>
+				<v-list-item
+					v-for="routine in routineStore.getRoutinesByDay(day)"
+					:key="routine.id"
+				>
+					<WorkoutCard
+						:routine="routine"
+						:preview="false"
+					/>
+				</v-list-item>
+			</v-list>
+			<v-alert
+				v-else
+				:max-width="650"
+				border="start"
+				border-color="red-accent-1"
+				elevation="2"
+				type="info"
+				title="No Routines"
+				:text="`You have no routines for ${day}.`"
+			></v-alert>
+		</v-window-item>
+	</v-window>
 	<RoutineModal
 		@showSnackBar="showSnackBar = true" />
 	<MyFooter />
-</main>
+</section>
 </template>
 
 <script lang="ts">
@@ -133,26 +171,6 @@ main {
 
 	.v-container {
 		grid-row: 2 / 3;
-	}
-}
-
-h1 {
-	display: flex;
-		justify-content: center;
-		align-items: center;
-		gap: 20px;
-	font-family: var(--title-font);
-		font-weight: 700;
-
-	&::after {
-		display: inline-block;
-		content: '';
-		width: 64px;
-		height: 64px;
-		background-image: url('/public/images/icons/report.webp');
-			background-repeat: no-repeat;
-			background-size: contain;
-			background-position: center;
 	}
 }
 </style>
