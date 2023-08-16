@@ -46,6 +46,8 @@
                 variant="flat"
                 color="error"
             >Close</v-btn>
+            <CloseButton
+				@click="dialog = false" />
         </v-card-actions>
     </v-card>
 </v-dialog>
@@ -59,6 +61,8 @@ import { useWorkoutStore } from '@/stores/workoutStore';
 import { useWindowStore } from '@/stores/windowStore';
 // Type interfaces
 import { WorkoutData } from '@/types/index';
+// Local components
+import CloseButton from '../buttons/CloseButton.vue';
 
 export default defineComponent({
     data () {
@@ -75,6 +79,9 @@ export default defineComponent({
                 return workout.attributes.date;
             });
         }
+    },
+    components: {
+        CloseButton
     }
 })
 </script>

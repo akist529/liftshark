@@ -43,7 +43,8 @@
 			:day="day"
 			:index="index" />
 	</v-tabs>
-	<WorkoutLog v-for="routine in routineStore.activeDayRoutines"
+	<WorkoutCard
+		v-for="routine in routineStore.activeDayRoutines"
 		:routine="routine"
 		:preview="false"
 		:key="routine.id" />
@@ -67,7 +68,7 @@ import { useRoutineStore } from '@/stores/routineStore';
 import { useWindowStore } from '@/stores/windowStore';
 // Local components
 import RoutineModal from '@/components/modals/RoutineModal.vue';
-import WorkoutLog from '@/components/ui/WorkoutsView/WorkoutLog.vue';
+import WorkoutCard from '@/components/cards/WorkoutCard.vue';
 import RoutineTab from '@/components/ui/RoutinesView/RoutineTab.vue';
 import LoginBanner from '@/components/banners/LoginBanner.vue';
 import MyFooter from '@/components/MyFooter.vue';
@@ -113,7 +114,7 @@ export default defineComponent({
 	},
 	components: {
 		RoutineModal,
-		WorkoutLog,
+		WorkoutCard,
 		RoutineTab,
 		LoginBanner,
 		MyFooter

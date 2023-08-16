@@ -1,20 +1,33 @@
 <template>
-<v-card class="d-flex flex-column justify-center align-center bg-blue-grey-darken-4" max-width="400">
+<v-card
+	class="d-flex flex-column justify-center align-center bg-blue-grey-darken-4"
+	max-width="400"
+>
 	<v-card-item
 		class="d-flex justify-center align-center w-100 text-white bg-primary"
 	>
 		<v-card-title>{{ name }}</v-card-title>
 	</v-card-item>
-	<v-card-actions v-if="images.isLoading" class="d-flex justify-center align-center pa-3">
+	<v-card-actions
+		v-if="images.isLoading"
+		class="d-flex justify-center align-center pa-3"
+	>
 		<v-progress-circular
 			indeterminate
 			color="primary"
 		></v-progress-circular>
 	</v-card-actions>
-	<v-card-text v-if="images.isError" class="d-flex justify-center align-center">
+	<v-card-text
+		v-if="images.isError"
+		class="d-flex justify-center align-center"
+	>
 		<strong>Error!</strong>
 	</v-card-text>
-	<v-sheet :height="200" width="100%" class="d-flex justify-center align-center bg-light-blue-lighten-4 pa-2">
+	<v-sheet
+		:height="200"
+		width="100%"
+		class="d-flex justify-center align-center bg-light-blue-lighten-4 pa-2"
+	>
 		<v-img
 			v-if="images.data && images.data.results.length"
 			max-width="100%"
@@ -24,11 +37,20 @@
 		></v-img>
 		<span v-else>NO IMAGE AVAILABLE</span>
 	</v-sheet>
-	<v-card-text v-if="images.isSuccess && images.data" class="w-100">
+	<v-card-text
+		v-if="images.isSuccess && images.data"
+		class="w-100"
+	>
 		<v-card-subtitle>Primary Muscles</v-card-subtitle>
 		<v-divider></v-divider>
-		<v-sheet class="d-flex justify-center align-center bg-blue-grey-darken-3 w-100 pa-2" :height="48">
-			<v-slide-group v-if="exercise.muscles.length" show-arrows>
+		<v-sheet
+			class="d-flex justify-center align-center bg-blue-grey-darken-3 w-100 pa-2"
+			:height="48"
+		>
+			<v-slide-group
+				v-if="exercise.muscles.length"
+				show-arrows
+			>
 				<v-slide-group-item
 					v-for="muscle in exercise.muscles"
 					:key="muscle"
@@ -43,39 +65,74 @@
 					>{{ getMuscleName(muscle) }}</span>
 				</v-slide-group-item>
 			</v-slide-group>
-			<span v-else :style="{fontSize: '24px'}">None</span>
+			<span
+				v-else
+				:style="{fontSize: '24px'}"
+			>None</span>
 		</v-sheet>
 		<v-card-subtitle>Secondary Muscles</v-card-subtitle>
 		<v-divider></v-divider>
-		<v-sheet class="d-flex justify-center align-center bg-blue-grey-darken-3 w-100 pa-2" :height="48">
-			<v-slide-group v-if="exercise.muscles_secondary.length" show-arrows>
-				<v-slide-group-item v-for="muscle in exercise.muscles_secondary" :key="muscle">
+		<v-sheet
+			class="d-flex justify-center align-center bg-blue-grey-darken-3 w-100 pa-2"
+			:height="48"
+		>
+			<v-slide-group
+				v-if="exercise.muscles_secondary.length"
+				show-arrows
+			>
+				<v-slide-group-item
+					v-for="muscle in exercise.muscles_secondary"
+					:key="muscle"
+				>
 					<span
 						class="mr-2"
 						:style="getLocalImage('muscles', getSlug(getMuscleName(muscle)))"
 					></span>
-					<span :style="{fontSize: '24px'}">{{ getMuscleName(muscle) }}</span>
+					<span
+						:style="{fontSize: '24px'}"
+					>{{ getMuscleName(muscle) }}</span>
 				</v-slide-group-item>
 			</v-slide-group>
-			<span v-else :style="{fontSize: '24px'}">None</span>
+			<span
+				v-else
+				:style="{fontSize: '24px'}"
+			>None</span>
 		</v-sheet>
 		<v-card-subtitle>Equipment</v-card-subtitle>
 		<v-divider></v-divider>
-		<v-sheet class="d-flex justify-center align-center bg-blue-grey-darken-3 w-100 pa-2" :height="48">
-			<v-slide-group v-if="exercise.equipment.length" show-arrows>
-				<v-slide-group-item v-for="item in exercise.equipment" :key="item">
+		<v-sheet
+			class="d-flex justify-center align-center bg-blue-grey-darken-3 w-100 pa-2"
+			:height="48"
+		>
+			<v-slide-group
+				v-if="exercise.equipment.length"
+				show-arrows
+			>
+				<v-slide-group-item
+					v-for="item in exercise.equipment"
+					:key="item"
+				>
 					<span
 						class="mr-2"
 						:style="getLocalImage('equipment', getSlug(getEquipmentName(item)))"
 					></span>
-					<span :style="{fontSize: '24px'}">{{ getEquipmentName(item) }}</span>
+					<span
+						:style="{fontSize: '24px'}"
+					>{{ getEquipmentName(item) }}</span>
 				</v-slide-group-item>
 			</v-slide-group>
-			<span v-else :style="{fontSize: '24px'}">None</span>
+			<span
+				v-else
+				:style="{fontSize: '24px'}"
+			>None</span>
 		</v-sheet>
 	</v-card-text>
-	<router-link class="w-100" :to="{ name: 'Exercise - Gym Tracker', params: { id: exercise.name.toLowerCase().replaceAll(' ', '-') } }">
-		<v-card-actions class="d-flex justify-center align-center bg-indigo"
+	<router-link
+		class="w-100"
+		:to="{ name: 'Exercise - Gym Tracker', params: { id: exercise.name.toLowerCase().replaceAll(' ', '-') } }"
+	>
+		<v-card-actions
+			class="d-flex justify-center align-center bg-indigo"
 		>SEE MORE</v-card-actions>
 	</router-link>
 </v-card>

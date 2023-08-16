@@ -43,19 +43,27 @@
             </v-tabs>
         </template>
     </v-toolbar>
-    <LoginBanner v-if="!token" />
+    <LoginBanner
+        v-if="!token"
+    />
     <v-window
         v-model="statStore.tab"
-        class="w-100"
+        class="d-flex justify-center align-center w-100 ma-5"
     >
-        <v-window-item value="weight">
-            <WeightLog />
+        <v-window-item
+            value="weight"
+        >
+            <WeightCard />
         </v-window-item>
-        <v-window-item value="measurement">
-            <MeasurementLog />
+        <v-window-item
+            value="measurement"
+        >
+            <MeasurementCard />
         </v-window-item>
-        <v-window-item value="record">
-            <PRLog />
+        <v-window-item
+            value="record"
+        >
+            <PRCard />
         </v-window-item>
     </v-window>
     <StatsModal
@@ -73,9 +81,9 @@ import { defineComponent } from 'vue';
 import { useStatStore } from '@/stores/statStore';
 import { useWindowStore } from '@/stores/windowStore';
 // Local components
-import WeightLog from '@/components/ui/StatsView/WeightLog.vue';
-import MeasurementLog from '@/components/ui/StatsView/MeasurementLog.vue';
-import PRLog from '@/components/ui/StatsView/PRLog.vue';
+import WeightCard from '@/components/cards/WeightCard.vue';
+import MeasurementCard from '@/components/cards/MeasurementCard.vue';
+import PRCard from '@/components/cards/PRCard.vue';
 import StatsModal from '@/components/modals/StatsModal.vue';
 import LoginBanner from '@/components/banners/LoginBanner.vue';
 import MyFooter from '@/components/MyFooter.vue';
@@ -108,9 +116,9 @@ export default defineComponent({
 		}
 	},
 	components: {
-		WeightLog,
-		MeasurementLog,
-		PRLog,
+		WeightCard,
+		MeasurementCard,
+		PRCard,
         StatsModal,
         LoginBanner,
         MyFooter
@@ -134,26 +142,3 @@ export default defineComponent({
 	}
 })
 </script>
-
-<style scoped lang="scss">
-h1 {
-    display: flex;
-        justify-content: center;
-        align-items: center;
-        gap: 20px;
-    font-family: var(--title-font);
-        font-weight: 700;
-    padding: 20px;
-
-    &::after {
-        display: inline-block;
-        content: '';
-        width: 64px;
-        height: 64px;
-        background-image: url('/public/images/icons/workout.webp');
-            background-repeat: no-repeat;
-            background-size: contain;
-            background-position: center;
-    }
-}
-</style>

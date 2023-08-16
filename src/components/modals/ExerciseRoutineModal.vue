@@ -43,6 +43,8 @@
                 variant="flat"
                 color="error"
             >Close</v-btn>
+            <CloseButton
+				@click="dialog = false" />
 		</v-card-actions>
 	</v-card>
 </v-dialog>
@@ -56,6 +58,8 @@ import { useRoutineStore } from '@/stores/routineStore';
 import { useWindowStore } from '@/stores/windowStore';
 // Type interfaces
 import { RoutineData } from '@/types/index';
+// Local components
+import CloseButton from '../buttons/CloseButton.vue';
 
 export default defineComponent({
     data () {
@@ -72,6 +76,9 @@ export default defineComponent({
                 return routine.attributes.name;
             });
         }
+    },
+    components: {
+        CloseButton
     }
 })
 </script>

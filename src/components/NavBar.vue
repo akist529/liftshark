@@ -7,46 +7,51 @@
         </li>
         <li>
             <router-link class="link" to="/">
-                <span
-                    class="icon"
-                    :style="{backgroundImage: `url(/images/icons/home.svg)`}"
-                ></span>
+                <v-icon
+                    icon="mdi-home"
+                    size="xx-large"
+                    color="grey"
+                ></v-icon>
                 <span>Home</span>
             </router-link>
         </li>
         <li>
             <router-link class="link" to="/workouts">
-                <span
-                    class="icon"
-                    :style="{backgroundImage: `url(/images/icons/menu_book.svg)`}"
-                ></span>
+                <v-icon
+                    icon="mdi-weight-lifter"
+                    size="xx-large"
+                    color="grey"
+                ></v-icon>
                 <span>Workouts</span>
             </router-link>
         </li>
         <li>
             <router-link class="link" to="/routines">
-                <span
-                    class="icon"
-                    :style="{backgroundImage: `url(/images/icons/routine.svg)`}"
-                ></span>
+                <v-icon
+                    icon="mdi-notebook"
+                    size="xx-large"
+                    color="grey"
+                ></v-icon>
                 <span>Routines</span>
             </router-link>
         </li>
         <li>
             <router-link class="link" to="/stats">
-                <span
-                    class="icon"
-                    :style="{backgroundImage: `url(/images/icons/conditions.svg)`}"
-                ></span>
+                <v-icon
+                    icon="mdi-account-search"
+                    size="xx-large"
+                    color="grey"
+                ></v-icon>
                 <span>Stats</span>
             </router-link>
         </li>
         <li>
             <router-link class="link" to="/exercises">
-                <span
-                    class="icon"
-                    :style="{backgroundImage: `url(/images/icons/fitness_center.svg)`}"
-                ></span>
+                <v-icon
+                    icon="mdi-dumbbell"
+                    size="xx-large"
+                    color="grey"
+                ></v-icon>
                 <span>Exercises</span>
             </router-link>
         </li>

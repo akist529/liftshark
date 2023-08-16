@@ -4,7 +4,7 @@
 		<AddButton
 			v-bind="props"
 			title="Add New Statistic"
-			:style="{position: 'absolute', bottom: 30 + 'px', right: 30 + 'px'}" />
+			:style="{position: 'fixed', bottom: 30 + 'px', right: 30 + 'px'}" />
 	</template>
 	<v-card class="d-flex justify-center align-center pa-2 rounded-lg bg-blue-grey-lighten-3 text-black">
 		<v-card-title class="d-flex justify-center align-center w-100">
@@ -37,7 +37,10 @@
 		<v-card-text v-if="isSuccess && data" class="d-flex justify-center align-center w-100">
 			<v-window v-model="statStore.tab">
 				<v-window-item value="weight">
-					<v-form class="w-75">
+					<v-responsive
+						class="mx-auto"
+						width="144"
+					>
 						<v-text-field
 							v-model="weight"
 							hide-details="auto"
@@ -46,10 +49,13 @@
 							label="Weight (lbs)"
 							append-icon="mdi-weight-pound"
 						></v-text-field>
-					</v-form>
+					</v-responsive>
 				</v-window-item>
 				<v-window-item value="measurement">
-					<v-form class="w-75">
+					<v-responsive
+						class="mx-auto"
+						width="256"
+					>
 						<v-select
 							v-model="muscle"
 							label="Muscle"
@@ -66,10 +72,13 @@
 							append-icon="mdi-tape-measure"
 							:min="1"
 						></v-text-field>
-					</v-form>
+					</v-responsive>
 				</v-window-item>
 				<v-window-item value="record">
-					<v-form class="w-75">
+					<v-responsive
+						class="mx-auto"
+						width="320"
+					>
 						<v-select
 							v-model="exercise"
 							label="Exercise"
@@ -86,7 +95,7 @@
 							class="w-100"
 							append-icon="mdi-medal"
 						></v-text-field>
-					</v-form>
+					</v-responsive>
 				</v-window-item>
 			</v-window>
 		</v-card-text>

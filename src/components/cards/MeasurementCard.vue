@@ -1,8 +1,20 @@
 <template>
-<v-card class="MeasurementLog">
-    <v-card-title>
-        <h1>Measurement Log</h1>
-    </v-card-title>
+<v-card
+    class="mx-auto"
+    width="400"
+>
+    <template
+        v-slot:prepend
+    >
+        <v-icon
+            icon="mdi-tape-measure"
+            size="xx-large"
+            color="primary"
+        ></v-icon>
+    </template>
+    <template
+        v-slot:title
+    >Measurement Log</template>
     <v-card-actions>
         <v-select
             v-model="muscle"
@@ -12,19 +24,26 @@
         ></v-select>
     </v-card-actions>
     <v-card-text>
-        <v-table v-if="filteredMeasurements().length">
+        <v-table
+            v-if="filteredMeasurements().length"
+        >
             <tbody>
                 <tr>
                     <th>DATE</th>
                     <th>MEASUREMENT</th>
                 </tr>
-                <tr v-for="measurement in filteredMeasurements()" :key="measurement.id">
+                <tr
+                    v-for="measurement in filteredMeasurements()"
+                    :key="measurement.id"
+                >
                     <td>{{ measurement.attributes.date }}</td>
                     <td>{{ `${measurement.attributes.measurement}"` }}</td>
                 </tr>
             </tbody>
         </v-table>
-        <strong v-else>No measurements logged.</strong>
+        <strong
+            v-else
+        >No measurements logged.</strong>
     </v-card-text>
 </v-card>
 </template>
@@ -55,25 +74,3 @@ export default defineComponent({
     }
 });
 </script>
-
-<style scoped lang="scss">
-.MeasurementLog {
-    h1 {
-        display: flex;
-            justify-content: center;
-            align-items: center;
-            gap: 10px;
-
-        &::after {
-            display: inline-block;
-            content: '';
-            width: 48px;
-            height: 48px;
-            background-image: url('/public/images/icons/tape.webp');
-                background-repeat: no-repeat;
-                background-size: contain;
-                background-position: center;
-        }
-    }
-}
-</style>

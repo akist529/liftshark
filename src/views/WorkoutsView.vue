@@ -68,7 +68,7 @@
 	</v-row>
 	<v-row v-if="workoutStore.workouts.length">
 		<v-col v-for="workout in workoutStore.activeWorkouts" :key="workout.id">
-			<WorkoutLog
+			<WorkoutCard
 				:workout="workout"
 				:preview="false" />
 		</v-col>
@@ -89,7 +89,7 @@ import { useWorkoutStore } from '@/stores/workoutStore';
 import { useRoutineStore } from '@/stores/routineStore';
 import { useWindowStore } from '@/stores/windowStore';
 // Local components
-import WorkoutLog from '@/components/ui/WorkoutsView/WorkoutLog.vue';
+import WorkoutCard from '@/components/cards/WorkoutCard.vue';
 import WorkoutModal from '@/components/modals/WorkoutModal.vue';
 import CalendarModal from '@/components/modals/CalendarModal.vue';
 import LoginBanner from '@/components/banners/LoginBanner.vue';
@@ -114,7 +114,7 @@ export default defineComponent({
 		});
 	},
 	components: {
-		WorkoutLog,
+		WorkoutCard,
 		WorkoutModal,
 		CalendarModal,
 		LoginBanner,

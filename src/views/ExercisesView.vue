@@ -1,6 +1,5 @@
 <template>
 <main
-	class="ExercisesView"
 	ref="view"
 >
 	<v-toolbar
@@ -108,21 +107,16 @@
 		<v-row
 			v-if="(exercises.isSuccess && exercises.data && muscles.isSuccess && muscles.data && equipment.isSuccess && equipment.data) && !error"
 		>
-			<v-col>
-				<v-container>
-					<v-row>
-						<v-col
-							v-for="exercise in exercises.data.results"
-							:key="exercise.id"
-							:cols="cols"
-						>
-							<ExerciseCard
-								:exercise="exercise"
-								:muscles="muscles.data.results"
-								:equipment="equipment.data.results" />
-						</v-col>
-					</v-row>
-				</v-container>
+			<v-col
+				v-for="exercise in exercises.data.results"
+				:key="exercise.id"
+				:cols="cols"
+			>
+				<ExerciseCard
+					:exercise="exercise"
+					:muscles="muscles.data.results"
+					:equipment="equipment.data.results"
+				/>
 			</v-col>
 		</v-row>
 	</v-container>
@@ -146,7 +140,7 @@ import { useQuery } from 'vue-query';
 import { useExerciseStore } from '@/stores/exerciseStore';
 import { useWindowStore } from '@/stores/windowStore';
 // Local components
-import ExerciseCard from '@/components/ui/ExercisesView/ExerciseCard.vue';
+import ExerciseCard from '@/components/cards/ExerciseCard.vue';
 import LoadIcon from '@/components/LoadIcon.vue';
 import MyFooter from '@/components/MyFooter.vue';
 import LoginBanner from '@/components/banners/LoginBanner.vue';
@@ -262,10 +256,3 @@ export default defineComponent({
 	}
 });
 </script>
-
-<style scoped lang="scss">
-.ExercisesView {
-	/* Visual */
-	font-family: var(--content-font);
-}
-</style>

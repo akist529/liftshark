@@ -1,8 +1,21 @@
 <template>
-<v-card v-if="isSuccess && data" class="PRLog">
-    <v-card-title>
-        <h1>PR Log</h1>
-    </v-card-title>
+<v-card
+    v-if="isSuccess && data"
+    class="mx-auto"
+    width="400"
+>
+    <template
+        v-slot:prepend
+    >
+        <v-icon
+            icon="mdi-weight-lifter"
+            size="xx-large"
+            color="primary"
+        ></v-icon>
+    </template>
+    <template
+        v-slot:title
+    >PR Log</template>
     <v-card-actions>
         <v-select
             v-model="exercise"
@@ -12,19 +25,26 @@
         ></v-select>
     </v-card-actions>
     <v-card-text>
-        <v-table v-if="filteredRecords()?.length">
+        <v-table
+            v-if="filteredRecords()?.length"
+        >
             <tbody>
                 <tr>
                     <th>DATE</th>
                     <th>PR (LBS.)</th>
                 </tr>
-                <tr v-for="record in filteredRecords()" :key="record.id">
+                <tr
+                    v-for="record in filteredRecords()"
+                    :key="record.id"
+                >
                     <td>{{ record.attributes.date }}</td>
                     <td>{{ record.attributes.max }}</td>
                 </tr>
             </tbody>
         </v-table>
-        <strong v-else>No PRs logged.</strong>
+        <strong
+            v-else
+        >No PRs logged.</strong>
     </v-card-text>
 </v-card>
 </template>
@@ -73,25 +93,3 @@ export default defineComponent({
     }
 });
 </script>
-
-<style scoped lang="scss">
-.PRLog {
-    h1 {
-        display: flex;
-            justify-content: center;
-            align-items: center;
-            gap: 10px;
-
-        &::after {
-            display: inline-block;
-            content: '';
-            width: 48px;
-            height: 48px;
-            background-image: url('/public/images/icons/weightlift.webp');
-                background-repeat: no-repeat;
-                background-size: contain;
-                background-position: center;
-        }
-    }
-}
-</style>
