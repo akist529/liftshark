@@ -1,6 +1,25 @@
 <template>
-<v-app-bar color="blue-grey-darken-4">
-	<ModeButton />
+<v-app-bar
+	color="blue-grey-darken-4"
+	density="compact"
+>
+	<v-app-bar-nav-icon
+        width="auto"
+        height="auto"
+        variant="plain"
+    >
+        <ModeButton />
+    </v-app-bar-nav-icon>
+    <v-app-bar-title
+		v-if="windowStore.width >= 450"
+        class="flex text-center"
+    >
+        <v-icon
+            icon="mdi-dumbbell"
+        ></v-icon>
+        Gym Tracker
+    </v-app-bar-title>
+	<v-spacer v-if="windowStore.width < 450"></v-spacer>
 	<WarningModal v-if="loginStore.token" />
 	<LoginModal v-else />
 </v-app-bar>
@@ -11,6 +30,7 @@
 import { defineComponent } from 'vue';
 // Pinia stores
 import { useLoginStore } from '@/stores/loginStore';
+import { useWindowStore } from '@/stores/windowStore';
 // Local components
 import ModeButton from '../buttons/ModeButton.vue';
 import LoginModal from '../modals/LoginModal.vue';
@@ -18,10 +38,9 @@ import WarningModal from '../modals/WarningModal.vue';
 
 export default defineComponent({
 	data () {
-		const loginStore = useLoginStore();
-
 		return ({
-			loginStore
+			loginStore: useLoginStore(),
+			windowStore: useWindowStore()
 		});
 	},
 	components: {

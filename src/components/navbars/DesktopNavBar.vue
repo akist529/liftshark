@@ -3,6 +3,7 @@
     :elevation="2"
     color="blue-grey-darken-4"
     density="compact"
+    scroll-behavior="hide"
 >
     <v-app-bar-nav-icon
         width="auto"

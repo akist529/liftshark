@@ -1,6 +1,7 @@
 <template>
 <v-layout>
     <TabletNavBar />
+    <TopNavBar />
     <router-view
     ></router-view>
 </v-layout>
@@ -9,10 +10,12 @@
 <script lang="ts">
 import { defineComponent } from 'vue';
 import TabletNavBar from '../navbars/TabletNavBar.vue';
+import TopNavBar from '../navbars/TopNavBar.vue';
 
 export default defineComponent({
     components: {
-        TabletNavBar
+        TabletNavBar,
+        TopNavBar
     }
 })
 </script>

@@ -1,7 +1,13 @@
 <template>
 <v-main>
-	<v-container fluid class="fill-height pa-0">
-		<v-row no-gutters class="ma-0 align-self-start">
+	<v-container
+		fluid
+		class="fill-height pa-0"
+	>
+		<v-row
+			no-gutters
+			class="ma-0 align-self-start"
+		>
 			<v-col :cols="12">
 				<WorkoutToolbar />
 				<LoginBanner
@@ -9,7 +15,10 @@
 				/>
 			</v-col>
 		</v-row>
-		<v-row no-gutters class="w-100 ma-0 align-self-stretch">
+		<v-row
+			no-gutters
+			class="w-100 ma-0 align-self-stretch"
+		>
 			<v-col :cols="12">
 				<v-list
 					v-if="workoutStore.workouts.length"
@@ -26,7 +35,10 @@
 				</v-list>
 			</v-col>
 		</v-row>
-		<v-row no-gutters class="ma-0 align-self-end">
+		<v-row
+			no-gutters
+			class="ma-0 align-self-end"
+		>
 			<v-col :cols="12">
 				<MyFooter />
 			</v-col>

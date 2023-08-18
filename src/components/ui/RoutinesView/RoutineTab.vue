@@ -1,5 +1,7 @@
 <template>
-<v-tab :value="index">
+<v-tab
+    :value="index"
+>
     <i
         class="icon"
         :style="{backgroundImage: `url(/images/icons/${day.toLowerCase()}.webp)`}"
@@ -31,10 +33,13 @@ export default defineComponent({
         background-size: contain;
         background-repeat: no-repeat;
     content: '';
-    width: 32px;
-    height: 32px;
+    width: 24px;
+    height: 24px;
     display: inline-block;
     filter: invert(1);
-    margin-right: 16px;
+}
+
+span {
+    display: inline-block;
 }
 </style>

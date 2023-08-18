@@ -2,58 +2,6 @@
 <v-main
     class="bg-blue-lighten-4"
 >
-    <v-toolbar
-        color="primary"
-		extended
-    >
-        <v-toolbar-title
-            class="flex align-center text-center"
-        >
-            <v-icon
-                icon="mdi-account-search"
-            ></v-icon>
-            My Stats
-        </v-toolbar-title>
-        <template
-            v-slot:extension
-        >
-            <v-tabs
-                v-model="statStore.tab"
-                bg-color="primary"
-                class="w-100 bg-primary"
-                align-tabs="center"
-                fixed-tabs
-                show-arrows
-                centered
-                :stacked="windowStore.width < 992"
-            >
-                <v-tab
-                    value="weight"
-                >
-                    <v-icon
-                        icon="mdi-scale-bathroom"
-                    ></v-icon>
-                    <span v-if="windowStore.width >= 600">Weight</span>
-                </v-tab>
-                <v-tab
-                    value="measurement"
-                >
-                    <v-icon
-                        icon="mdi-tape-measure"
-                    ></v-icon>
-                    <span v-if="windowStore.width >= 600">Measurements</span>
-                </v-tab>
-                <v-tab
-                    value="record"
-                >
-                    <v-icon
-                        icon="mdi-weight-lifter"
-                    ></v-icon>
-                    <span v-if="windowStore.width >= 600">Records</span>
-                </v-tab>
-            </v-tabs>
-        </template>
-    </v-toolbar>
     <StatsToolbar
         @weight="setPageShown('Weight')"
         @measure="setPageShown('Measurements')"
@@ -82,11 +30,7 @@
             <PRCard />
         </v-window-item>
     </v-window>
-    <StatsToolbar
-        @weight="setPageShown('Weight')"
-        @measure="setPageShown('Measurements')"
-        @prs="setPageShown('PRs')"
-    />
+    <MyFooter />
 </v-main>
 </template>
 
@@ -102,6 +46,7 @@ import MeasurementCard from '@/components/cards/MeasurementCard.vue';
 import PRCard from '@/components/cards/PRCard.vue';
 import LoginBanner from '@/components/banners/LoginBanner.vue';
 import StatsToolbar from '@/components/toolbars/StatsToolbar.vue';
+import MyFooter from '@/components/MyFooter.vue';
 // Third-party libraries
 import Cookies from 'js-cookie';
 
@@ -133,7 +78,8 @@ export default defineComponent({
 		MeasurementCard,
 		PRCard,
         LoginBanner,
-        StatsToolbar
+        StatsToolbar,
+        MyFooter
 	},
     computed: {
         addButtonTitle () {

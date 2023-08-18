@@ -13,14 +13,13 @@
         ></v-icon>
         My Workouts
     </v-toolbar-title>
-    <template
-        v-slot:extension
-    >
-        <span>Actions</span>
+    <template v-slot:extension>
         <v-toolbar-items
             class="w-100 d-flex justify-space-evenly align-center"
         >
             <v-btn
+                v-if="windowStore.width >= 420"
+                class="d-flex justify-center align-center"
                 variant="plain"
                 @click="workoutStore.changeDateBack">
                 <template
@@ -32,14 +31,16 @@
                     ></v-icon>
                 </template>
                 <span
-                    v-if="windowStore.width >= 400"
+                    v-if="windowStore.width >= 600"
                 >Back</span>
             </v-btn>
             <CalendarModal />
             <v-btn
+                v-if="windowStore.width >= 420"
+                class="d-flex justify-center align-center"
                 variant="plain"
                 @click="workoutStore.changeDateForward">
-                <span v-if="windowStore.width >= 400">Forward</span>
+                <span v-if="windowStore.width >= 600">Forward</span>
                 <template v-slot:append>
                     <v-icon icon="mdi-chevron-right" size="xxx-large"></v-icon>
                 </template>
