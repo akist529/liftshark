@@ -1,5 +1,5 @@
 <template>
-<section
+<v-main
 	class="RoutinesView"
 >
 	<v-toolbar
@@ -34,6 +34,9 @@
 			</v-tabs>
 		</template>
 	</v-toolbar>
+	<RoutineToolbar
+		@showSnackBar="showSnackBar = true"
+	/>
 	<LoginBanner
 		v-if="!token"
 	/>
@@ -86,10 +89,10 @@
 			></v-alert>
 		</v-window-item>
 	</v-window>
-	<RoutineModal
-		@showSnackBar="showSnackBar = true" />
-	<MyFooter />
-</section>
+	<RoutineToolbar
+		@showSnackBar="showSnackBar = true"
+	/>
+</v-main>
 </template>
 
 <script lang="ts">
@@ -105,11 +108,10 @@ import { ExerciseData, RoutineData } from '@/types/index';
 import { useRoutineStore } from '@/stores/routineStore';
 import { useWindowStore } from '@/stores/windowStore';
 // Local components
-import RoutineModal from '@/components/modals/RoutineModal.vue';
 import WorkoutCard from '@/components/cards/WorkoutCard.vue';
 import RoutineTab from '@/components/ui/RoutinesView/RoutineTab.vue';
 import LoginBanner from '@/components/banners/LoginBanner.vue';
-import MyFooter from '@/components/MyFooter.vue';
+import RoutineToolbar from '@/components/toolbars/RoutineToolbar.vue';
 
 const getData = async (): Promise<ExerciseData> => {
 	return await fetch('https://wger.de/api/v2/exercise?limit=999&language=2')
@@ -151,11 +153,10 @@ export default defineComponent({
 		}
 	},
 	components: {
-		RoutineModal,
 		WorkoutCard,
 		RoutineTab,
 		LoginBanner,
-		MyFooter
+		RoutineToolbar
 	},
 	async created () {
 		window.setInterval(this.updateUserToken, 100); // Routinely check if user signs in or out

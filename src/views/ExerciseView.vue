@@ -1,5 +1,7 @@
 <template>
-<section class="bg-grey-darken-4">
+<v-main
+	class="bg-grey-darken-4"
+>
 	<LoadIcon
 		v-if="!isLoaded && !isError"
 	/>
@@ -260,13 +262,11 @@
 				<ExerciseRoutineModal />
 				<ExerciseWorkoutModal />
 				<BookmarkButton
-					class="bookmark-btn"
 					:id="exercise.data.id" />
 			</v-toolbar-items>
 		</v-toolbar>
 	</article>
-	<MyFooter />
-</section>
+</v-main>
 </template>
 
 <script lang="ts">
@@ -282,7 +282,6 @@ import LoadIcon from '@/components/LoadIcon.vue';
 import ExerciseRoutineModal from '@/components/modals/ExerciseRoutineModal.vue';
 import ExerciseWorkoutModal from '@/components/modals/ExerciseWorkoutModal.vue';
 import LoginBanner from '@/components/banners/LoginBanner.vue';
-import MyFooter from '@/components/MyFooter.vue';
 // Third-party libraries
 import Cookies from 'js-cookie';
 // Pinia stores
@@ -419,7 +418,6 @@ export default defineComponent({
 		LoadIcon,
 		ExerciseRoutineModal,
 		LoginBanner,
-		MyFooter,
 		ExerciseWorkoutModal
 	},
 	methods: {

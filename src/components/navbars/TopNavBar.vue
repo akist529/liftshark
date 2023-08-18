@@ -1,9 +1,9 @@
 <template>
-<nav class="TopNavBar">
+<v-app-bar color="blue-grey-darken-4">
 	<ModeButton />
 	<WarningModal v-if="loginStore.token" />
 	<LoginModal v-else />
-</nav>
+</v-app-bar>
 </template>
 
 <script lang="ts">
@@ -12,9 +12,9 @@ import { defineComponent } from 'vue';
 // Pinia stores
 import { useLoginStore } from '@/stores/loginStore';
 // Local components
-import ModeButton from '@/components/buttons/ModeButton.vue';
-import LoginModal from './modals/LoginModal.vue';
-import WarningModal from './modals/WarningModal.vue';
+import ModeButton from '../buttons/ModeButton.vue';
+import LoginModal from '../modals/LoginModal.vue';
+import WarningModal from '../modals/WarningModal.vue';
 
 export default defineComponent({
 	data () {

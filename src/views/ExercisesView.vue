@@ -1,5 +1,5 @@
 <template>
-<main
+<v-main
 	ref="view"
 >
 	<v-toolbar
@@ -127,8 +127,7 @@
 		:total-visible="7"
 		rounded="circle"
 	></v-pagination>
-	<MyFooter />
-</main>
+</v-main>
 </template>
 
 <script lang="ts">
@@ -142,7 +141,6 @@ import { useWindowStore } from '@/stores/windowStore';
 // Local components
 import ExerciseCard from '@/components/cards/ExerciseCard.vue';
 import LoadIcon from '@/components/LoadIcon.vue';
-import MyFooter from '@/components/MyFooter.vue';
 import LoginBanner from '@/components/banners/LoginBanner.vue';
 // Type interfaces
 import { ExerciseData, Muscle, Equipment } from '@/types/index';
@@ -203,7 +201,6 @@ export default defineComponent({
 	components: {
 		ExerciseCard,
 		LoadIcon,
-		MyFooter,
 		LoginBanner
 	},
 	computed: {

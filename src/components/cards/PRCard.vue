@@ -2,7 +2,7 @@
 <v-card
     v-if="isSuccess && data"
     class="mx-auto"
-    width="400"
+    :width="200"
 >
     <template
         v-slot:prepend
@@ -27,11 +27,12 @@
     <v-card-text>
         <v-table
             v-if="filteredRecords()?.length"
+            class="flex text-center"
         >
             <tbody>
                 <tr>
-                    <th>DATE</th>
-                    <th>PR (LBS.)</th>
+                    <th class="flex text-center">DATE</th>
+                    <th class="flex text-center">PR (LBS.)</th>
                 </tr>
                 <tr
                     v-for="record in filteredRecords()"

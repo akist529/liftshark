@@ -10,10 +10,15 @@
 	<template
 		v-slot:activator="{ props }"
 	>
-		<AddButton
-			v-bind="props"
+		<v-btn
 			title="Add New Routine"
-			:style="{position: 'fixed', bottom: 30 + 'px', right: 30 + 'px'}" />
+			v-bind="props"
+		>
+            <v-icon
+                icon="mdi-plus"
+                size="xx-large"
+            ></v-icon>
+        </v-btn>
 	</template>
 	<v-card
 		v-if="exerciseQuery.isSuccess"

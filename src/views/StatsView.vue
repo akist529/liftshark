@@ -1,5 +1,5 @@
 <template>
-<section
+<v-main
     class="bg-blue-lighten-4"
 >
     <v-toolbar
@@ -24,31 +24,47 @@
                 align-tabs="center"
                 fixed-tabs
                 show-arrows
+                centered
+                :stacked="windowStore.width < 992"
             >
                 <v-tab
                     value="weight"
-                    prepend-icon="mdi-scale-bathroom"
-                    :stacked="windowStore.width < 600"
-                >Weight</v-tab>
+                >
+                    <v-icon
+                        icon="mdi-scale-bathroom"
+                    ></v-icon>
+                    <span v-if="windowStore.width >= 600">Weight</span>
+                </v-tab>
                 <v-tab
                     value="measurement"
-                    prepend-icon="mdi-tape-measure"
-                    :stacked="windowStore.width < 600"
-                >Measurements</v-tab>
+                >
+                    <v-icon
+                        icon="mdi-tape-measure"
+                    ></v-icon>
+                    <span v-if="windowStore.width >= 600">Measurements</span>
+                </v-tab>
                 <v-tab
                     value="record"
-                    prepend-icon="mdi-weight-lifter"
-                    :stacked="windowStore.width < 600"
-                >PRs</v-tab>
+                >
+                    <v-icon
+                        icon="mdi-weight-lifter"
+                    ></v-icon>
+                    <span v-if="windowStore.width >= 600">Records</span>
+                </v-tab>
             </v-tabs>
         </template>
     </v-toolbar>
+    <StatsToolbar
+        @weight="setPageShown('Weight')"
+        @measure="setPageShown('Measurements')"
+        @prs="setPageShown('PRs')"
+    />
     <LoginBanner
         v-if="!token"
     />
     <v-window
         v-model="statStore.tab"
-        class="d-flex justify-center align-center w-100 pa-5"
+        class="d-flex justify-center align-center pa-5"
     >
         <v-window-item
             value="weight"
@@ -66,12 +82,12 @@
             <PRCard />
         </v-window-item>
     </v-window>
-    <StatsModal
+    <StatsToolbar
         @weight="setPageShown('Weight')"
         @measure="setPageShown('Measurements')"
-        @prs="setPageShown('PRs')" />
-    <MyFooter />
-</section>
+        @prs="setPageShown('PRs')"
+    />
+</v-main>
 </template>
 
 <script lang="ts">
@@ -84,9 +100,8 @@ import { useWindowStore } from '@/stores/windowStore';
 import WeightCard from '@/components/cards/WeightCard.vue';
 import MeasurementCard from '@/components/cards/MeasurementCard.vue';
 import PRCard from '@/components/cards/PRCard.vue';
-import StatsModal from '@/components/modals/StatsModal.vue';
 import LoginBanner from '@/components/banners/LoginBanner.vue';
-import MyFooter from '@/components/MyFooter.vue';
+import StatsToolbar from '@/components/toolbars/StatsToolbar.vue';
 // Third-party libraries
 import Cookies from 'js-cookie';
 
@@ -94,14 +109,12 @@ export default defineComponent({
 	data () {
 		const statPages = ['Weight', 'Measurements', 'PRs'];
 		const pageShown = 'Measurements';
-        const statStore = useStatStore();
-        const windowStore = useWindowStore();
 
 		return ({
 			statPages,
 			pageShown,
-            statStore,
-            windowStore,
+            statStore: useStatStore(),
+            windowStore: useWindowStore(),
             token: Cookies.get('token')
 		});
 	},
@@ -119,9 +132,8 @@ export default defineComponent({
 		WeightCard,
 		MeasurementCard,
 		PRCard,
-        StatsModal,
         LoginBanner,
-        MyFooter
+        StatsToolbar
 	},
     computed: {
         addButtonTitle () {

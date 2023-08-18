@@ -1,10 +1,15 @@
 <template>
 <v-dialog :fullscreen="windowStore.width < 600" scrollable persistent v-model="dialog" class="WorkoutModal w-100 h-100" :max-width="windowStore.width >= 600 ? '400px' : '100%'">
 	<template v-slot:activator="{ props }">
-		<AddButton
+		<v-btn
 			v-bind="props"
-			title="Add New Workout"
-			:style="{position: 'fixed', bottom: 30 + 'px', right: 30 + 'px'}" />
+            title="Add New Workout"
+        >
+            <v-icon
+                icon="mdi-plus"
+                size="xx-large"
+            ></v-icon>
+        </v-btn>
 	</template>
 	<v-card v-if="exerciseQuery.isSuccess" class="d-flex justify-center align-center pa-2 rounded-lg bg-blue-grey-lighten-3 text-black">
 		<v-card-title class="d-flex flex-column justify-center align-center">
@@ -33,9 +38,15 @@
 			</v-form>
 		</v-card-text>
 		<v-card-actions>
-			<AddButton
-				title="Add Workout"
-				@click="addWorkout" />
+			<v-btn
+				title="Add New Workout"
+				@click="addWorkout"
+			>
+				<v-icon
+					icon="mdi-plus"
+					size="xx-large"
+				></v-icon>
+			</v-btn>
 		</v-card-actions>
 	</v-card>
 </v-dialog>
@@ -53,9 +64,8 @@ import { useWorkoutStore } from '@/stores/workoutStore';
 import { useWindowStore } from '@/stores/windowStore';
 import { useSnackbarStore } from '@/stores/snackbarStore';
 // Local components
-import CloseButton from '../buttons/CloseButton.vue';
-import ExerciseForm from './WorkoutModal/ExerciseForm.vue';
-import AddButton from '../buttons/AddButton.vue';
+import CloseButton from '@/components/buttons/CloseButton.vue';
+import ExerciseForm from '../WorkoutModal/ExerciseForm.vue';
 
 const getData = async (): Promise<ExerciseData> => {
 	return await fetch('https://wger.de/api/v2/exercise?limit=999&language=2')
@@ -83,8 +93,7 @@ export default defineComponent({
     },
     components: {
         CloseButton,
-		ExerciseForm,
-		AddButton
+		ExerciseForm
     },
 	methods: {
 		deleteExercise (e: MouseEvent) {

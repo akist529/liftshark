@@ -1,82 +1,38 @@
 <template>
-<main
-	class="WorkoutsView
-	w-100"
->
-	<v-toolbar
-		color="primary"
-		extended
-	>
-		<v-toolbar-title
-			class="flex align-center text-center"
-		>
-			<v-icon
-				icon="mdi-weight-lifter"
-			></v-icon>
-			My Workouts
-		</v-toolbar-title>
-		<template
-			v-slot:extension
-		>
-			<v-toolbar-items
-				class="w-100 d-flex justify-space-evenly align-center"
-			>
-				<v-btn
-					variant="plain"
-					@click="workoutStore.changeDateBack">
-					<template
-						v-slot:prepend
+<v-main>
+	<v-container fluid class="fill-height pa-0">
+		<v-row no-gutters class="ma-0 align-self-start">
+			<v-col :cols="12">
+				<WorkoutToolbar />
+				<LoginBanner
+					v-if="!token"
+				/>
+			</v-col>
+		</v-row>
+		<v-row no-gutters class="w-100 ma-0 align-self-stretch">
+			<v-col :cols="12">
+				<v-list
+					v-if="workoutStore.workouts.length"
+					class="d-flex flex-wrap justify-center align-center"
+				>
+					<v-list-item
+						v-for="workout in workoutStore.activeWorkouts"
+						:key="workout.id"
 					>
-						<v-icon
-							icon="mdi-chevron-left"
-							size="xxx-large"
-						></v-icon>
-					</template>
-					<span
-						v-if="windowStore.width >= 400"
-					>Back</span>
-				</v-btn>
-				<CalendarModal />
-				<v-btn
-					variant="plain"
-					@click="workoutStore.changeDateForward">
-					<span v-if="windowStore.width >= 400">Forward</span>
-					<template v-slot:append>
-						<v-icon icon="mdi-chevron-right" size="xxx-large"></v-icon>
-					</template>
-				</v-btn>
-			</v-toolbar-items>
-		</template>
-	</v-toolbar>
-	<LoginBanner v-if="!token" />
-	<v-row v-if="routineStore.routines.length" class="d-flex flex-wrap justify-center align-center">
-		<v-col>
-			<v-select
-				name="routine"
-				id="routine"
-				ref="routine"
-				v-model="routineName"
-				label="Select Routine"
-				:items="routineStore.routines.map(routine => routine.attributes.name)">
-			</v-select>
-			<v-btn
-				title="Log Routine as Workout"
-				@click="useRoutine"
-				append-icon="mdi-notebook"
-			>Log Routine as Workout</v-btn>
-		</v-col>
-	</v-row>
-	<v-row v-if="workoutStore.workouts.length">
-		<v-col v-for="workout in workoutStore.activeWorkouts" :key="workout.id">
-			<WorkoutCard
-				:workout="workout"
-				:preview="false" />
-		</v-col>
-	</v-row>
-	<WorkoutModal
-		@showSnackBar="showSnackBar = true" />
-	<MyFooter />
-</main>
+						<WorkoutCard
+							:workout="workout"
+							:preview="false" />
+					</v-list-item>
+				</v-list>
+			</v-col>
+		</v-row>
+		<v-row no-gutters class="ma-0 align-self-end">
+			<v-col :cols="12">
+				<MyFooter />
+			</v-col>
+		</v-row>
+	</v-container>
+</v-main>
 </template>
 
 <script lang="ts">
@@ -90,9 +46,8 @@ import { useRoutineStore } from '@/stores/routineStore';
 import { useWindowStore } from '@/stores/windowStore';
 // Local components
 import WorkoutCard from '@/components/cards/WorkoutCard.vue';
-import WorkoutModal from '@/components/modals/WorkoutModal.vue';
-import CalendarModal from '@/components/modals/CalendarModal.vue';
 import LoginBanner from '@/components/banners/LoginBanner.vue';
+import WorkoutToolbar from '@/components/toolbars/WorkoutToolbar.vue';
 import MyFooter from '@/components/MyFooter.vue';
 // Type interfaces
 import { Workout } from '@/types/index';
@@ -115,9 +70,8 @@ export default defineComponent({
 	},
 	components: {
 		WorkoutCard,
-		WorkoutModal,
-		CalendarModal,
 		LoginBanner,
+		WorkoutToolbar,
 		MyFooter
 	},
 	methods: {
@@ -149,17 +103,3 @@ export default defineComponent({
 	}
 })
 </script>
-
-<style scoped>
-#icon {
-	display: inline-block;
-	content: '';
-	width: 48px;
-	height: 48px;
-	background-image: url('/public/images/icons/exercise.webp');
-		background-repeat: no-repeat;
-		background-size: contain;
-		background-position: center;
-
-}
-</style>

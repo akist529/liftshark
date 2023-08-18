@@ -1,0 +1,40 @@
+<template>
+<v-navigation-drawer
+    expand-on-hover
+    rail
+    permanent
+    location="left"
+    color="blue-grey-darken-4"
+>
+    <v-list
+        density="compact"
+        nav
+    >
+        <v-list-item
+            prepend-icon="mdi-home"
+            title="Home"
+            to="/"
+        ></v-list-item>
+        <v-list-item
+            prepend-icon="mdi-weight-lifter"
+            title="Workouts"
+            to="/workouts"
+        ></v-list-item>
+        <v-list-item
+            prepend-icon="mdi-notebook"
+            title="Routines"
+            to="/routines"
+        ></v-list-item>
+        <v-list-item
+            prepend-icon="mdi-account-search"
+            title="Stats"
+            to="/stats"
+        ></v-list-item>
+        <v-list-item
+            prepend-icon="mdi-dumbbell"
+            title="Exercises"
+            to="/exercises"
+        ></v-list-item>
+    </v-list>
+</v-navigation-drawer>
+</template>

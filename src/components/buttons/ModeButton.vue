@@ -3,7 +3,7 @@
 	inset
 	color="info"
 	@click="modeStore.toggleDarkMode"
-	class="d-inline-flex  justify-center align-center">
+	class="d-inline-flex justify-center align-center">
 	<template v-slot:prepend>
 		<v-icon
 			icon="mdi-weather-sunny"

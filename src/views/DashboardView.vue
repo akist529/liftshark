@@ -1,5 +1,5 @@
 <template>
-<main
+<v-main
     ref="view"
 >
     <v-toolbar
@@ -100,8 +100,7 @@
             </v-col>
         </v-row>
     </v-container>
-    <MyFooter />
-</main>
+</v-main>
 </template>
 
 <script lang="ts">
@@ -119,7 +118,6 @@ import { useWindowStore } from '@/stores/windowStore';
 import RoutinePreview from '@/components/ui/DashboardView/RoutinePreview.vue';
 import WorkoutCard from '@/components/cards/WorkoutCard.vue';
 import LoginBanner from '@/components/banners/LoginBanner.vue';
-import MyFooter from '@/components/MyFooter.vue';
 // Third-party libraries
 import Cookies from 'js-cookie';
 
@@ -167,8 +165,7 @@ export default defineComponent({
     components: {
         RoutinePreview,
         WorkoutCard,
-        LoginBanner,
-        MyFooter
+        LoginBanner
     }
 });
 </script>

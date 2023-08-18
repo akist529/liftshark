@@ -1,7 +1,7 @@
 <template>
 <v-card
     class="mx-auto"
-    width="400"
+    :width="200"
 >
     <template
         v-slot:prepend
@@ -35,11 +35,12 @@
     <v-card-text>
         <v-table
             v-if="measurements.length"
+            class="flex text-center"
         >
             <tbody>
                 <tr>
-                    <th>DATE</th>
-                    <th>MEASUREMENT</th>
+                    <th class="flex text-center">DATE</th>
+                    <th class="flex text-center">MEASUREMENT</th>
                 </tr>
                 <tr
                     v-for="measurement in measurements"

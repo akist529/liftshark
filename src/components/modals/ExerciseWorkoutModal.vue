@@ -6,21 +6,32 @@
     class="ExerciseWorkoutModal w-100 h-100"
     :max-width="windowStore.width >= 600 ? '400px' : '100%'"
 >
-    <template v-slot:activator="{ props }">
-        <v-btn title="Add to Workout" v-bind="props">
+    <template
+        v-slot:activator="{ props }"
+    >
+        <v-btn
+            title="Add to Workout"
+            v-bind="props"
+        >
             <v-icon
                 icon="mdi-dumbbell"
                 size="xx-large"
             ></v-icon>
         </v-btn>
     </template>
-    <v-card class="d-flex justify-center align-center pa-2 rounded-lg bg-blue-grey-lighten-3 text-black">
-        <template v-slot:prepend>
+    <v-card
+        class="d-flex justify-center align-center pa-2 rounded-lg bg-blue-grey-lighten-3 text-black"
+    >
+        <template
+            v-slot:prepend
+        >
             <v-icon
                 icon="mdi-dumbbell"
             ></v-icon>
         </template>
-        <template v-slot:title>
+        <template
+            v-slot:title
+        >
             Add Exercise to Workout
         </template>
         <v-card-actions

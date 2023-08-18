@@ -1,10 +1,15 @@
 <template>
 <v-dialog scrollable persistent v-model="dialog" class="StatsModal w-100 h-100" :max-width="windowStore.width >= 600 ? '400px' : '100%'">
 	<template v-slot:activator="{ props }">
-		<AddButton
+		<v-btn
 			v-bind="props"
-			title="Add New Statistic"
-			:style="{position: 'fixed', bottom: 30 + 'px', right: 30 + 'px'}" />
+            title="Add New Statistic"
+        >
+            <v-icon
+                icon="mdi-plus"
+                size="xx-large"
+            ></v-icon>
+        </v-btn>
 	</template>
 	<v-card class="d-flex justify-center align-center pa-2 rounded-lg bg-blue-grey-lighten-3 text-black">
 		<v-card-title class="d-flex justify-center align-center w-100">
@@ -126,8 +131,7 @@ import { useExerciseStore } from '@/stores/exerciseStore';
 import { useSnackbarStore } from '@/stores/snackbarStore';
 import { useWindowStore } from '@/stores/windowStore';
 // Local components
-import CloseButton from '../buttons/CloseButton.vue';
-import AddButton from '../buttons/AddButton.vue';
+import CloseButton from '@/components/buttons/CloseButton.vue';
 // Type interfaces
 import { ExerciseData } from '@/types';
 
@@ -171,8 +175,7 @@ export default defineComponent({
         });
     },
     components: {
-        CloseButton,
-		AddButton
+        CloseButton
     },
 	methods: {
 		addStat (e: MouseEvent) {
