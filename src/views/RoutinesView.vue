@@ -1,12 +1,12 @@
 <template>
-<v-main>
+<v-main class="bg-blue-lighten-4">
 	<v-container
 		fluid
 		class="fill-height pa-0"
 	>
 		<v-row
 			no-gutters
-			class="ma-0 align-self-start"
+			class="ma-0 align-self-start w-100"
 		>
 			<v-col :cols="12">
 				<RoutineToolbar

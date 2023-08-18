@@ -17,20 +17,27 @@
         <v-tabs
             v-model="routineStore.activeDay"
             bg-color="primary"
-            class="w-100 bg-primary"
+            :class="windowStore.width < 992 ? 'w-100' : ''"
             align-tabs="center"
-            fixed-tabs
+            :fixed-tabs="windowStore.width < 992"
             show-arrows
             centered
-            :stacked="windowStore.width < 992"
         >
-            <RoutineTab
+            <v-tab
                 v-for="(day, index) in routineStore.weekdays"
                 :key="index"
-                :day="day"
-                :index="index"
-                :value="index" />
+                :value="index"
+            >
+                <i
+                    class="icon"
+                    :style="{backgroundImage: `url(/images/icons/${day.toLowerCase()}.webp)`}"
+                ></i>
+                <span v-if="windowStore.width >= 1110">{{ day }}</span>
+            </v-tab>
         </v-tabs>
+        <v-spacer
+            v-if="windowStore.width >= 992"
+        ></v-spacer>
         <v-toolbar-items>
             <RoutineModal
                 @showSnackBar="$emit('showSnackBar')"
@@ -45,7 +52,6 @@
 import { defineComponent } from 'vue';
 // Local components
 import RoutineModal from '../../components/modals/RoutineModal.vue';
-import RoutineTab from '../ui/RoutinesView/RoutineTab.vue';
 // Pinia stores
 import { useRoutineStore } from '@/stores/routineStore';
 import { useWindowStore } from '@/stores/windowStore';
@@ -58,8 +64,24 @@ export default defineComponent({
         });
     },
     components: {
-        RoutineModal,
-        RoutineTab
+        RoutineModal
     }
 })
 </script>
+
+<style scoped>
+.icon {
+    background-position: center;
+        background-size: contain;
+        background-repeat: no-repeat;
+    content: '';
+    width: 24px;
+    height: 24px;
+    display: inline-block;
+    filter: invert(1);
+}
+
+span {
+    display: inline-block;
+}
+</style>

@@ -30,7 +30,9 @@
                 <v-icon
                     icon="mdi-scale-bathroom"
                 ></v-icon>
-                <span v-if="windowStore.width >= 600">Weight</span>
+                <span
+                    v-if="windowStore.width >= 600"
+                >Weight</span>
             </v-tab>
             <v-tab
                 value="measurement"
@@ -38,7 +40,9 @@
                 <v-icon
                     icon="mdi-tape-measure"
                 ></v-icon>
-                <span v-if="windowStore.width >= 600">Measurements</span>
+                <span
+                    v-if="windowStore.width >= 600"
+                >Measurements</span>
             </v-tab>
             <v-tab
                 value="record"
@@ -46,10 +50,14 @@
                 <v-icon
                     icon="mdi-weight-lifter"
                 ></v-icon>
-                <span v-if="windowStore.width >= 600">Records</span>
+                <span
+                    v-if="windowStore.width >= 600"
+                >Records</span>
             </v-tab>
         </v-tabs>
-        <v-spacer v-if="windowStore.width >= 992"></v-spacer>
+        <v-spacer
+            v-if="windowStore.width >= 992"
+        ></v-spacer>
         <v-toolbar-items>
             <AddStatModal
                 @weight="$emit('weight')"
