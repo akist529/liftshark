@@ -17,9 +17,9 @@
         <v-tabs
             v-model="statStore.tab"
             bg-color="primary"
-            class="w-100 bg-primary"
+            :class="windowStore.width < 992 ? 'w-100' : ''"
             align-tabs="center"
-            fixed-tabs
+            :fixed-tabs="windowStore.width < 992"
             show-arrows
             centered
             :stacked="windowStore.width < 992"
@@ -49,6 +49,7 @@
                 <span v-if="windowStore.width >= 600">Records</span>
             </v-tab>
         </v-tabs>
+        <v-spacer v-if="windowStore.width >= 992"></v-spacer>
         <v-toolbar-items>
             <AddStatModal
                 @weight="$emit('weight')"
