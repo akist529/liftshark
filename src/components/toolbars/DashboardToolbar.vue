@@ -3,6 +3,7 @@
     class="px-5 py-1"
     color="primary"
     density="compact"
+    extended
 >
     <v-toolbar-title
         class="flex text-center"

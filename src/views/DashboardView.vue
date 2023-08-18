@@ -71,6 +71,11 @@
                 <h2>Nothing logged for today.</h2>
             </v-col>
         </v-row>
+        <v-row>
+            <v-col>
+                <MyFooter />
+            </v-col>
+        </v-row>
     </v-container>
 </v-main>
 </template>
@@ -91,6 +96,7 @@ import RoutinePreview from '@/components/ui/DashboardView/RoutinePreview.vue';
 import WorkoutCard from '@/components/cards/WorkoutCard.vue';
 import LoginBanner from '@/components/banners/LoginBanner.vue';
 import DashboardToolbar from '@/components/toolbars/DashboardToolbar.vue';
+import MyFooter from '@/components/MyFooter.vue';
 // Third-party libraries
 import Cookies from 'js-cookie';
 
@@ -131,7 +137,8 @@ export default defineComponent({
         RoutinePreview,
         WorkoutCard,
         LoginBanner,
-        DashboardToolbar
+        DashboardToolbar,
+        MyFooter
     }
 });
 </script>

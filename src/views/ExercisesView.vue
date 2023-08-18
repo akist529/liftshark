@@ -1,7 +1,5 @@
 <template>
-<v-main
-	ref="view"
->
+<v-main>
 	<ExercisesToolbar
 		:muscles="muscles"
 		:equipment="equipment"
@@ -61,6 +59,7 @@
 		:total-visible="7"
 		rounded="circle"
 	></v-pagination>
+	<MyFooter />
 </v-main>
 </template>
 
@@ -77,6 +76,7 @@ import ExerciseCard from '@/components/cards/ExerciseCard.vue';
 import LoadIcon from '@/components/LoadIcon.vue';
 import LoginBanner from '@/components/banners/LoginBanner.vue';
 import ExercisesToolbar from '@/components/toolbars/ExercisesToolbar.vue';
+import MyFooter from '@/components/MyFooter.vue';
 // Type interfaces
 import { ExerciseData, Muscle, Equipment } from '@/types/index';
 // Third-party libraries
@@ -129,7 +129,9 @@ export default defineComponent({
 			deep: true,
 			handler () {
 				this.exercises.refetch();
-				(this.$refs.view as HTMLDivElement).scrollTo({ top: 0, behavior: 'smooth' });
+				this.$nextTick(() => {
+					window.scrollTo({ top: 0, behavior: 'smooth' });
+				});
 			}
 		}
 	},
@@ -137,7 +139,8 @@ export default defineComponent({
 		ExerciseCard,
 		LoadIcon,
 		LoginBanner,
-		ExercisesToolbar
+		ExercisesToolbar,
+		MyFooter
 	},
 	computed: {
 		cols () {
