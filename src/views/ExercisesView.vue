@@ -1,5 +1,5 @@
 <template>
-<v-main>
+<v-main class="bg-blue-lighten-4">
 	<ExercisesToolbar
 		:muscles="muscles"
 		:equipment="equipment"

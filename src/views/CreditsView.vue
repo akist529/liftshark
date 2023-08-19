@@ -1,5 +1,5 @@
 <template>
-<v-main>
+<v-main class="bg-blue-lighten-4">
     <v-list density="compact">
         <v-list-subheader>Exercise data provided by wger</v-list-subheader>
         <v-list-subheader>Icons provided by:</v-list-subheader>
