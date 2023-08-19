@@ -1,7 +1,5 @@
 <template>
-<v-main
-	class="bg-grey-darken-4"
->
+<v-main class="bg-grey-darken-4">
 	<LoadIcon
 		v-if="!isLoaded && !isError"
 	/>
@@ -16,37 +14,13 @@
 		text="There is an issue communicating with the server. Please try again later."
 	></v-alert>
 	<header>
-		<v-toolbar
-			v-if="isLoaded && !isError && exercise.data && muscles.data && equipment.data"
-			class="bg-primary px-0 py-2"
-			density="compact"
-		>
-			<v-btn
-				variant="plain"
-				@click="$router.back()"
-				class="pa-0 ma-0 d-flex justify-center align-center"
-			>
-				<v-icon
-					icon="mdi-chevron-left"
-					size="xxx-large"
-				></v-icon>
-			</v-btn>
-			<v-toolbar-title
-				class="pa-0 ma-0"
-			>
-				<v-tooltip :text="exercise.data.name">
-					<template v-slot:activator="{ props }">
-						<span v-bind="props">{{ exercise.data.name }}</span>
-					</template>
-				</v-tooltip>
-			</v-toolbar-title>
-			<v-toolbar-items>
-				<ExerciseRoutineModal />
-				<ExerciseWorkoutModal />
-				<BookmarkButton
-					:id="exercise.data.id" />
-			</v-toolbar-items>
-		</v-toolbar>
+		<ExerciseToolbar
+			:exercise="exercise"
+			:muscles="muscles"
+			:equipment="equipment"
+			:isLoaded="isLoaded"
+			:isError="isError"
+		/>
 		<LoginBanner v-if="!token" />
 	</header>
 	<article
@@ -282,6 +256,7 @@ import LoadIcon from '@/components/LoadIcon.vue';
 import ExerciseRoutineModal from '@/components/modals/ExerciseRoutineModal.vue';
 import ExerciseWorkoutModal from '@/components/modals/ExerciseWorkoutModal.vue';
 import LoginBanner from '@/components/banners/LoginBanner.vue';
+import ExerciseToolbar from '@/components/toolbars/ExerciseToolbar.vue';
 // Third-party libraries
 import Cookies from 'js-cookie';
 // Pinia stores
@@ -418,7 +393,8 @@ export default defineComponent({
 		LoadIcon,
 		ExerciseRoutineModal,
 		LoginBanner,
-		ExerciseWorkoutModal
+		ExerciseWorkoutModal,
+		ExerciseToolbar
 	},
 	methods: {
 		getMuscleName (item: number) {
