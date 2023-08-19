@@ -1,36 +1,60 @@
 <template>
-<v-main
-    class="bg-blue-lighten-4"
->
-    <StatsToolbar
-        @weight="setPageShown('Weight')"
-        @measure="setPageShown('Measurements')"
-        @prs="setPageShown('PRs')"
-    />
-    <LoginBanner
-        v-if="!token"
-    />
-    <v-window
-        v-model="statStore.tab"
-        class="d-flex justify-center align-center pa-5"
+<v-main class="bg-blue-lighten-4">
+    <v-container
+        fluid
+		class="fill-height pa-0"
     >
-        <v-window-item
-            value="weight"
+        <v-row
+            no-gutters
+			class="ma-0 align-self-start w-100"
         >
-            <WeightCard />
-        </v-window-item>
-        <v-window-item
-            value="measurement"
+            <v-col :cols="12">
+                <StatsToolbar
+                    @weight="setPageShown('Weight')"
+                    @measure="setPageShown('Measurements')"
+                    @prs="setPageShown('PRs')"
+                />
+                <LoginBanner
+                    v-if="!token"
+                />
+            </v-col>
+        </v-row>
+        <v-row
+            no-gutters
+			class="w-100 ma-0 align-self-stretch"
         >
-            <MeasurementCard />
-        </v-window-item>
-        <v-window-item
-            value="record"
+            <v-col :cols="12">
+                <v-window
+                    v-model="statStore.tab"
+                    class="d-flex justify-center align-center pa-5"
+                >
+                    <v-window-item
+                        value="weight"
+                    >
+                        <WeightCard />
+                    </v-window-item>
+                    <v-window-item
+                        value="measurement"
+                    >
+                        <MeasurementCard />
+                    </v-window-item>
+                    <v-window-item
+                        value="record"
+                    >
+                        <PRCard />
+                    </v-window-item>
+                </v-window>
+            </v-col>
+        </v-row>
+        <v-row
+            no-gutters
+			class="ma-0 align-self-end"
         >
-            <PRCard />
-        </v-window-item>
-    </v-window>
-    <MyFooter />
+            <v-col :cols="12">
+                <MyFooter />
+            </v-col>
+        </v-row>
+    </v-container>
 </v-main>
 </template>
 

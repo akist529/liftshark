@@ -2,7 +2,6 @@
 <v-card
     v-if="isSuccess && data"
     class="mx-auto"
-    :width="200"
 >
     <template
         v-slot:prepend

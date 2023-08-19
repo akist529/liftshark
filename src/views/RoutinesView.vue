@@ -45,16 +45,11 @@
 								/>
 							</v-list-item>
 						</v-list>
-						<v-alert
+						<InfoAlert
 							v-else
-							:max-width="650"
-							border="start"
-							border-color="red-accent-1"
-							elevation="2"
-							type="info"
 							title="No Routines"
 							:text="`You have no routines for ${day}.`"
-						></v-alert>
+						/>
 					</v-window-item>
 				</v-window>
 			</v-col>
@@ -88,6 +83,7 @@ import WorkoutCard from '@/components/cards/WorkoutCard.vue';
 import LoginBanner from '@/components/banners/LoginBanner.vue';
 import RoutineToolbar from '@/components/toolbars/RoutineToolbar.vue';
 import MyFooter from '@/components/MyFooter.vue';
+import InfoAlert from '@/components/alerts/InfoAlert.vue';
 
 const getData = async (): Promise<ExerciseData> => {
 	return await fetch('https://wger.de/api/v2/exercise?limit=999&language=2')
@@ -132,7 +128,8 @@ export default defineComponent({
 		WorkoutCard,
 		LoginBanner,
 		RoutineToolbar,
-		MyFooter
+		MyFooter,
+		InfoAlert
 	},
 	async created () {
 		window.setInterval(this.updateUserToken, 100); // Routinely check if user signs in or out

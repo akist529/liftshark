@@ -1,12 +1,12 @@
 <template>
-<v-main>
+<v-main class="bg-blue-lighten-4">
 	<v-container
 		fluid
 		class="fill-height pa-0"
 	>
 		<v-row
 			no-gutters
-			class="ma-0 align-self-start"
+			class="ma-0 align-self-start w-100"
 		>
 			<v-col :cols="12">
 				<WorkoutToolbar />
@@ -19,9 +19,12 @@
 			no-gutters
 			class="w-100 ma-0 align-self-stretch"
 		>
-			<v-col :cols="12">
+			<v-col
+				:cols="12"
+				class="d-flex justify-center align-center w-100 pa-5"
+			>
 				<v-list
-					v-if="workoutStore.workouts.length"
+					v-if="workoutStore.activeWorkouts.length"
 					class="d-flex flex-wrap justify-center align-center"
 				>
 					<v-list-item
@@ -33,6 +36,11 @@
 							:preview="false" />
 					</v-list-item>
 				</v-list>
+				<InfoAlert
+					v-else
+					title="No Workouts"
+					text="You have no workouts on this date."
+				/>
 			</v-col>
 		</v-row>
 		<v-row
@@ -61,6 +69,7 @@ import WorkoutCard from '@/components/cards/WorkoutCard.vue';
 import LoginBanner from '@/components/banners/LoginBanner.vue';
 import WorkoutToolbar from '@/components/toolbars/WorkoutToolbar.vue';
 import MyFooter from '@/components/MyFooter.vue';
+import InfoAlert from '@/components/alerts/InfoAlert.vue';
 // Type interfaces
 import { Workout } from '@/types/index';
 
@@ -84,7 +93,8 @@ export default defineComponent({
 		WorkoutCard,
 		LoginBanner,
 		WorkoutToolbar,
-		MyFooter
+		MyFooter,
+		InfoAlert
 	},
 	methods: {
 		updateUserToken () {

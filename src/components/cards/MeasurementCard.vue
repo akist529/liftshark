@@ -1,7 +1,6 @@
 <template>
 <v-card
     class="mx-auto"
-    :width="200"
 >
     <template
         v-slot:prepend

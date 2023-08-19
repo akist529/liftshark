@@ -1,58 +1,77 @@
 <template>
-<v-main
-    ref="view"
->
-    <DashboardToolbar />
-    <LoginBanner
-        v-if="!token"
-    />
-    <v-card
-        v-if="workoutStore.activeWorkouts.length"
-        class="mx-auto bg-grey-darken-4"
-        elevation="8"
-        max-width="800"
-        :height="400"
+<v-main class="bg-blue-lighten-4">
+    <v-container
+        fluid
+		class="fill-height pa-0"
     >
-        <v-card-title
-            class="flex text-center"
+        <v-row
+            no-gutters
+			class="ma-0 align-self-start w-100"
         >
-            Today's Workouts
-            <v-icon
-                icon="mdi-weight-lifter"
-                size="large"
-            ></v-icon>
-        </v-card-title>
-        <v-card-text
-            class="mx-auto bg-grey-darken-4 d-flex justify-center align-start"
-            elevation="8"
-            max-width="800"
-            :height="400"
+            <v-col :cols="12">
+                <DashboardToolbar />
+                <LoginBanner
+                    v-if="!token"
+                />
+            </v-col>
+        </v-row>
+        <v-row
+            no-gutters
+			class="w-100 ma-0 align-self-stretch"
         >
-            <v-window
-                v-model="window"
-                show-arrows
-                :height="400"
-                class="d-flex justify-center align-start"
-            >
-                <v-window-item
-                    v-for="workout in workoutStore.activeWorkouts"
-                    :key="workout.id"
-                    class="mx-auto"
+            <v-col :cols="12">
+                <v-card
+                    v-if="workoutStore.activeWorkouts.length"
+                    class="mx-auto bg-grey-darken-4"
+                    elevation="8"
+                    max-width="800"
                     :height="400"
                 >
-                    <WorkoutCard
-                        class="overflow-y-auto"
-                        :workout="workout"
-                        :preview="true"
-                        :height="325"
-                    />
-                </v-window-item>
-            </v-window>
-        </v-card-text>
-    </v-card>
-    <v-container>
-        <v-row v-if="routineStore.activeDayRoutines.length">
-            <v-col>
+                    <v-card-title
+                        class="flex text-center"
+                    >
+                        Today's Workouts
+                        <v-icon
+                            icon="mdi-weight-lifter"
+                            size="large"
+                        ></v-icon>
+                    </v-card-title>
+                    <v-card-text
+                        class="mx-auto bg-grey-darken-4 d-flex justify-center align-start"
+                        elevation="8"
+                        max-width="800"
+                        :height="400"
+                    >
+                        <v-window
+                            v-model="window"
+                            show-arrows
+                            :height="400"
+                            class="d-flex justify-center align-start"
+                        >
+                            <v-window-item
+                                v-for="workout in workoutStore.activeWorkouts"
+                                :key="workout.id"
+                                class="mx-auto"
+                                :height="400"
+                            >
+                                <WorkoutCard
+                                    class="overflow-y-auto"
+                                    :workout="workout"
+                                    :preview="true"
+                                    :height="325"
+                                />
+                            </v-window-item>
+                        </v-window>
+                    </v-card-text>
+                </v-card>
+            </v-col>
+        </v-row>
+        <v-row
+            v-if="routineStore.activeDayRoutines.length"
+            no-gutters
+			class="w-100 ma-0 align-self-stretch"
+        >
+            <v-col :cols="12">
                 <v-list>
                     <v-list-subheader>Today's Routines</v-list-subheader>
                     <v-list-item
@@ -66,13 +85,20 @@
                 </v-list>
             </v-col>
         </v-row>
-        <v-row v-else>
-            <v-col>
+        <v-row
+            v-else
+            no-gutters
+			class="w-100 ma-0 align-self-stretch"
+        >
+            <v-col :cols="12">
                 <h2>Nothing logged for today.</h2>
             </v-col>
         </v-row>
-        <v-row>
-            <v-col>
+        <v-row
+            no-gutters
+			class="ma-0 align-self-end"
+        >
+            <v-col :cols="12">
                 <MyFooter />
             </v-col>
         </v-row>
