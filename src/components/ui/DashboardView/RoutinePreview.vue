@@ -1,18 +1,30 @@
 <template>
-<div v-if="routine" class="RoutinePreview">
-    <h3>{{ routine.attributes.name }}</h3>
-    <ul v-if="routine.attributes.entries">
-        <li v-for="entry in routine.attributes.entries" :key="entry.key">
-            <h4>{{ entry.name }}</h4>
-            <ul v-if="entry.sets">
-                <li v-for="set in entry.sets" :key="set.key">
-                    <span>{{ set.reps }} reps</span>
-                    <span>{{ set.weight }} lbs.</span>
-                </li>
-            </ul>
-        </li>
-    </ul>
-</div>
+<v-card v-if="routine">
+    <v-card-title>{{ routine.attributes.name }}</v-card-title>
+    <v-card-text>
+        <v-list v-if="routine.attributes.entries">
+            <v-list-item
+                v-for="entry in routine.attributes.entries"
+                :key="entry.key"
+            >
+                <v-card>
+                    <v-card-title>{{ entry.name }}</v-card-title>
+                    <v-card-text v-if="entry.sets">
+                        <v-list>
+                            <v-list-item
+                                v-for="set in entry.sets"
+                                :key="set.key"
+                            >
+                                <span>{{ set.reps }} reps</span>
+                                <span>{{ set.weight }} lbs.</span>
+                            </v-list-item>
+                        </v-list>
+                    </v-card-text>
+                </v-card>
+            </v-list-item>
+        </v-list>
+    </v-card-text>
+</v-card>
 </template>
 
 <script lang="ts">
@@ -30,11 +42,3 @@ export default defineComponent({
     }
 });
 </script>
-
-<style scoped lang="scss">
-.RoutinePreview {
-    background-color: rgb(152,152,152);
-    padding: 10px;
-    border: 2px solid rgb(0,0,0);
-}
-</style>

@@ -21,5 +21,5 @@ export default defineComponent({
     components: {
         LoginModal
     }
-})
+});
 </script>

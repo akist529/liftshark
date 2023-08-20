@@ -16,7 +16,7 @@
 			<h1>Log Statistic</h1>
 		</v-card-title>
 		<v-card-actions class="d-flex flex-wrap justify-center align-center w-100" :style="{gap: '10px'}">
-			<v-tabs v-model="statStore.tab" bg-color="primary">
+			<v-tabs v-model="tab" bg-color="primary">
 				<v-tab
 					value="weight"
 					prepend-icon="mdi-scale-bathroom"
@@ -40,7 +40,7 @@
 				@click="dialog = false" />
 		</v-card-actions>
 		<v-card-text v-if="isSuccess && data" class="d-flex justify-center align-center w-100">
-			<v-window v-model="statStore.tab">
+			<v-window v-model="tab">
 				<v-window-item value="weight">
 					<v-responsive
 						class="mx-auto"
@@ -171,7 +171,8 @@ export default defineComponent({
 			data,
 			refetch,
 			exercise,
-			record
+			record,
+			tab: 'weight'
         });
     },
     components: {

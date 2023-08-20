@@ -1,7 +1,7 @@
 <template>
 <v-card
 	class="d-flex flex-column justify-center align-center bg-blue-grey-darken-4"
-	max-width="400"
+	:width="300"
 >
 	<v-card-item
 		class="d-flex justify-center align-center w-100 text-white bg-primary"
@@ -26,7 +26,7 @@
 	<v-sheet
 		:height="200"
 		width="100%"
-		class="d-flex justify-center align-center bg-light-blue-lighten-4 pa-2"
+		class="d-flex justify-center align-center pa-2"
 	>
 		<v-img
 			v-if="images.data && images.data.results.length"

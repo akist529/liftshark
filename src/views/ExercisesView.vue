@@ -1,23 +1,44 @@
 <template>
 <v-main class="bg-blue-lighten-4">
-	<ExercisesToolbar
-		:muscles="muscles"
-		:equipment="equipment"
-	/>
-	<LoginBanner
-		v-if="!token"
-	/>
-	<v-pagination
-		v-if="exercises.isSuccess && exercises.data"
-		v-model="exerciseStore.page"
-		:length="Math.ceil(exercises.data.count / 20)"
-		rounded="circle"
-	></v-pagination>
-	<v-container>
+	<v-container
+		fluid
+		class="fill-height pa-0"
+	>
 		<v-row
-			v-if="error"
+			no-gutters
+			class="ma-0 align-self-start w-100"
 		>
-			<v-col>
+			<v-col :cols="12">
+				<ExercisesToolbar
+					:muscles="muscles"
+					:equipment="equipment"
+				/>
+				<LoginBanner
+					v-if="!token"
+				/>
+			</v-col>
+		</v-row>
+		<v-row
+			no-gutters
+			class="w-100 ma-0 align-self-stretch"
+		>
+			<v-col :cols="12">
+				<v-pagination
+					v-if="exercises.isSuccess && exercises.data"
+					v-model="exerciseStore.page"
+					:length="Math.ceil(exercises.data.count / 20)"
+					rounded="circle"
+				></v-pagination>
+			</v-col>
+		</v-row>
+		<v-row
+			no-gutters
+			class="w-100 ma-0 align-self-stretch"
+		>
+			<v-col
+				v-if="error"
+				:cols="12"
+			>
 				<v-alert
 					:max-width="650"
 					border="start"
@@ -28,21 +49,27 @@
 					text="There is an issue communicating with the server. Please try again later."
 				></v-alert>
 			</v-col>
-		</v-row>
-		<v-row
-			v-if="(exercises.isLoading || muscles.isLoading || equipment.isLoading) && !error"
-		>
-			<v-col>
+			<v-col
+				v-if="(exercises.isLoading || muscles.isLoading || equipment.isLoading) && !error"
+				:cols="12"
+			>
 				<LoadIcon />
 			</v-col>
 		</v-row>
 		<v-row
 			v-if="(exercises.isSuccess && exercises.data && muscles.isSuccess && muscles.data && equipment.isSuccess && equipment.data) && !error"
+			class="w-100 ma-0 align-self-stretch"
 		>
 			<v-col
 				v-for="exercise in exercises.data.results"
 				:key="exercise.id"
-				:cols="cols"
+				:xs="12"
+				:sm="6"
+				:md="4"
+				:lg="3"
+				:xl="3"
+				:xxl="3"
+				class="mx-auto d-flex justify-center align-center"
 			>
 				<ExerciseCard
 					:exercise="exercise"
@@ -51,15 +78,29 @@
 				/>
 			</v-col>
 		</v-row>
+		<v-row
+			no-gutters
+			class="w-100 ma-0 align-self-stretch"
+		>
+			<v-col :cols="12">
+				<v-pagination
+					v-if="exercises.isSuccess && exercises.data"
+					v-model="exerciseStore.page"
+					:length="Math.ceil(exercises.data.count / 20)"
+					:total-visible="7"
+					rounded="circle"
+				></v-pagination>
+			</v-col>
+		</v-row>
+		<v-row
+			no-gutters
+			class="ma-0 align-self-end"
+		>
+			<v-col :cols="12">
+				<MyFooter />
+			</v-col>
+		</v-row>
 	</v-container>
-	<v-pagination
-		v-if="exercises.isSuccess && exercises.data"
-		v-model="exerciseStore.page"
-		:length="Math.ceil(exercises.data.count / 20)"
-		:total-visible="7"
-		rounded="circle"
-	></v-pagination>
-	<MyFooter />
 </v-main>
 </template>
 
