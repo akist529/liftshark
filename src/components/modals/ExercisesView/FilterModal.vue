@@ -6,16 +6,26 @@
     class="w-100 h-100"
     :max-width="windowStore.width >= 600 ? '400px' : '100%'"
 >
-	<template v-slot:activator="{ props }">
-		<v-btn
-			v-bind="props"
-            title="Filter Exercises"
+	<template
+        v-slot:activator="{ props: dialog }"
+    >
+        <v-tooltip
+            text="Filter Exercises"
+            :open-delay="125"
         >
-            <v-icon
-                icon="mdi-filter"
-                size="xx-large"
-            ></v-icon>
-        </v-btn>
+            <template
+                v-slot:activator="{ props: tooltip }"
+            >
+                <v-btn
+                    v-bind="mergeProps(dialog, tooltip)"
+                >
+                    <v-icon
+                        icon="mdi-filter"
+                        size="xx-large"
+                    ></v-icon>
+                </v-btn>
+            </template>
+        </v-tooltip>
 	</template>
 	<v-card
         class="d-flex justify-center align-center pa-2 rounded-lg bg-blue-grey-lighten-3 text-black"
@@ -101,7 +111,7 @@
 
 <script lang="ts">
 // Vue imports
-import { defineComponent } from 'vue';
+import { defineComponent, mergeProps } from 'vue';
 // Pinia stores
 import { useWindowStore } from '../../../stores/windowStore';
 import { useExerciseStore } from '@/stores/exerciseStore';
@@ -137,7 +147,8 @@ export default defineComponent({
 			} else {
 				this.exerciseStore.filteredEquipment = item;
 			}
-		}
+		},
+        mergeProps
 	}
 });
 </script>

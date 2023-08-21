@@ -2,6 +2,7 @@
 <v-card
 	class="d-flex flex-column justify-center align-center bg-blue-grey-darken-4"
 	:width="300"
+	:style="{filter: 'drop-shadow(3px 3px 10px rgba(0,0,0,0.5))'}"
 >
 	<v-card-item
 		class="d-flex justify-center align-center w-100 text-white bg-primary"

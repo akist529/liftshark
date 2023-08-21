@@ -1,13 +1,22 @@
 <template>
-<v-btn
-    :title="isFavorited ? 'Remove from Favorites' : 'Add to Favorites'"
-    @click="isFavorited ? exerciseStore.removeFromFavorites(id) : exerciseStore.addToFavorites(id)">
-    <v-icon
-        :icon="isFavorited ? 'mdi-heart' : 'mdi-heart-plus'"
-        size="xx-large"
-        :color="isFavorited ? 'pink' : ''"
-    ></v-icon>
-</v-btn>
+<v-tooltip
+    :text="isFavorited ? 'Remove from Favorites' : 'Add to Favorites'"
+>
+    <template
+        v-slot:activator="{ props }"
+    >
+        <v-btn
+            v-bind="props"
+            :title="isFavorited ? 'Remove from Favorites' : 'Add to Favorites'"
+            @click="isFavorited ? exerciseStore.removeFromFavorites(id) : exerciseStore.addToFavorites(id)">
+            <v-icon
+                :icon="isFavorited ? 'mdi-heart' : 'mdi-heart-plus'"
+                size="xx-large"
+                :color="isFavorited ? 'pink' : ''"
+            ></v-icon>
+        </v-btn>
+    </template>
+</v-tooltip>
 </template>
 
 <script lang="ts">

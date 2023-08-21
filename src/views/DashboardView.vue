@@ -16,12 +16,12 @@
             </v-col>
         </v-row>
         <v-row
+            v-if="workoutStore.activeWorkouts.length"
             no-gutters
 			class="w-100 ma-0 align-self-stretch"
         >
             <v-col :cols="12">
                 <v-card
-                    v-if="workoutStore.activeWorkouts.length"
                     class="mx-auto bg-grey-darken-4"
                     elevation="8"
                     max-width="800"
@@ -90,8 +90,14 @@
             no-gutters
 			class="w-100 ma-0 align-self-stretch"
         >
-            <v-col :cols="12">
-                <h2>Nothing logged for today.</h2>
+            <v-col
+                :cols="12"
+                class="d-flex justify-center align-center"
+            >
+                <InfoAlert
+                    title="No Workouts or Routines"
+                    text="No workouts logged today or routines scheduled for today."
+                />
             </v-col>
         </v-row>
         <v-row
@@ -123,6 +129,7 @@ import WorkoutCard from '@/components/cards/WorkoutCard.vue';
 import LoginBanner from '@/components/banners/LoginBanner.vue';
 import DashboardToolbar from '@/components/toolbars/DashboardToolbar.vue';
 import MyFooter from '@/components/MyFooter.vue';
+import InfoAlert from '@/components/alerts/InfoAlert.vue';
 // Third-party libraries
 import Cookies from 'js-cookie';
 
@@ -164,7 +171,8 @@ export default defineComponent({
         WorkoutCard,
         LoginBanner,
         DashboardToolbar,
-        MyFooter
+        MyFooter,
+        InfoAlert
     }
 });
 </script>

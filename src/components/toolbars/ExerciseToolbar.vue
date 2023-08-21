@@ -12,16 +12,21 @@
         {{ exercise.data.name }}
     </v-toolbar-title>
     <template v-slot:extension>
-        <v-btn
-            variant="plain"
-            @click="$router.back()"
-            class="pa-0 ma-0 d-flex justify-center align-center"
-        >
-            <v-icon
-                icon="mdi-chevron-left"
-                size="xxx-large"
-            ></v-icon>
-        </v-btn>
+        <v-tooltip text="Back to Exercises">
+            <template v-slot:activator="{ props }">
+                <v-btn
+                    v-bind="props"
+                    variant="plain"
+                    @click="$router.back()"
+                    class="pa-0 ma-0 d-flex justify-center align-center"
+                >
+                    <v-icon
+                        icon="mdi-chevron-left"
+                        size="xxx-large"
+                    ></v-icon>
+                </v-btn>
+            </template>
+        </v-tooltip>
         <v-spacer></v-spacer>
         <v-toolbar-items>
             <ExerciseRoutineModal />

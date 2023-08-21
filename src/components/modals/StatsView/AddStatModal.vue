@@ -1,15 +1,25 @@
 <template>
 <v-dialog scrollable persistent v-model="dialog" class="StatsModal w-100 h-100" :max-width="windowStore.width >= 600 ? '400px' : '100%'">
-	<template v-slot:activator="{ props }">
-		<v-btn
-			v-bind="props"
-            title="Add New Statistic"
-        >
-            <v-icon
-                icon="mdi-plus"
-                size="xx-large"
-            ></v-icon>
-        </v-btn>
+	<template
+		v-slot:activator="{ props: dialog }"
+	>
+		<v-tooltip
+			text="Add New Stat"
+			:open-delay="125"
+		>
+			<template
+				v-slot:activator="{ props: tooltip }"
+			>
+				<v-btn
+					v-bind="mergeProps(dialog, tooltip)"
+				>
+					<v-icon
+						icon="mdi-plus"
+						size="xx-large"
+					></v-icon>
+				</v-btn>
+			</template>
+		</v-tooltip>
 	</template>
 	<v-card class="d-flex justify-center align-center pa-2 rounded-lg bg-blue-grey-lighten-3 text-black">
 		<v-card-title class="d-flex justify-center align-center w-100">
@@ -122,7 +132,7 @@
 
 <script lang="ts">
 // Vue imports
-import { defineComponent } from 'vue';
+import { defineComponent, mergeProps } from 'vue';
 // Vue Query imports
 import { useQuery } from 'vue-query';
 // Pinia stores
@@ -212,7 +222,8 @@ export default defineComponent({
 			if (!exercise) return;
 
 			this.statStore.addRecord(exercise.exercise_base, this.record);
-		}
+		},
+		mergeProps
 	}
 })
 </script>

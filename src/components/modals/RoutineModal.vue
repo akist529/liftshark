@@ -8,17 +8,25 @@
 	:max-width="windowStore.width >= 600 ? '400px' : '100%'"
 >
 	<template
-		v-slot:activator="{ props }"
+		v-slot:activator="{ props: dialog }"
 	>
-		<v-btn
-			title="Add New Routine"
-			v-bind="props"
+		<v-tooltip
+			text="Add New Routine"
+			:open-delay="125"
 		>
-            <v-icon
-                icon="mdi-plus"
-                size="xx-large"
-            ></v-icon>
-        </v-btn>
+			<template
+				v-slot:activator="{ props: tooltip }"
+			>
+				<v-btn
+					v-bind="mergeProps(dialog, tooltip)"
+				>
+					<v-icon
+						icon="mdi-plus"
+						size="xx-large"
+					></v-icon>
+				</v-btn>
+			</template>
+		</v-tooltip>
 	</template>
 	<v-card
 		v-if="exerciseQuery.isSuccess"
@@ -78,7 +86,7 @@
 
 <script lang="ts">
 // Vue imports
-import { defineComponent } from 'vue';
+import { defineComponent, mergeProps } from 'vue';
 // Vue Query imports
 import { useQuery } from 'vue-query';
 // Type interfaces
@@ -171,7 +179,8 @@ export default defineComponent({
 			this.snackbarStore.text = 'Routine successfully added';
 			this.snackbarStore.color = 'success';
 			this.snackbarStore.open = true;
-		}
+		},
+		mergeProps
 	}
 });
 </script>

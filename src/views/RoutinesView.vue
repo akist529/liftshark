@@ -24,12 +24,12 @@
 			<v-col :cols="12">
 				<v-window
 					v-model="routineStore.activeDay"
-					class="d-flex justify-center align-center w-100 pa-5"
 				>
 					<v-window-item
 						v-for="(day, index) in routineStore.weekdays"
 						:key="index"
 						:value="index"
+						class="mx-auto pa-2"
 					>
 						<v-list
 							v-if="routineStore.getRoutinesByDay(day).length"

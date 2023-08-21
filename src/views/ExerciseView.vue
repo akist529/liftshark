@@ -36,209 +36,244 @@
 			<v-col
 				:cols="12"
 				class="pa-3 d-flex flex-wrap justify-center align-flex-start bg-blue-lighten-4"
-				:style="{gap: '10px'}"
+				:style="{gap: '20px'}"
 			>
 				<v-card
 					class="mx-auto"
 					width="400"
-					prepend-icon="mdi-weight-lifter"
 				>
-					<template v-slot:title>
-						Muscles
-					</template>
-					<v-list
-						density="compact"
-						class="bg-transparent d-flex flex-wrap justify-center align-center"
-						disabled
+					<v-card-title
+						class="bg-primary"
 					>
-						<v-list-subheader>Primary Muscles</v-list-subheader>
-						<v-sheet
-							:width="300"
+						<v-icon
+							icon="mdi-arm-flex"
+							size="xx-large"
+							class="mx-5"
+						></v-icon>
+						Muscles
+					</v-card-title>
+					<v-card-text class="pa-2">
+						<v-list
+							density="compact"
+							class="bg-transparent d-flex flex-wrap justify-center align-center"
+							disabled
+						>
+							<v-list-subheader>Primary Muscles</v-list-subheader>
+							<v-sheet
+								:width="300"
+								class="bg-transparent d-flex flex-wrap justify-center align-center"
+							>
+								<v-list-item
+									v-for="(muscle, i) in exercise.data.muscles"
+									:key="i"
+									:value="getMuscleName(muscle)"
+									color="primary"
+								>
+									<template
+										v-slot:prepend
+									>
+										<span
+											:style="getIcon('muscles', getSlug(getMuscleName(muscle)))"
+										></span>
+									</template>
+									<v-list-item-title
+										v-text="getMuscleName(muscle)"
+									></v-list-item-title>
+								</v-list-item>
+								<v-list-item
+									v-if="!exercise.data.muscles.length"
+									color="primary"
+									disabled
+								>
+									<v-list-item-title>None</v-list-item-title>
+								</v-list-item>
+							</v-sheet>
+						</v-list>
+						<v-list
+							density="compact"
+							class="bg-transparent d-flex flex-wrap justify-center align-center"
+							disabled
+						>
+							<v-list-subheader>Secondary Muscles</v-list-subheader>
+							<v-sheet :width="300" class="bg-transparent d-flex flex-wrap justify-center align-center">
+								<v-list-item
+									v-for="(muscle, i) in exercise.data.muscles_secondary"
+									:key="i"
+									:value="getMuscleName(muscle)"
+									color="primary"
+								>
+									<template
+										v-slot:prepend
+									>
+										<span
+											:style="getIcon('muscles', getSlug(getMuscleName(muscle)))"
+										></span>
+									</template>
+									<v-list-item-title
+										v-text="getMuscleName(muscle)"
+									></v-list-item-title>
+								</v-list-item>
+								<v-list-item
+									v-if="!exercise.data.muscles_secondary.length"
+									color="primary"
+									disabled
+								>
+									<v-list-item-title>None</v-list-item-title>
+								</v-list-item>
+							</v-sheet>
+						</v-list>
+					</v-card-text>
+				</v-card>
+				<v-card
+					class="mx-auto"
+					width="400"
+				>
+					<v-card-title
+						class="bg-primary"
+					>
+						<v-icon
+							icon="mdi-dumbbell"
+							size="xx-large"
+							class="mx-5"
+						></v-icon>
+						Equipment
+					</v-card-title>
+					<v-card-text class="pa-2">
+						<v-list
+							density="compact"
+							class="bg-transparent d-flex flex-wrap justify-center align-center"
+							disabled
+						>
+							<v-sheet :width="300" class="bg-transparent d-flex flex-wrap justify-center align-center">
+								<v-list-item
+									v-for="(item, i) in exercise.data.equipment"
+									:key="i"
+									:value="getEquipmentName(item)"
+									color="primary"
+								>
+									<template
+										v-slot:prepend
+									>
+										<span
+											:style="getIcon('equipment', getSlug(getEquipmentName(item)))"
+										></span>
+									</template>
+									<v-list-item-title
+										v-text="getEquipmentName(item)"
+									></v-list-item-title>
+								</v-list-item>
+								<v-list-item
+									v-if="!exercise.data.equipment.length"
+									color="primary"
+									disabled
+								>
+									<v-list-item-title>None</v-list-item-title>
+								</v-list-item>
+							</v-sheet>
+						</v-list>
+					</v-card-text>
+				</v-card>
+				<v-card
+					class="mx-auto"
+					width="400"
+				>
+					<v-card-title
+						class="bg-primary"
+					>
+						<v-icon
+							icon="mdi-information"
+							size="xx-large"
+							class="mx-5"
+						></v-icon>
+						Description
+					</v-card-title>
+					<v-card-text
+						class="pa-2"
+						:innerHTML="exercise.data.description || '<span>None</span>'"
+					></v-card-text>
+				</v-card>
+				<v-card
+					class="mx-auto"
+					width="400"
+				>
+					<v-card-title
+						class="bg-primary"
+					>
+						<v-icon
+							icon="mdi-image-area"
+							size="xx-large"
+							class="mx-5"
+						></v-icon>
+						Images
+					</v-card-title>
+					<v-card-text class="pa-2">
+						<v-list
+							v-if="images.data"
 							class="bg-transparent d-flex flex-wrap justify-center align-center"
 						>
 							<v-list-item
-								v-for="(muscle, i) in exercise.data.muscles"
-								:key="i"
-								:value="getMuscleName(muscle)"
-								color="primary"
+								v-for="image in images.data.results"
+								:key="image.id"
 							>
-								<template
-									v-slot:prepend
-								>
-									<span
-										:style="getIcon('muscles', getSlug(getMuscleName(muscle)))"
-									></span>
-								</template>
-								<v-list-item-title
-									v-text="getMuscleName(muscle)"
-								></v-list-item-title>
+								<figure>
+									<v-img
+										alt="Exercise Example"
+										:src="image.image"
+										:max-width="250"
+									></v-img>
+									<figcaption>Example of {{ exercise.data.name }}</figcaption>
+								</figure>
 							</v-list-item>
 							<v-list-item
-								v-if="!exercise.data.muscles.length"
-								color="primary"
-								disabled
+								v-if="!images.data.results.length"
 							>
-								<v-list-item-title>None</v-list-item-title>
+								<span>No Image Available</span>
 							</v-list-item>
-						</v-sheet>
-					</v-list>
-					<v-list
-						density="compact"
-						class="bg-transparent d-flex flex-wrap justify-center align-center"
-						disabled
+						</v-list>
+					</v-card-text>
+				</v-card>
+				<v-card
+					class="mx-auto"
+					width="400"
+				>
+					<v-card-title
+						class="bg-primary"
 					>
-						<v-list-subheader>Secondary Muscles</v-list-subheader>
-						<v-sheet :width="300" class="bg-transparent d-flex flex-wrap justify-center align-center">
-							<v-list-item
-								v-for="(muscle, i) in exercise.data.muscles_secondary"
-								:key="i"
-								:value="getMuscleName(muscle)"
-								color="primary"
-							>
-								<template
-									v-slot:prepend
-								>
-									<span
-										:style="getIcon('muscles', getSlug(getMuscleName(muscle)))"
-									></span>
-								</template>
-								<v-list-item-title
-									v-text="getMuscleName(muscle)"
-								></v-list-item-title>
-							</v-list-item>
-							<v-list-item
-								v-if="!exercise.data.muscles_secondary.length"
-								color="primary"
-								disabled
-							>
-								<v-list-item-title>None</v-list-item-title>
-							</v-list-item>
-						</v-sheet>
-					</v-list>
-				</v-card>
-				<v-card
-					class="mx-auto"
-					width="400"
-					prepend-icon="mdi-dumbbell"
-				>
-					<template v-slot:title>
-						Equipment
-					</template>
-					<v-list
-						density="compact"
-						class="bg-transparent d-flex flex-wrap justify-center align-center"
-						disabled
-					>
-						<v-sheet :width="300" class="bg-transparent d-flex flex-wrap justify-center align-center">
-							<v-list-item
-								v-for="(item, i) in exercise.data.equipment"
-								:key="i"
-								:value="getEquipmentName(item)"
-								color="primary"
-							>
-								<template
-									v-slot:prepend
-								>
-									<span
-										:style="getIcon('equipment', getSlug(getEquipmentName(item)))"
-									></span>
-								</template>
-								<v-list-item-title
-									v-text="getEquipmentName(item)"
-								></v-list-item-title>
-							</v-list-item>
-							<v-list-item
-								v-if="!exercise.data.equipment.length"
-								color="primary"
-								disabled
-							>
-								<v-list-item-title>None</v-list-item-title>
-							</v-list-item>
-						</v-sheet>
-					</v-list>
-				</v-card>
-				<v-card
-					class="mx-auto"
-					width="400"
-					prepend-icon="mdi-information"
-				>
-					<template v-slot:title>
-						Description
-					</template>
-					<v-card-text
-						class="pa-3"
-						:innerHTML="exercise.data.description"
-					></v-card-text>
-					<v-card-text
-						v-if="!exercise.data.description"
-					>None</v-card-text>
-				</v-card>
-				<v-card
-					class="mx-auto"
-					width="400"
-					prepend-icon="mdi-image-area"
-				>
-					<template v-slot:title>
-						Images
-					</template>
-					<v-list
-						v-if="images.data"
-						class="bg-transparent d-flex flex-wrap justify-center align-center"
-					>
-						<v-list-item
-							v-for="image in images.data.results"
-							:key="image.id"
-						>
-							<figure>
-								<v-img
-									alt="Exercise Example"
-									:src="image.image"
-									:max-width="250"
-								></v-img>
-								<figcaption>Example of {{ exercise.data.name }}</figcaption>
-							</figure>
-						</v-list-item>
-						<v-list-item
-							v-if="!images.data.results.length"
-						>
-							<span>No Image Available</span>
-						</v-list-item>
-					</v-list>
-				</v-card>
-				<v-card
-					class="mx-auto"
-					width="400"
-					prepend-icon="mdi-weight-lifter"
-				>
-					<template v-slot:title>
+						<v-icon
+							icon="mdi-medal"
+							size="xx-large"
+							class="mx-5"
+						></v-icon>
 						Workout History
-					</template>
-					<v-table v-if="records.length">
-						<thead>
-							<tr>
-								<th class="text-left">
-									Date
-								</th>
-								<th class="text-left">
-									Record (lbs)
-								</th>
-								<th class="text-left">
-									Record (reps)
-								</th>
-							</tr>
-						</thead>
-						<tbody>
-							<tr
-								v-for="record in records"
-								:key="record.id"
-							>
-								<td>{{ record.date }}</td>
-								<td>{{ record.weight }} lbs</td>
-								<td>{{ record.reps }} reps</td>
-							</tr>
-						</tbody>
-					</v-table>
-					<span v-else class="pa-3">No workout history for this exercise</span>
+					</v-card-title>
+					<v-card-text class="pa-2">
+						<v-table v-if="records.length">
+							<thead>
+								<tr>
+									<th class="text-left">
+										Date
+									</th>
+									<th class="text-left">
+										Record (lbs)
+									</th>
+									<th class="text-left">
+										Record (reps)
+									</th>
+								</tr>
+							</thead>
+							<tbody>
+								<tr
+									v-for="record in records"
+									:key="record.id"
+								>
+									<td>{{ record.date }}</td>
+									<td>{{ record.weight }} lbs</td>
+									<td>{{ record.reps }} reps</td>
+								</tr>
+							</tbody>
+						</v-table>
+						<span v-else class="pa-3">No workout history for this exercise</span>
+					</v-card-text>
 				</v-card>
 			</v-col>
 		</v-row>

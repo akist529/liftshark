@@ -1,5 +1,11 @@
 <template>
-<v-dialog scrollable persistent v-model="dialog" class="LoginModal w-100 h-100" max-width="400px">
+<v-dialog
+	scrollable
+	persistent
+	v-model="dialog"
+	class="LoginModal w-100 h-100"
+	max-width="400px"
+>
 	<template v-slot:activator="{ props }">
 		<v-btn
 			v-bind="props"
@@ -8,8 +14,12 @@
 			variant="tonal"
 		>Log In</v-btn>
 	</template>
-	<v-card class="d-flex justify-center align-center pa-3 rounded-lg bg-blue-grey-lighten-3 text-black w-100">
-		<v-card-title class="d-flex flex-column justify-center align-center w-75">
+	<v-card
+		class="d-flex justify-center align-center pa-3 rounded-lg bg-blue-grey-lighten-3 text-black w-100"
+	>
+		<v-card-title
+			class="d-flex flex-column justify-center align-center w-75"
+		>
 			<h1>Sign In</h1>
 		</v-card-title>
 		<v-card-actions>
@@ -28,8 +38,12 @@
 			<CloseButton
 				@click="dialog = false" />
 		</v-card-actions>
-		<v-card-text class="d-flex justify-center align-center w-100">
-			<v-form class="d-flex flex-column justify-center w-100">
+		<v-card-text
+			class="d-flex justify-center align-center w-100"
+		>
+			<v-form
+				class="d-flex flex-column justify-center w-100"
+			>
 				<v-text-field
 					v-if="!loggingIn"
 					variant="underlined"
@@ -51,7 +65,9 @@
 					label="E-Mail"
 					clearable
 				></v-text-field>
-				<v-container class="d-flex justify-center align-center pa-0">
+				<v-container
+					class="d-flex justify-center align-center pa-0"
+				>
 					<v-text-field
 						variant="underlined"
 						prepend-icon="mdi-lock"
@@ -83,11 +99,15 @@
 			<v-btn
 				id="submit"
 				@click="loggingIn ? loginUser() : registerUser()"
-				variant="flat"
+				variant="tonal"
+				class="bg-primary"
 			>{{ loggingIn ? 'Log In' : 'Sign Up' }}</v-btn>
 		</v-card-actions>
 		<v-card-text>
-			<strong v-if="error" id="errorMessage">{{ errorMessage }}</strong>
+			<strong
+				v-if="error"
+				id="errorMessage"
+			>{{ errorMessage }}</strong>
 		</v-card-text>
 	</v-card>
 </v-dialog>

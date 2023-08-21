@@ -1,18 +1,28 @@
 <template>
 <v-dialog scrollable persistent v-model="dialog" class="CalendarModal w-100 h-100" :max-width="windowStore.width >= 600 ? '400px' : '100%'">
-	<template v-slot:activator="{ props }">
-		<v-btn
-			v-bind="props"
-			:prepend-icon="dateIsToday ? 'mdi-calendar-today' : 'mdi-calendar'"
-			variant="plain"
-			title="Change Date">
-			<span v-if="dateIsToday">Today</span>
-			<div v-else>
-				<span>{{ workoutStore.months[workoutStore.date.getMonth()] }}</span>
-				<hr/>
-				<span>{{ workoutStore.dateVal }}</span>
-			</div>
-		</v-btn>
+	<template
+		v-slot:activator="{ props: dialog }"
+	>
+		<v-tooltip
+			text="Change Date"
+			:open-delay="500"
+		>
+			<template
+				v-slot:activator="{ props: tooltip }"
+			>
+				<v-btn
+					v-bind="mergeProps(dialog, tooltip)"
+					:prepend-icon="dateIsToday ? 'mdi-calendar-today' : 'mdi-calendar'"
+					variant="plain">
+					<span v-if="dateIsToday">Today</span>
+					<div v-else>
+						<span>{{ workoutStore.months[workoutStore.date.getMonth()] }}</span>
+						<hr/>
+						<span>{{ workoutStore.dateVal }}</span>
+					</div>
+				</v-btn>
+			</template>
+		</v-tooltip>
 	</template>
 	<v-card>
 		<v-card-actions>
@@ -34,7 +44,7 @@
 
 <script lang="ts">
 // Vue imports
-import { defineComponent } from 'vue';
+import { defineComponent, mergeProps } from 'vue';
 // Pinia stores
 import { useWorkoutStore } from '@/stores/workoutStore';
 import { useWindowStore } from '@/stores/windowStore';
@@ -78,7 +88,8 @@ export default defineComponent({
 			this.workoutStore.dateVal = this.workoutStore.date.getDate();
 			this.workoutStore.dateString = modelData.toLocaleDateString('en-CA').split('T')[0];
 			this.dialog = false;
-		}
+		},
+		mergeProps
 	}
 });
 </script>

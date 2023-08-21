@@ -17,34 +17,52 @@
         <v-toolbar-items
             class="w-100 d-flex justify-space-evenly align-center"
         >
-            <v-btn
-                v-if="windowStore.width >= 420"
-                class="d-flex justify-center align-center"
-                variant="plain"
-                @click="workoutStore.changeDateBack">
-                <template
-                    v-slot:prepend
-                >
-                    <v-icon
-                        icon="mdi-chevron-left"
-                        size="xxx-large"
-                    ></v-icon>
+            <v-tooltip
+                text="Change Date Back"
+                :open-delay="500"
+            >
+                <template v-slot:activator="{ props }">
+                    <v-btn
+                        v-bind="props"
+                        v-if="windowStore.width >= 420"
+                        class="d-flex justify-center align-center"
+                        variant="plain"
+                        @click="workoutStore.changeDateBack">
+                        <template
+                            v-slot:prepend
+                        >
+                            <v-icon
+                                icon="mdi-chevron-left"
+                                size="xxx-large"
+                            ></v-icon>
+                        </template>
+                        <span
+                            v-if="windowStore.width >= 600"
+                        >Back</span>
+                    </v-btn>
                 </template>
-                <span
-                    v-if="windowStore.width >= 600"
-                >Back</span>
-            </v-btn>
+            </v-tooltip>
             <CalendarModal />
-            <v-btn
-                v-if="windowStore.width >= 420"
-                class="d-flex justify-center align-center"
-                variant="plain"
-                @click="workoutStore.changeDateForward">
-                <span v-if="windowStore.width >= 600">Forward</span>
-                <template v-slot:append>
-                    <v-icon icon="mdi-chevron-right" size="xxx-large"></v-icon>
+            <v-tooltip
+                text="Change Date Forward"
+                :open-delay="500"
+            >
+                <template
+                    v-slot:activator="{ props }"
+                >
+                    <v-btn
+                        v-if="windowStore.width >= 420"
+                        v-bind="props"
+                        class="d-flex justify-center align-center"
+                        variant="plain"
+                        @click="workoutStore.changeDateForward">
+                        <span v-if="windowStore.width >= 600">Forward</span>
+                        <template v-slot:append>
+                            <v-icon icon="mdi-chevron-right" size="xxx-large"></v-icon>
+                        </template>
+                    </v-btn>
                 </template>
-            </v-btn>
+            </v-tooltip>
         </v-toolbar-items>
         <v-spacer></v-spacer>
         <v-toolbar-items>

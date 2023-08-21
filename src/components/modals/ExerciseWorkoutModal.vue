@@ -7,17 +7,24 @@
     :max-width="windowStore.width >= 600 ? '400px' : '100%'"
 >
     <template
-        v-slot:activator="{ props }"
+        v-slot:activator="{ props: dialog }"
     >
-        <v-btn
-            title="Add to Workout"
-            v-bind="props"
+        <v-tooltip
+            text="Add to Workout"
         >
-            <v-icon
-                icon="mdi-dumbbell"
-                size="xx-large"
-            ></v-icon>
-        </v-btn>
+            <template
+                v-slot:activator="{ props: tooltip }"
+            >
+                <v-btn
+                    v-bind="mergeProps(dialog, tooltip)"
+                >
+                    <v-icon
+                        icon="mdi-dumbbell"
+                        size="xx-large"
+                    ></v-icon>
+                </v-btn>
+            </template>
+        </v-tooltip>
     </template>
     <v-card
         class="d-flex justify-center align-center pa-2 rounded-lg bg-blue-grey-lighten-3 text-black"
@@ -66,7 +73,7 @@
 
 <script lang="ts">
 // Vue imports
-import { defineComponent } from 'vue';
+import { defineComponent, mergeProps } from 'vue';
 // Pinia imports
 import { useWorkoutStore } from '@/stores/workoutStore';
 import { useWindowStore } from '@/stores/windowStore';
@@ -89,7 +96,8 @@ export default defineComponent({
             return this.workoutStore.workouts.map(function (workout: WorkoutData) {
                 return workout.attributes.date;
             });
-        }
+        },
+        mergeProps
     },
     components: {
         CloseButton

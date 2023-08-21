@@ -3,7 +3,9 @@ import { defineComponent } from 'vue';
 export const getCorrectName = defineComponent({
     methods: {
         getCorrectName (name: string) {
-			const splitName = name.split(' ');
+			console.log(name);
+
+			const splitName = name.replaceAll('  ', ' ').split(' ');
 			const correctNameArray: string[] = [];
 
 			for (const word of splitName) {

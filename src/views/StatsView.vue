@@ -26,7 +26,6 @@
             <v-col :cols="12">
                 <v-window
                     v-model="statStore.tab"
-                    class="d-flex justify-center align-center pa-5"
                 >
                     <v-window-item
                         value="weight"
