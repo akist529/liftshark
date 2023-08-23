@@ -14,7 +14,7 @@
 					:equipment="equipment"
 				/>
 				<LoginBanner
-					v-if="!token"
+					v-if="!loginStore.token"
 				/>
 			</v-col>
 		</v-row>
@@ -112,6 +112,7 @@ import { useQuery } from 'vue-query';
 // Pinia stores
 import { useExerciseStore } from '@/stores/exerciseStore';
 import { useWindowStore } from '@/stores/windowStore';
+import { useLoginStore } from '@/stores/loginStore';
 // Local components
 import ExerciseCard from '@/components/cards/ExerciseCard.vue';
 import LoadIcon from '@/components/LoadIcon.vue';
@@ -120,8 +121,6 @@ import ExercisesToolbar from '@/components/toolbars/ExercisesToolbar.vue';
 import MyFooter from '@/components/MyFooter.vue';
 // Type interfaces
 import { ExerciseData, Muscle, Equipment } from '@/types/index';
-// Third-party libraries
-import Cookies from 'js-cookie';
 
 const getExerciseData = async (page: number, muscle: Muscle | null, equipment: Equipment | null): Promise<ExerciseData> => {
 	let url = `https://wger.de/api/v2/exercise/?language=2&limit=20&offset=${(page - 1) * 20}`;
@@ -150,19 +149,17 @@ const getData = async (url: string): Promise<any> => {
 export default defineComponent({
 	data () {
 		const exerciseStore = useExerciseStore();
-		const windowStore = useWindowStore();
-
 		const exercises = useQuery(['exercises', exerciseStore], () => getExerciseData(exerciseStore.page, exerciseStore.filteredMuscle, exerciseStore.filteredEquipment), { onError: (error) => console.log('ERROR', error) });
 		const muscles = useQuery('muscles', () => getData('https://wger.de/api/v2/muscle?limit=999'), { useErrorBoundary: true });
 		const equipment = useQuery('equipment', () => getData('https://wger.de/api/v2/equipment?limit=999'), { useErrorBoundary: true });
 
 		return ({
 			exerciseStore,
-			windowStore,
+			windowStore: useWindowStore(),
+			loginStore: useLoginStore(),
 			exercises,
 			muscles,
-			equipment,
-			token: Cookies.get('token')
+			equipment
 		});
 	},
 	watch: {

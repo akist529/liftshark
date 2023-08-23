@@ -11,7 +11,7 @@
             <v-col :cols="12">
                 <DashboardToolbar />
                 <LoginBanner
-                    v-if="!token"
+                    v-if="!loginStore.token"
                 />
             </v-col>
         </v-row>
@@ -123,6 +123,7 @@ import { ExerciseData } from '@/types/index';
 import { useRoutineStore } from '@/stores/routineStore';
 import { useWorkoutStore } from '@/stores/workoutStore';
 import { useWindowStore } from '@/stores/windowStore';
+import { useLoginStore } from '@/stores/loginStore';
 // Local components
 import RoutinePreview from '@/components/ui/DashboardView/RoutinePreview.vue';
 import WorkoutCard from '@/components/cards/WorkoutCard.vue';
@@ -130,8 +131,6 @@ import LoginBanner from '@/components/banners/LoginBanner.vue';
 import DashboardToolbar from '@/components/toolbars/DashboardToolbar.vue';
 import MyFooter from '@/components/MyFooter.vue';
 import InfoAlert from '@/components/alerts/InfoAlert.vue';
-// Third-party libraries
-import Cookies from 'js-cookie';
 
 const getData = async (): Promise<ExerciseData> => {
 	return await fetch('https://wger.de/api/v2/exercise?limit=999&language=2')
@@ -141,17 +140,14 @@ const getData = async (): Promise<ExerciseData> => {
 
 export default defineComponent({
     data () {
-        const routineStore = useRoutineStore();
-        const workoutStore = useWorkoutStore();
-        const windowStore = useWindowStore();
         const exercises = useQuery('exercises', () => getData());
 
         return ({
-            routineStore,
-            workoutStore,
-            windowStore,
+            routineStore: useRoutineStore(),
+            workoutStore: useWorkoutStore(),
+            windowStore: useWindowStore(),
+            loginStore: useLoginStore(),
             exercises,
-            token: Cookies.get('token'),
             window: 0
         });
     },

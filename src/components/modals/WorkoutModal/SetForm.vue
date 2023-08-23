@@ -1,5 +1,5 @@
 <template>
-<v-container class="SetForm w-50">
+<v-container>
     <v-row>
         <v-col class="d-flex justify-center align-center">
             <v-label>Set #{{ setCount }}</v-label>

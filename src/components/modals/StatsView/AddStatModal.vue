@@ -23,7 +23,11 @@
 	</template>
 	<v-card class="d-flex justify-center align-center pa-2 rounded-lg bg-blue-grey-lighten-3 text-black">
 		<v-card-title class="d-flex justify-center align-center w-100">
-			<h1>Log Statistic</h1>
+			<v-icon
+				icon="mdi-account-search"
+				class="mr-1"
+			></v-icon>
+			Log Statistic
 		</v-card-title>
 		<v-card-actions class="d-flex flex-wrap justify-center align-center w-100" :style="{gap: '10px'}">
 			<v-tabs v-model="tab" bg-color="primary">
@@ -119,11 +123,13 @@
 				@click="addStat"
 				variant="flat"
 				color="success"
+				prepend-icon="mdi-plus"
 			>Add</v-btn>
 			<v-btn
 				@click="dialog = false"
 				variant="flat"
 				color="error"
+				prepend-icon="mdi-close"
 			>Close</v-btn>
 		</v-card-actions>
 	</v-card>

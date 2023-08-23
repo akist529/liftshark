@@ -12,7 +12,12 @@
     >
         <ModeButton />
     </v-app-bar-nav-icon>
+    <v-spacer></v-spacer>
+    <LoginModal v-if="!loginStore.token" />
+    <LogoutModal v-else />
+    <v-spacer></v-spacer>
     <v-app-bar-title
+        v-if="windowStore.width >= 1460"
         class="flex text-center"
     >
         <v-icon
@@ -20,6 +25,7 @@
         ></v-icon>
         Gym Tracker
     </v-app-bar-title>
+    <v-spacer></v-spacer>
     <v-btn
         class="h-100 rounded-0"
         to="/"
@@ -63,10 +69,26 @@
 import { defineComponent } from 'vue';
 // Local components
 import ModeButton from '../buttons/ModeButton.vue';
+import LoginModal from '../modals/LoginModal.vue';
+import LogoutModal from '../modals/LogoutModal.vue';
+// Pinia stores
+import { useLoginStore } from '@/stores/loginStore';
+import { useWindowStore } from '@/stores/windowStore';
+// Third-party libraries
+import Cookies from 'js-cookie';
 
 export default defineComponent({
+    data () {
+        return ({
+            loginStore: useLoginStore(),
+            windowStore: useWindowStore(),
+            token: Cookies.get('token')
+        });
+    },
     components: {
-        ModeButton
+        ModeButton,
+        LoginModal,
+        LogoutModal
     }
 });
 </script>

@@ -3,51 +3,61 @@
     :value="count"
 >
     <v-card>
-        <v-card-title>
-            {{ name ? name : 'Exercise ' + count }}
-        </v-card-title>
         <v-card-actions>
-            <DeleteButton
-                @click="$emit('deleteExercise', $event)"
-            />
-        </v-card-actions>
-        <v-card-text
-            class="bg-blue-grey-darken-2 overflow-y-auto h-100"
-        >
-            <v-select
-                clearable
-                label="Exercise"
-                :id="`exercise-${count}-name`"
-                :name="`exercise-${count}-name`"
-                :placeholder="exercises[0].name"
-                :items="exercises.map(exercise => exercise.name)"
-                v-model="name"
-            ></v-select>
-            <v-row>
-                <v-slider
-                    v-model="setCount"
-                    :id="`exercise-${count}-setCount`"
-                    :name="`exercise-${count}-setCount`"
-                    :step="1"
-                    :min="1"
-                    :max="6"
-                    label="Sets"
-                    show-ticks="always"
-                    tick-size="6"
-                    :ticks="tickLabels"
-                    prepend-icon="mdi-weight-lifter">
-                </v-slider>
-            </v-row>
-            <v-container
-                class="d-flex flex-wrap justify-center align-center"
-            >
-                <SetForm v-for="set in setCount"
-                    :key="set"
-                    :exerciseCount="count"
-                    :setCount="set"
-                />
+            <v-container>
+                <v-row>
+                    <v-col :cols="10">
+                        <v-select
+                            label="Exercise"
+                            :id="`exercise-${count}-name`"
+                            :name="`exercise-${count}-name`"
+                            :placeholder="exercises[0].name"
+                            :items="exercises.map(exercise => exercise.name)"
+                            v-model="name"
+                        ></v-select>
+                    </v-col>
+                    <v-col
+                        :cols="2"
+                        class="d-flex justify-center align-center"
+                    >
+                        <DeleteButton
+                            @click="$emit('deleteExercise', $event)"
+                        />
+                    </v-col>
+                </v-row>
+                <v-row>
+                    <v-col :cols="12">
+                        <v-slider
+                            v-model="setCount"
+                            :id="`exercise-${count}-setCount`"
+                            :name="`exercise-${count}-setCount`"
+                            :step="1"
+                            :min="1"
+                            :max="6"
+                            label="Sets"
+                            show-ticks="always"
+                            tick-size="6"
+                            :ticks="tickLabels"
+                            prepend-icon="mdi-weight-lifter">
+                        </v-slider>
+                    </v-col>
+                </v-row>
+                <v-row
+                    class="d-flex flex-wrap justify-center align-center"
+                >
+                    <v-col
+                        :cols="4"
+                        v-for="set in setCount"
+                        :key="set"
+                    >
+                        <SetForm
+                            :exerciseCount="count"
+                            :setCount="set"
+                        />
+                    </v-col>
+                </v-row>
             </v-container>
-        </v-card-text>
+        </v-card-actions>
     </v-card>
 </v-window-item>
 </template>
@@ -76,12 +86,17 @@ export default defineComponent({
             5: '5',
             6: '6'
         });
+        const entry = ({
+            name: '',
+            sets: []
+        });
 
         return ({
             workoutStore,
             setCount,
             name,
-            tickLabels
+            tickLabels,
+            entry
         });
     },
     props: {

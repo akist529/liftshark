@@ -15,7 +15,7 @@
                     @prs="setPageShown('PRs')"
                 />
                 <LoginBanner
-                    v-if="!token"
+                    v-if="!loginStore.token"
                 />
             </v-col>
         </v-row>
@@ -63,6 +63,7 @@ import { defineComponent } from 'vue';
 // Pinia stores
 import { useStatStore } from '@/stores/statStore';
 import { useWindowStore } from '@/stores/windowStore';
+import { useLoginStore } from '@/stores/loginStore';
 // Local components
 import WeightCard from '@/components/cards/WeightCard.vue';
 import MeasurementCard from '@/components/cards/MeasurementCard.vue';
@@ -70,8 +71,6 @@ import PRCard from '@/components/cards/PRCard.vue';
 import LoginBanner from '@/components/banners/LoginBanner.vue';
 import StatsToolbar from '@/components/toolbars/StatsToolbar.vue';
 import MyFooter from '@/components/MyFooter.vue';
-// Third-party libraries
-import Cookies from 'js-cookie';
 
 export default defineComponent({
 	data () {
@@ -83,7 +82,7 @@ export default defineComponent({
 			pageShown,
             statStore: useStatStore(),
             windowStore: useWindowStore(),
-            token: Cookies.get('token')
+            loginStore: useLoginStore()
 		});
 	},
 	methods: {

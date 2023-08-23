@@ -16,7 +16,7 @@
 					:isLoaded="isLoaded"
 					:isError="isError"
 				/>
-				<LoginBanner v-if="!token" />
+				<LoginBanner v-if="!loginStore.token" />
 			</v-col>
 		</v-row>
 		<v-row
@@ -322,6 +322,7 @@ import MyFooter from '@/components/MyFooter.vue';
 import Cookies from 'js-cookie';
 // Pinia stores
 import { useWorkoutStore } from '@/stores/workoutStore';
+import { useLoginStore } from '@/stores/loginStore';
 
 const getData = async (url: string): Promise<any> => {
 	return await fetch(url)
@@ -445,8 +446,8 @@ export default defineComponent({
 			exerciseBase: 0,
 			error: true,
 			displayName,
-			token: Cookies.get('token'),
-			workoutStore: useWorkoutStore()
+			workoutStore: useWorkoutStore(),
+			loginStore: useLoginStore()
 		});
 	},
 	components: {

@@ -43,15 +43,35 @@
 				label="Name"
 				class="w-100"
 			></v-text-field>
-			<h2>{{ routineStore.weekdays[routineStore.activeDay] }}</h2>
 		</v-card-title>
-		<v-card-actions>
-			<v-btn
-				class="btn-add-exercise"
-				@click="entryCount++">
-				Add Exercise
-				<v-icon icon="mdi-dumbbell"></v-icon>
-			</v-btn>
+		<v-card-actions class="w-100 d-flex justify-center align-center">
+			<v-tabs
+				bg-color="primary"
+				show-arrows
+				fixed-tabs
+				centered
+				density="compact"
+			>
+				<v-tab
+					v-for="entry in entryCount"
+					:key="entry"
+					:value="entry"
+				>{{ entry }}</v-tab>
+			</v-tabs>
+			<v-tooltip text="Add Exercise" :open-delay="125">
+				<template v-slot:activator="{ props }">
+					<v-btn
+						v-bind="props"
+						class="bg-primary rounded-0"
+						@click="entryCount++"
+					>
+						<v-icon
+							icon="mdi-plus"
+							size="xx-large"
+						></v-icon>
+					</v-btn>
+				</template>
+			</v-tooltip>
 			<CloseButton
 				@click="dialog = false" />
 		</v-card-actions>
@@ -61,24 +81,26 @@
 			<v-form
 				class="w-100"
 			>
-				<v-carousel
-					class="rounded-lg w-100 h-100"
-					show-arrows="hover"
-					progress="primary"
-				>
-					<ExerciseForm
+				<v-window>
+					<v-window-item
 						v-for="exercise in entryCount"
 						:key="exercise"
-						:exercises="exerciseQuery.data.results"
-						:count="exercise"
-						@deleteExercise="deleteExercise($event)" />
-				</v-carousel>
+					>
+						<ExerciseForm
+							:exercises="exerciseQuery.data.results"
+							:count="exercise"
+							@deleteExercise="deleteExercise($event)"
+						/>
+					</v-window-item>
+				</v-window>
 			</v-form>
 		</v-card-text>
 		<v-card-actions>
-			<AddButton
-				title="Add Routine"
-				@click="addRoutine" />
+			<v-btn
+				@click="addRoutine"
+				prepend-icon="mdi-notebook"
+				class="bg-primary"
+			>Add Routine</v-btn>
 		</v-card-actions>
 	</v-card>
 </v-dialog>
@@ -98,7 +120,6 @@ import { useSnackbarStore } from '@/stores/snackbarStore';
 // Local components
 import CloseButton from '../buttons/CloseButton.vue';
 import ExerciseForm from './WorkoutModal/ExerciseForm.vue';
-import AddButton from '../buttons/AddButton.vue';
 
 const getData = async (): Promise<ExerciseData> => {
 	return await fetch('https://wger.de/api/v2/exercise?limit=999&language=2')
@@ -128,8 +149,7 @@ export default defineComponent({
     },
     components: {
         CloseButton,
-		ExerciseForm,
-		AddButton
+		ExerciseForm
     },
 	methods: {
 		deleteExercise (e: MouseEvent) {
@@ -173,7 +193,6 @@ export default defineComponent({
 				routine.entries.push(entry);
 			}
 
-			console.log(routine);
 			this.routineStore.addRoutine(routine);
 			this.dialog = false;
 			this.snackbarStore.text = 'Routine successfully added';

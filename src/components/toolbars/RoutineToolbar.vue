@@ -39,9 +39,7 @@
             v-if="windowStore.width >= 992"
         ></v-spacer>
         <v-toolbar-items>
-            <RoutineModal
-                @showSnackBar="$emit('showSnackBar')"
-            />
+            <RoutineModal />
         </v-toolbar-items>
     </template>
 </v-toolbar>

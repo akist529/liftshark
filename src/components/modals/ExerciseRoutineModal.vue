@@ -49,11 +49,13 @@
                 @click="routineStore.updateRoutine(routine)"
                 variant="flat"
                 color="success"
+                prepend-icon="mdi-check"
             >Add to Routine</v-btn>
             <v-btn
                 @click="dialog = false"
                 variant="flat"
                 color="error"
+                prepend-icon="mdi-close"
             >Close</v-btn>
             <CloseButton
 				@click="dialog = false" />

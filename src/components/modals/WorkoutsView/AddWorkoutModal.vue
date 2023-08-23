@@ -33,28 +33,36 @@
 		prepend-icon="mdi-dumbbell"
 	>
 		<template v-slot:title>
-			<span>New Workout</span><br/>
-			<span>{{ workoutStore.days[workoutStore.date.getDay()] }}, {{ workoutStore.months[workoutStore.date.getMonth()] }} {{ workoutStore.date.getDate() }}, {{ workoutStore.date.getFullYear() }}</span>
+			<span class="text-uppercase">{{ workoutStore.days[workoutStore.date.getDay()] }}, {{ workoutStore.months[workoutStore.date.getMonth()] }} {{ workoutStore.date.getDate() }}, {{ workoutStore.date.getFullYear() }}</span>
 		</template>
-		<v-card-actions>
+		<v-card-actions class="w-100 d-flex justify-center align-center">
 			<v-tabs
-				v-model="entryCount"
 				bg-color="primary"
-				class="w-100"
 				show-arrows
 				fixed-tabs
 				centered
+				density="compact"
 			>
 				<v-tab
 					v-for="entry in entryCount"
 					:key="entry"
 					:value="entry"
 				>{{ entry }}</v-tab>
-				<v-tab
-					@click="entryCount++"
-					prepend-icon="mdi-dumbbell"
-				>Add Exercise</v-tab>
 			</v-tabs>
+			<v-tooltip text="Add Exercise" :open-delay="125">
+				<template v-slot:activator="{ props }">
+					<v-btn
+						v-bind="props"
+						class="bg-primary rounded-0"
+						@click="entryCount++"
+					>
+						<v-icon
+							icon="mdi-plus"
+							size="xx-large"
+						></v-icon>
+					</v-btn>
+				</template>
+			</v-tooltip>
 			<CloseButton
 				@click="dialog = false" />
 		</v-card-actions>
@@ -73,13 +81,11 @@
 		</v-card-text>
 		<v-card-actions>
 			<v-btn
-				title="Add New Workout"
 				@click="addWorkout"
+				class="bg-primary"
+				prepend-icon="mdi-plus"
 			>
-				<v-icon
-					icon="mdi-plus"
-					size="xx-large"
-				></v-icon>
+				Add Workout
 			</v-btn>
 		</v-card-actions>
 	</v-card>

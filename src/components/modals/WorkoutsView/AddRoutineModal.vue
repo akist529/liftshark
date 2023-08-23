@@ -30,14 +30,13 @@
 	<v-card
 		class="d-flex justify-center align-center pa-2 rounded-lg bg-blue-grey-lighten-3 text-black"
 	>
-        <template v-slot:prepend>
+		<v-card-title class="text-uppercase">
 			<v-icon
 				icon="mdi-notebook"
 				size="xx-large"
-				color="primary"
 			></v-icon>
-		</template>
-		<template v-slot:title>Add Routine as Workout</template>
+			Add Routine as Workout
+		</v-card-title>
 		<v-card-actions class="d-flex flex-column justify-center align-center">
 			<v-select
 				name="routine"
@@ -51,7 +50,8 @@
 			<v-btn
 				title="Log Routine as Workout"
 				@click="useRoutine"
-				append-icon="mdi-notebook"
+				prepend-icon="mdi-notebook"
+				class="bg-primary"
 			>Log Routine as Workout</v-btn>
 			<CloseButton
 				@click="dialog = false"
@@ -68,6 +68,7 @@ import { defineComponent, mergeProps } from 'vue';
 import { useWindowStore } from '../../../stores/windowStore';
 import { useRoutineStore } from '../../../stores/routineStore';
 import { useWorkoutStore } from '@/stores/workoutStore';
+import { useSnackbarStore } from '@/stores/snackbarStore';
 // Type interfaces
 import { Workout } from '../../../types/index';
 // Local components
@@ -79,6 +80,7 @@ export default defineComponent({
             windowStore: useWindowStore(),
             routineStore: useRoutineStore(),
 			workoutStore: useWorkoutStore(),
+			snackbarStore: useSnackbarStore(),
             dialog: false,
             routineName: ''
         });
@@ -95,6 +97,12 @@ export default defineComponent({
 
 				this.workoutStore.addWorkout(workout);
 			}
+
+			this.dialog = false;
+			this.snackbarStore.text = 'Successfully added routine as workout';
+			this.snackbarStore.color = 'success';
+			this.snackbarStore.icon = 'mdi-check-circle';
+			this.snackbarStore.toggleSnackbar();
 		},
 		mergeProps
     },

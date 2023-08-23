@@ -29,6 +29,12 @@
         </v-tooltip>
         <v-spacer></v-spacer>
         <v-toolbar-items>
+            <v-btn>
+                <v-icon
+                    icon="mdi-medal"
+                    size="xx-large"
+                ></v-icon>
+            </v-btn>
             <ExerciseRoutineModal />
             <ExerciseWorkoutModal />
             <BookmarkButton

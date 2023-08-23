@@ -11,7 +11,7 @@
 			<v-col :cols="12">
 				<WorkoutToolbar />
 				<LoginBanner
-					v-if="!token"
+					v-if="!loginStore.token"
 				/>
 			</v-col>
 		</v-row>
@@ -64,6 +64,7 @@ import Cookies from 'js-cookie';
 import { useWorkoutStore } from '@/stores/workoutStore';
 import { useRoutineStore } from '@/stores/routineStore';
 import { useWindowStore } from '@/stores/windowStore';
+import { useLoginStore } from '@/stores/loginStore';
 // Local components
 import WorkoutCard from '@/components/cards/WorkoutCard.vue';
 import LoginBanner from '@/components/banners/LoginBanner.vue';
@@ -75,18 +76,13 @@ import { Workout } from '@/types/index';
 
 export default defineComponent({
 	data () {
-		const workoutStore = useWorkoutStore();
-		const routineStore = useRoutineStore();
-		const windowStore = useWindowStore();
-
 		return ({
-			workoutStore,
-			routineStore,
-			windowStore,
-			months: workoutStore.months,
+			workoutStore: useWorkoutStore(),
+			routineStore: useRoutineStore(),
+			windowStore: useWindowStore(),
+			loginStore: useLoginStore(),
 			showSnackBar: false,
-			routineName: '',
-			token: Cookies.get('token')
+			routineName: ''
 		});
 	},
 	components: {
@@ -98,8 +94,8 @@ export default defineComponent({
 	},
 	methods: {
 		updateUserToken () {
-			if (this.token !== Cookies.get('token')) {
-				this.token = Cookies.get('token');
+			if (this.loginStore.token !== Cookies.get('token')) {
+				this.loginStore.token = Cookies.get('token');
 			}
 		},
 		routinesOfDay (day: string) {

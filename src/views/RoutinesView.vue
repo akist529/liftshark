@@ -9,11 +9,9 @@
 			class="ma-0 align-self-start w-100"
 		>
 			<v-col :cols="12">
-				<RoutineToolbar
-					@showSnackBar="showSnackBar = true"
-				/>
+				<RoutineToolbar />
 				<LoginBanner
-					v-if="!token"
+					v-if="!loginStore.token"
 				/>
 			</v-col>
 		</v-row>
@@ -74,10 +72,11 @@ import { useQuery } from 'vue-query';
 // Third-party libraries
 import Cookies from 'js-cookie';
 // Type interfaces
-import { ExerciseData, RoutineData } from '@/types/index';
+import { ExerciseData } from '@/types/index';
 // Pinia stores
 import { useRoutineStore } from '@/stores/routineStore';
 import { useWindowStore } from '@/stores/windowStore';
+import { useLoginStore } from '@/stores/loginStore';
 // Local components
 import WorkoutCard from '@/components/cards/WorkoutCard.vue';
 import LoginBanner from '@/components/banners/LoginBanner.vue';
@@ -93,23 +92,13 @@ const getData = async (): Promise<ExerciseData> => {
 
 export default defineComponent({
 	data () {
-		const routineStore = useRoutineStore();
-		const windowStore = useWindowStore();
-		const userToken = Cookies.get('token');
 		const exercises = useQuery('exercises', () => getData());
 
 		return ({
-			routineStore,
-			windowStore,
-			weekdays: routineStore.weekdays as string[],
-			routines: routineStore.routines as RoutineData[],
-			getRoutineData: routineStore.getRoutineData,
-			deleteRoutine: routineStore.deleteRoutine,
-			addRoutine: routineStore.addRoutine,
-			userToken,
-			exercises,
-			showSnackBar: false,
-			token: Cookies.get('token')
+			routineStore: useRoutineStore(),
+			windowStore: useWindowStore(),
+			loginStore: useLoginStore(),
+			exercises
 		});
 	},
 	watch: {
@@ -119,8 +108,8 @@ export default defineComponent({
 	},
 	methods: {
 		updateUserToken () {
-			if (this.userToken !== Cookies.get('token')) {
-				this.userToken = Cookies.get('token');
+			if (this.loginStore.token !== Cookies.get('token')) {
+				this.loginStore.token = Cookies.get('token');
 			}
 		}
 	},

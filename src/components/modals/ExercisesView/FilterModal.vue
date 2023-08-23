@@ -33,22 +33,24 @@
 		<v-card-title
             class="d-flex justify-center align-center w-100"
         >
+            <v-icon
+                icon="mdi-dumbbell"
+                class="mr-2"
+            ></v-icon>
 			Filter Exercises
 		</v-card-title>
         <v-card-actions>
-            <v-tabs v-model="mode">
+            <v-tabs v-model="mode" class="bg-primary">
                 <v-tab value="muscle">
                     <v-icon
                         icon="mdi-arm-flex"
                         size="xx-large"
-                        color="primary"
                     ></v-icon>
                 </v-tab>
                 <v-tab value="equipment">
                     <v-icon
                         icon="mdi-bench"
                         size="xx-large"
-                        color="primary"
                     ></v-icon>
                 </v-tab>
             </v-tabs>
@@ -103,6 +105,7 @@
 				@click="dialog = false"
 				variant="flat"
 				color="error"
+                prepend-icon="mdi-close"
 			>Close</v-btn>
 		</v-card-actions>
 	</v-card>
