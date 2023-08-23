@@ -240,14 +240,14 @@
 						class="bg-primary"
 					>
 						<v-icon
-							icon="mdi-medal"
+							icon="mdi-weight-lifter"
 							size="xx-large"
 							class="mx-5"
 						></v-icon>
 						Workout History
 					</v-card-title>
 					<v-card-text class="pa-2">
-						<v-table v-if="records.length">
+						<v-table v-if="workouts.length">
 							<thead>
 								<tr>
 									<th class="text-left">
@@ -263,16 +263,58 @@
 							</thead>
 							<tbody>
 								<tr
-									v-for="record in records"
-									:key="record.id"
+									v-for="workout in workouts"
+									:key="workout.id"
 								>
-									<td>{{ record.date }}</td>
-									<td>{{ record.weight }} lbs</td>
-									<td>{{ record.reps }} reps</td>
+									<td>{{ workout.date }}</td>
+									<td>{{ workout.weight }} lbs</td>
+									<td>{{ workout.reps }} reps</td>
 								</tr>
 							</tbody>
 						</v-table>
 						<span v-else class="pa-3">No workout history for this exercise</span>
+					</v-card-text>
+				</v-card>
+				<v-card
+					class="mx-auto"
+					:width="400"
+				>
+					<v-card-title
+						class="bg-primary"
+					>
+						<v-icon
+							icon="mdi-medal"
+							size="xx-large"
+							class="mx-5"
+						></v-icon>
+						1-Rep Max
+					</v-card-title>
+					<v-card-text class="pa-2">
+						<v-table v-if="statStore.records.length">
+							<thead>
+								<tr>
+									<th class="text-left">
+										Date
+									</th>
+									<th class="text-left">
+										Max (lbs)
+									</th>
+								</tr>
+							</thead>
+							<tbody>
+								<tr
+									v-for="record in statStore.records"
+									:key="record.id"
+								>
+									<td>{{ record.attributes.date }}</td>
+									<td>{{ record.attributes.max }} lbs</td>
+								</tr>
+							</tbody>
+						</v-table>
+						<span
+							v-else
+							class="pa-3"
+						>No 1-rep max logged for this exercise</span>
 					</v-card-text>
 				</v-card>
 			</v-col>
@@ -312,17 +354,16 @@ import { defineComponent } from 'vue';
 // Vue Query imports
 import { useQuery } from 'vue-query';
 // Type interfaces
-import { Muscle, Equipment, Category, Exercise } from '@/types/index';
+import { Muscle, Equipment, Category, Exercise, RecordData } from '@/types/index';
 // Local components
 import LoadIcon from '@/components/LoadIcon.vue';
 import LoginBanner from '@/components/banners/LoginBanner.vue';
 import ExerciseToolbar from '@/components/toolbars/ExerciseToolbar.vue';
 import MyFooter from '@/components/MyFooter.vue';
-// Third-party libraries
-import Cookies from 'js-cookie';
 // Pinia stores
 import { useWorkoutStore } from '@/stores/workoutStore';
 import { useLoginStore } from '@/stores/loginStore';
+import { useStatStore } from '@/stores/statStore';
 
 const getData = async (url: string): Promise<any> => {
 	return await fetch(url)
@@ -447,7 +488,8 @@ export default defineComponent({
 			error: true,
 			displayName,
 			workoutStore: useWorkoutStore(),
-			loginStore: useLoginStore()
+			loginStore: useLoginStore(),
+			statStore: useStatStore()
 		});
 	},
 	components: {
@@ -502,8 +544,8 @@ export default defineComponent({
 				return true;
 			} else return false;
 		},
-		records () {
-			const records: any[] = [];
+		workouts () {
+			const workouts: any[] = [];
 
 			for (const workout of this.workoutStore.workouts) {
 				for (const entry of workout.attributes.entries) {
@@ -512,7 +554,7 @@ export default defineComponent({
 							return b.weight - a.weight;
 						})
 
-						records.push({
+						workouts.push({
 							date: workout.attributes.date,
 							weight: sortedSets[0].weight,
 							reps: sortedSets[0].reps
@@ -521,7 +563,14 @@ export default defineComponent({
 				}
 			}
 
-			return records;
+			return workouts;
+		},
+		records (): RecordData[] {
+			if (this.exercise.data) {
+				return this.statStore.records.filter(record => record.attributes.exercise === this.exercise.data?.exercise_base);
+			} else {
+				return [];
+			}
 		}
 	},
 	watch: {

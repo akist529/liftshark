@@ -48,11 +48,11 @@
                 value="record"
             >
                 <v-icon
-                    icon="mdi-weight-lifter"
+                    icon="mdi-medal"
                 ></v-icon>
                 <span
                     v-if="windowStore.width >= 600"
-                >Records</span>
+                >1-Rep Max</span>
             </v-tab>
         </v-tabs>
         <v-spacer

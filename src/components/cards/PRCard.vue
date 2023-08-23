@@ -8,14 +8,14 @@
         v-slot:prepend
     >
         <v-icon
-            icon="mdi-weight-lifter"
+            icon="mdi-medal"
             size="xx-large"
             color="primary"
         ></v-icon>
     </template>
     <template
         v-slot:title
-    >PR Log</template>
+    >1-Rep Max</template>
     <v-card-actions>
         <v-select
             v-model="exercise"
@@ -32,7 +32,7 @@
             <tbody>
                 <tr>
                     <th class="flex text-center">DATE</th>
-                    <th class="flex text-center">PR (LBS.)</th>
+                    <th class="flex text-center">MAX (LBS.)</th>
                 </tr>
                 <tr
                     v-for="record in filteredRecords()"

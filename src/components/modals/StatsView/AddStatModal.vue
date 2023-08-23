@@ -45,10 +45,10 @@
 				>Measurements</v-tab>
 				<v-tab
 					value="record"
-					prepend-icon="mdi-weight-lifter"
+					prepend-icon="mdi-medal"
 					:stacked="windowStore.width < 600"
 					@click="$emit('prs')"
-				>PRs</v-tab>
+				>1-Rep Max</v-tab>
 			</v-tabs>
 			<CloseButton
 				@click="dialog = false" />
@@ -110,7 +110,7 @@
 							hide-details="auto"
 							density="compact"
 							type="number"
-							label="New Record (lbs)"
+							label="1-Rep Max (lbs)"
 							class="w-100"
 							append-icon="mdi-medal"
 						></v-text-field>
@@ -226,6 +226,15 @@ export default defineComponent({
 		addRecord () {
 			const exercise = this.data?.results.find(exercise => exercise.name === this.exercise);
 			if (!exercise) return;
+
+			const recordExists = this.statStore.records.find(record => {
+				if (record.attributes.date === this.statStore.date &&
+				record.attributes.exercise === exercise.exercise_base) {
+					return true;
+				} else return false;
+			});
+
+			if (recordExists) this.statStore.deleteRecord(recordExists.id);
 
 			this.statStore.addRecord(exercise.exercise_base, this.record);
 		},
