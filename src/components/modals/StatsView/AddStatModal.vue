@@ -1,5 +1,11 @@
 <template>
-<v-dialog scrollable persistent v-model="dialog" class="StatsModal w-100 h-100" :max-width="windowStore.width >= 600 ? '400px' : '100%'">
+<v-dialog
+	scrollable
+	persistent
+	v-model="dialog"
+	class="StatsModal w-100 h-100"
+	:max-width="windowStore.width >= 600 ? '400px' : '100%'"
+>
 	<template
 		v-slot:activator="{ props: dialog }"
 	>
@@ -221,6 +227,15 @@ export default defineComponent({
 			this.statStore.addWeight(this.weight);
 		},
 		addMeasurement () {
+			const recordExists = this.statStore.measurements.find(measurement => {
+				if (measurement.attributes.date === this.statStore.date &&
+				measurement.attributes.muscle === this.muscle) {
+					return true;
+				} else return false;
+			});
+
+			if (recordExists) this.statStore.deleteRecord(recordExists.id);
+
 			this.statStore.addMeasurement(this.muscle, this.measurement);
 		},
 		addRecord () {

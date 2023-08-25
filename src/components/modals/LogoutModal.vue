@@ -8,10 +8,19 @@
     <template v-slot:activator="{ props }">
         <v-btn
             v-bind="props"
-            append-icon="mdi-logout"
             class="bg-primary"
             variant="flat"
-        >Log Out</v-btn>
+            :style="{minWidth: 'auto', padding: '0 8px'}"
+        >
+            <span
+                v-if="(windowStore.width > 470 && windowStore.width <= 992) || windowStore.width >= 1100"
+				class="mr-1"
+			>Log Out</span>
+			<v-icon
+				icon="mdi-logout"
+				size="large"
+			></v-icon>
+        </v-btn>
     </template>
     <v-card
 		class="rounded-lg bg-blue-grey-lighten-3"
@@ -44,12 +53,14 @@ import CloseButton from '../buttons/CloseButton.vue';
 // Pinia stores
 import { useLoginStore } from '@/stores/loginStore';
 import { useSnackbarStore } from '@/stores/snackbarStore';
+import { useWindowStore } from '@/stores/windowStore';
 
 export default defineComponent({
     data () {
         return ({
             loginStore: useLoginStore(),
             snackbarStore: useSnackbarStore(),
+            windowStore: useWindowStore(),
             dialog: false
         });
     },

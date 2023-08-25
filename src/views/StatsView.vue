@@ -21,7 +21,7 @@
         </v-row>
         <v-row
             no-gutters
-			class="w-100 ma-0 align-self-stretch"
+			class="w-100 ma-0 pa-5 align-self-stretch"
         >
             <v-col :cols="12">
                 <v-window

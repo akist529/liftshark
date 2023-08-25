@@ -11,43 +11,43 @@ import CreditsView from '@/views/CreditsView.vue';
 const routes: Array<RouteRecordRaw> = [
 	{
 		path: '/',
-		name: 'Dashboard - Gym Tracker',
+		name: 'Dashboard - Lift Shark',
 		component: DashboardView
 	},
 	{
 		path: '/workouts',
-		name: 'Workouts - Gym Tracker',
+		name: 'Workouts - Lift Shark',
 		component: WorkoutsView
 	},
 	{
 		path: '/routines',
-		name: 'Routines - Gym Tracker',
+		name: 'Routines - Lift Shark',
 		component: RoutinesView
 	},
 	{
 		path: '/stats',
-		name: 'Stats - Gym Tracker',
+		name: 'Stats - Lift Shark',
 		component: StatsView
 	},
 	{
 		path: '/exercises',
-		name: 'Exercise List - Gym Tracker',
+		name: 'Exercise List - Lift Shark',
 		component: ExercisesView
 	},
 	{
 		path: '/exercise/:id',
-		name: 'Exercise - Gym Tracker',
+		name: 'Exercise - Lift Shark',
 		component: ExerciseView,
 		props: true
 	},
 	{
 		path: '/credits',
-		name: 'Credits - Gym Tracker',
+		name: 'Credits - Lift Shark',
 		component: CreditsView
 	},
 	{
 		path: '/:catchAll(.*)*',
-		name: '404 - Page Not Found - Gym Tracker',
+		name: '404 - Page Not Found - Lift Shark',
 		component: PageErrorView
 	}
 ];

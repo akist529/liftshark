@@ -10,20 +10,20 @@
         height="auto"
         variant="plain"
     >
-        <ModeButton />
+        <ModeSlider />
     </v-app-bar-nav-icon>
     <v-spacer></v-spacer>
     <LoginModal v-if="!loginStore.token" />
     <LogoutModal v-else />
     <v-spacer></v-spacer>
     <v-app-bar-title
-        v-if="windowStore.width >= 1460"
-        class="flex text-center"
+        class="text-h4 text-uppercase"
     >
-        <v-icon
-            icon="mdi-dumbbell"
-        ></v-icon>
-        Gym Tracker
+        <span>Lift</span>
+        <span
+            class="shark-icon"
+        ></span>
+        <span>Shark</span>
     </v-app-bar-title>
     <v-spacer></v-spacer>
     <v-btn
@@ -68,7 +68,7 @@
 // Vue imports
 import { defineComponent } from 'vue';
 // Local components
-import ModeButton from '../buttons/ModeButton.vue';
+import ModeSlider from '../buttons/ModeButton/ModeSlider.vue';
 import LoginModal from '../modals/LoginModal.vue';
 import LogoutModal from '../modals/LogoutModal.vue';
 // Pinia stores
@@ -86,9 +86,29 @@ export default defineComponent({
         });
     },
     components: {
-        ModeButton,
+        ModeSlider,
         LoginModal,
         LogoutModal
     }
 });
 </script>
+
+<style scoped>
+.v-toolbar-title {
+    min-width: auto;
+    margin-left: 16px;
+    margin-right: 16px;
+}
+
+.shark-icon {
+    background-image: url('/public/shark.webp');
+    background-repeat: no-repeat;
+    background-size: contain;
+    background-position: center;
+    width: 32px;
+    height: 32px;
+    content: '';
+    display: inline-flex;
+    filter: invert(1);
+}
+</style>

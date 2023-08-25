@@ -8,12 +8,14 @@
 		<v-icon
 			icon="mdi-weather-sunny"
 			:color="modeStore.darkMode ? 'white' : 'orange'"
+			:style="{marginRight: '-8px'}"
 		></v-icon>
 	</template>
 	<template v-slot:append>
 		<v-icon
 			icon="mdi-moon-waning-crescent"
 			:color="modeStore.darkMode ? 'info' : 'white'"
+			:style="{marginLeft: '-8px'}"
 		></v-icon>
 	</template>
 </v-switch>

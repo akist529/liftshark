@@ -8,10 +8,19 @@
 	<template v-slot:activator="{ props }">
 		<v-btn
 			v-bind="props"
-			append-icon="mdi-login"
 			class="bg-primary"
 			variant="flat"
-		>Log In</v-btn>
+			:style="{minWidth: 'auto', padding: '0 8px'}"
+		>
+			<span
+				v-if="(windowStore.width > 470 && windowStore.width <= 992) || windowStore.width >= 1100"
+				class="mr-1"
+			>Log In</span>
+			<v-icon
+				icon="mdi-login"
+				size="large"
+			></v-icon>
+		</v-btn>
 	</template>
 	<v-card
 		class="rounded-lg bg-blue-grey-lighten-3"
