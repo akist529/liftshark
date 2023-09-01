@@ -1,7 +1,7 @@
 <template>
 <v-toolbar
     class="px-5 py-1"
-    color="primary"
+    :color="modeStore.darkMode ? 'blue-grey-darken-4' : 'blue-lighten-3'"
     density="compact"
     extended
 >
@@ -36,11 +36,13 @@
 <script lang="ts">
 // Vue imports
 import { defineComponent } from 'vue';
+// Pinia stores
+import { useModeStore } from '@/stores/modeStore';
 
 export default defineComponent({
     data () {
         return ({
-
+            modeStore: useModeStore()
         });
     },
     computed: {
@@ -53,9 +55,5 @@ export default defineComponent({
             return hour >= 12 && hour < 17;
         }
     }
-})
+});
 </script>
-
-<style scoped lang="scss">
-
-</style>

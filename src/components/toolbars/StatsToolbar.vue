@@ -1,7 +1,7 @@
 <template>
 <v-toolbar
     class="px-5 py-1"
-    color="primary"
+    :color="modeStore.darkMode ? 'blue-grey-darken-4' : 'blue-lighten-3'"
     density="compact"
     extended
 >
@@ -78,12 +78,14 @@ import AddStatModal from '../modals/StatsView/AddStatModal.vue';
 // Pinia stores
 import { useWindowStore } from '@/stores/windowStore';
 import { useStatStore } from '@/stores/statStore';
+import { useModeStore } from '@/stores/modeStore';
 
 export default defineComponent({
     data () {
         return ({
             windowStore: useWindowStore(),
-            statStore: useStatStore()
+            statStore: useStatStore(),
+            modeStore: useModeStore()
         });
     },
     components: {

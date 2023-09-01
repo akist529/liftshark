@@ -1,7 +1,7 @@
 <template>
 <v-toolbar
     class="px-5 py-1"
-    color="primary"
+    :color="modeStore.darkMode ? 'blue-grey-darken-4' : 'blue-lighten-3'"
     density="compact"
     extended
 >
@@ -87,12 +87,14 @@ import CalendarModal from '../modals/CalendarModal.vue';
 // Pinia stores
 import { useWorkoutStore } from '@/stores/workoutStore';
 import { useWindowStore } from '@/stores/windowStore';
+import { useModeStore } from '@/stores/modeStore';
 
 export default defineComponent({
     data () {
         return ({
             workoutStore: useWorkoutStore(),
-            windowStore: useWindowStore()
+            windowStore: useWindowStore(),
+            modeStore: useModeStore()
         });
     },
     components: {

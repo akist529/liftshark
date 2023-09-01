@@ -1,83 +1,79 @@
 <template>
-<v-window-item
-    :value="count"
+<v-container
+    class="bg-blue-grey-darken-4 pa-2 rounded-lg"
 >
-    <v-card>
-        <v-card-actions>
-            <v-container>
-                <v-row>
-                    <v-col :cols="10">
-                        <v-select
-                            label="Exercise"
-                            :id="`exercise-${count}-name`"
-                            :name="`exercise-${count}-name`"
-                            :placeholder="exercises[0].name"
-                            :items="exercises.map(exercise => exercise.name)"
-                            v-model="name"
-                        ></v-select>
-                    </v-col>
-                    <v-col
-                        :cols="2"
-                        class="d-flex justify-center align-center"
-                    >
-                        <DeleteButton
-                            @click="$emit('deleteExercise', $event)"
-                        />
-                    </v-col>
-                </v-row>
-                <v-row>
-                    <v-col :cols="12">
-                        <v-slider
-                            v-model="setCount"
-                            :id="`exercise-${count}-setCount`"
-                            :name="`exercise-${count}-setCount`"
-                            :step="1"
-                            :min="1"
-                            :max="6"
-                            label="Sets"
-                            show-ticks="always"
-                            tick-size="6"
-                            :ticks="tickLabels"
-                            prepend-icon="mdi-weight-lifter">
-                        </v-slider>
-                    </v-col>
-                </v-row>
-                <v-row
-                    class="d-flex flex-wrap justify-center align-center"
-                >
-                    <v-col
-                        :cols="4"
-                        v-for="set in setCount"
-                        :key="set"
-                    >
-                        <SetForm
-                            :exerciseCount="count"
-                            :setCount="set"
-                        />
-                    </v-col>
-                </v-row>
-            </v-container>
-        </v-card-actions>
-    </v-card>
-</v-window-item>
+    <v-row>
+        <v-col :cols="10" class="ma-0 pa-0">
+            <v-select
+                label="Exercise"
+                :items="exercises.map(exercise => exercise.name)"
+                :v-model="modal === 'workout' ? workoutStore.entries[entry.key].name : routineStore.entries[entry.key].name"
+            ></v-select>
+        </v-col>
+        <v-col
+            :cols="2"
+            class="my-0 pa-0"
+        >
+            <v-tooltip text="Delete Exercise">
+                <template v-slot:activator="{ props }">
+                    <DeleteButton
+                        v-bind="props"
+                        @click="modal === 'workout' ? workoutStore.deleteEntry(entry) : routineStore.deleteEntry(entry)"
+                    />
+                </template>
+            </v-tooltip>
+        </v-col>
+    </v-row>
+    <v-row>
+        <v-col :cols="12" class="ma-0 pa-0">
+            <v-slider
+                :step="1"
+                :min="1"
+                :max="6"
+                label="Sets"
+                show-ticks="always"
+                tick-size="6"
+                :ticks="tickLabels"
+                prepend-icon="mdi-weight-lifter"
+                :modelValue="sets"
+                @update:modelValue="newValue => updateSetCount(sets, newValue)"
+            ></v-slider>
+        </v-col>
+    </v-row>
+    <v-row
+        v-for="set in entry.sets"
+        :key="set.key"
+        class="d-flex flex-wrap justify-center align-center"
+    >
+        <v-col
+            :cols="12"
+            class="my-0 py-0"
+        >
+            <SetForm
+                :entry="entry"
+                :set="set"
+                :modal="modal"
+            />
+        </v-col>
+    </v-row>
+</v-container>
 </template>
 
 <script lang="ts">
 // Vue imports
 import { defineComponent, PropType } from 'vue';
 // Type interfaces
-import { Exercise } from '@/types/index';
+import { Exercise, Entry } from '@/types/index';
 // Pinia stores
 import { useWorkoutStore } from '@/stores/workoutStore';
+import { useRoutineStore } from '@/stores/routineStore';
+import { useModeStore } from '@/stores/modeStore';
 // Local components
 import SetForm from '@/components/modals/WorkoutModal/SetForm.vue';
 import DeleteButton from '@/components/buttons/DeleteButton.vue';
 
 export default defineComponent({
     data () {
-        const workoutStore = useWorkoutStore();
-        const setCount = 1;
-        const name = '';
         const tickLabels = ({
             1: '1',
             2: '2',
@@ -86,17 +82,13 @@ export default defineComponent({
             5: '5',
             6: '6'
         });
-        const entry = ({
-            name: '',
-            sets: []
-        });
 
         return ({
-            workoutStore,
-            setCount,
-            name,
-            tickLabels,
-            entry
+            workoutStore: useWorkoutStore(),
+            routineStore: useRoutineStore(),
+            modeStore: useModeStore(),
+            sets: 1,
+            tickLabels
         });
     },
     props: {
@@ -104,14 +96,47 @@ export default defineComponent({
             type: Array as PropType<Exercise[]>,
             required: true
         },
-        count: {
-            type: Number as PropType<number>,
+        entry: {
+            type: Object as PropType<Entry>,
+            required: true
+        },
+        modal: {
+            type: String as PropType<string>,
             required: true
         }
     },
     components: {
         SetForm,
         DeleteButton
+    },
+    methods: {
+        updateSetCount (oldCount: number, newCount: number) {
+            if (this.sets > newCount) {
+                if (this.modal === 'workout') {
+                    this.workoutStore.entries[this.entry.key].sets.slice(0, newCount);
+                } else {
+                    this.routineStore.entries[this.entry.key].sets.slice(0, newCount);
+                }
+            } else {
+                for (let i = this.sets; i < newCount; i++) {
+                    if (this.modal === 'workout') {
+                        this.workoutStore.entries[this.entry.key].sets.push({
+                            key: i,
+                            reps: 1,
+                            weight: 0
+                        });
+                    } else {
+                        this.routineStore.entries[this.entry.key].sets.push({
+                            key: i,
+                            reps: 1,
+                            weight: 0
+                        });
+                    }
+                }
+            }
+
+            this.sets = newCount;
+        }
     }
 })
 </script>

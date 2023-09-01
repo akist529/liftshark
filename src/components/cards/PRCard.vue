@@ -1,7 +1,7 @@
 <template>
 <v-card
     v-if="isSuccess && data"
-    class="mx-auto"
+    :class="modeStore.darkMode ? 'bg-blue-grey-darken-3 mx-auto' : 'bg-blue-grey-lighten-3 mx-auto'"
     :width="300"
 >
     <template
@@ -10,7 +10,6 @@
         <v-icon
             icon="mdi-medal"
             size="xx-large"
-            color="primary"
         ></v-icon>
     </template>
     <template
@@ -27,7 +26,7 @@
     <v-card-text>
         <v-table
             v-if="filteredRecords()?.length"
-            class="flex text-center"
+            :class="modeStore.darkMode ? 'bg-blue-grey-darken-4 text-white text-center mt-3' : 'bg-blue-grey-lighten-4 text-black text-center mt-3'"
         >
             <tbody>
                 <tr>
@@ -43,16 +42,12 @@
                 </tr>
             </tbody>
         </v-table>
-        <v-alert
+        <InfoAlert
             v-else
-            class="mt-3"
-            :max-width="650"
-            border="start"
-            border-color="red-accent-1"
-            elevation="2"
-            type="info"
             title="No Records"
-        ></v-alert>
+            text=""
+            class="mt-3"
+        />
     </v-card-text>
 </v-card>
 </template>
@@ -64,8 +59,11 @@ import { defineComponent } from 'vue';
 import { useQuery } from 'vue-query';
 // Pinia stores
 import { useStatStore } from '@/stores/statStore';
+import { useModeStore } from '@/stores/modeStore';
 // Type interfaces
 import { ExerciseData } from '@/types/index';
+// Local components
+import InfoAlert from '../alerts/InfoAlert.vue';
 
 const getData = async (url: string): Promise<ExerciseData> => {
 	return await fetch(url)
@@ -75,13 +73,12 @@ const getData = async (url: string): Promise<ExerciseData> => {
 
 export default defineComponent({
     data () {
-        const statStore = useStatStore();
-        const exercise = '';
 		const { error, isError, isLoading, isFetching, isSuccess, data, refetch } = useQuery('exercises', () => getData('https://wger.de/api/v2/exercise/?language=2&limit=999'));
 
         return ({
-            statStore,
-            exercise,
+            statStore: useStatStore(),
+            modeStore: useModeStore(),
+            exercise: '',
             error,
             isError,
             isLoading,
@@ -98,6 +95,9 @@ export default defineComponent({
 
             return this.statStore.records.filter(record => record.attributes.exercise === exercise.exercise_base);
         }
+    },
+    components: {
+        InfoAlert
     }
 });
 </script>

@@ -3,6 +3,7 @@
     <v-list density="compact">
         <v-list-subheader>Exercise data provided by wger</v-list-subheader>
         <v-list-subheader>Icons provided by:</v-list-subheader>
+        <span>Shark icons by Ehtisham Abid & PLANBSTUDIO @ FlatIcon</span>
         <v-list-item color="primary">Freepik, Flaticon</v-list-item>
         <v-list-item color="primary">muh zakaria, Flaticon</v-list-item>
         <v-list-item color="primary">nawicon, Flaticon</v-list-item>

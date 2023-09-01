@@ -1,5 +1,7 @@
 <template>
-<v-main class="bg-blue-lighten-4">
+<v-main
+	:class="modeStore.darkMode ? 'bg-grey-darken-4' : 'bg-blue-lighten-4'"
+>
 	<v-container
 		fluid
 		class="fill-height pa-0"
@@ -16,8 +18,7 @@
 			</v-col>
 		</v-row>
 		<v-row
-			no-gutters
-			class="w-100 ma-0 align-self-stretch"
+			class="content w-100 ma-0 align-self-stretch"
 		>
 			<v-col :cols="12">
 				<v-window
@@ -31,7 +32,7 @@
 					>
 						<v-list
 							v-if="routineStore.getRoutinesByDay(day).length"
-							class="d-flex flex-wrap justify-center align-center"
+							class="d-flex flex-wrap justify-center align-center bg-transparent"
 						>
 							<v-list-item
 								v-for="routine in routineStore.getRoutinesByDay(day)"
@@ -77,6 +78,7 @@ import { ExerciseData } from '@/types/index';
 import { useRoutineStore } from '@/stores/routineStore';
 import { useWindowStore } from '@/stores/windowStore';
 import { useLoginStore } from '@/stores/loginStore';
+import { useModeStore } from '@/stores/modeStore';
 // Local components
 import WorkoutCard from '@/components/cards/WorkoutCard.vue';
 import LoginBanner from '@/components/banners/LoginBanner.vue';
@@ -98,6 +100,7 @@ export default defineComponent({
 			routineStore: useRoutineStore(),
 			windowStore: useWindowStore(),
 			loginStore: useLoginStore(),
+			modeStore: useModeStore(),
 			exercises
 		});
 	},
@@ -125,3 +128,19 @@ export default defineComponent({
 	}
 });
 </script>
+
+<style scoped>
+.content {
+	background-image: url('/public/images/ui/shark-bg.webp');
+    background-size: 80%;
+    background-repeat: no-repeat;
+    background-position: center;
+    background-attachment: scroll;
+}
+
+@media only screen and (min-width: 600px) {
+	.content {
+		background-size: contain;
+	}
+}
+</style>

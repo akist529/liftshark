@@ -1,5 +1,7 @@
 <template>
-<v-main class="bg-blue-lighten-4">
+<v-main
+	:class="modeStore.darkMode ? 'bg-grey-darken-4' : 'bg-blue-lighten-4'"
+>
 	<v-container
 		fluid
 		class="fill-height pa-0"
@@ -35,7 +37,7 @@
 		>
 			<v-col
 				:cols="12"
-				class="pa-3 d-flex flex-wrap justify-center align-flex-start bg-blue-lighten-4"
+				class="content pa-3 d-flex flex-wrap justify-center align-flex-start"
 				:style="{gap: '20px'}"
 			>
 				<v-card
@@ -43,7 +45,7 @@
 					width="400"
 				>
 					<v-card-title
-						class="bg-primary"
+						:class="modeStore.darkMode ? 'bg-blue-grey-darken-3' : 'bg-blue-lighten-2'"
 					>
 						<v-icon
 							icon="mdi-arm-flex"
@@ -52,7 +54,9 @@
 						></v-icon>
 						Muscles
 					</v-card-title>
-					<v-card-text class="pa-2">
+					<v-card-text
+						:class="modeStore.darkMode ? 'bg-blue-grey-darken-1 pa-2 h-100' : 'bg-blue-lighten-3 pa-2 h-100'"
+					>
 						<v-list
 							density="compact"
 							class="bg-transparent d-flex flex-wrap justify-center align-center"
@@ -129,7 +133,7 @@
 					width="400"
 				>
 					<v-card-title
-						class="bg-primary"
+						:class="modeStore.darkMode ? 'bg-blue-grey-darken-3' : 'bg-blue-lighten-2'"
 					>
 						<v-icon
 							icon="mdi-dumbbell"
@@ -138,7 +142,9 @@
 						></v-icon>
 						Equipment
 					</v-card-title>
-					<v-card-text class="pa-2">
+					<v-card-text
+						:class="modeStore.darkMode ? 'bg-blue-grey-darken-1 pa-2 h-100' : 'bg-blue-lighten-3 pa-2 h-100'"
+					>
 						<v-list
 							density="compact"
 							class="bg-transparent d-flex flex-wrap justify-center align-center"
@@ -178,7 +184,7 @@
 					width="400"
 				>
 					<v-card-title
-						class="bg-primary"
+						:class="modeStore.darkMode ? 'bg-blue-grey-darken-3' : 'bg-blue-lighten-2'"
 					>
 						<v-icon
 							icon="mdi-information"
@@ -188,7 +194,7 @@
 						Description
 					</v-card-title>
 					<v-card-text
-						class="pa-2"
+						:class="modeStore.darkMode ? 'bg-blue-grey-darken-1 pa-2 h-100' : 'bg-blue-lighten-3 pa-2 h-100'"
 						:innerHTML="exercise.data.description || '<span>None</span>'"
 					></v-card-text>
 				</v-card>
@@ -197,7 +203,7 @@
 					width="400"
 				>
 					<v-card-title
-						class="bg-primary"
+						:class="modeStore.darkMode ? 'bg-blue-grey-darken-3' : 'bg-blue-lighten-2'"
 					>
 						<v-icon
 							icon="mdi-image-area"
@@ -206,30 +212,29 @@
 						></v-icon>
 						Images
 					</v-card-title>
-					<v-card-text class="pa-2">
-						<v-list
-							v-if="images.data"
-							class="bg-transparent d-flex flex-wrap justify-center align-center"
+					<v-card-text
+						:class="modeStore.darkMode ? 'bg-blue-grey-darken-1 pa-2 h-100' : 'bg-blue-lighten-3 pa-2 h-100'"
+					>
+						<v-carousel
+							v-if="images.data.results.length"
+							class="bg-white"
 						>
-							<v-list-item
+							<v-carousel-item
 								v-for="image in images.data.results"
 								:key="image.id"
+								class="h-100"
 							>
-								<figure>
-									<v-img
-										alt="Exercise Example"
-										:src="image.image"
-										:max-width="250"
-									></v-img>
-									<figcaption>Example of {{ exercise.data.name }}</figcaption>
-								</figure>
-							</v-list-item>
-							<v-list-item
-								v-if="!images.data.results.length"
-							>
-								<span>No Image Available</span>
-							</v-list-item>
-						</v-list>
+								<v-img
+									alt="Exercise Example"
+									:src="image.image"
+									:max-width="250"
+									class="mx-auto h-100"
+								></v-img>
+							</v-carousel-item>
+						</v-carousel>
+						<span
+							v-if="!images.data.results.length"
+						>No Images Available</span>
 					</v-card-text>
 				</v-card>
 				<v-card
@@ -237,7 +242,7 @@
 					width="400"
 				>
 					<v-card-title
-						class="bg-primary"
+						:class="modeStore.darkMode ? 'bg-blue-grey-darken-3' : 'bg-blue-lighten-2'"
 					>
 						<v-icon
 							icon="mdi-weight-lifter"
@@ -246,7 +251,9 @@
 						></v-icon>
 						Workout History
 					</v-card-title>
-					<v-card-text class="pa-2">
+					<v-card-text
+						:class="modeStore.darkMode ? 'bg-blue-grey-darken-1 pa-2 h-100' : 'bg-blue-lighten-3 pa-2 h-100'"
+					>
 						<v-table v-if="workouts.length">
 							<thead>
 								<tr>
@@ -272,7 +279,10 @@
 								</tr>
 							</tbody>
 						</v-table>
-						<span v-else class="pa-3">No workout history for this exercise</span>
+						<span
+							v-else
+							class="pa-3"
+						>No workout history for this exercise</span>
 					</v-card-text>
 				</v-card>
 				<v-card
@@ -280,7 +290,7 @@
 					:width="400"
 				>
 					<v-card-title
-						class="bg-primary"
+						:class="modeStore.darkMode ? 'bg-blue-grey-darken-3' : 'bg-blue-lighten-2'"
 					>
 						<v-icon
 							icon="mdi-medal"
@@ -289,14 +299,19 @@
 						></v-icon>
 						1-Rep Max
 					</v-card-title>
-					<v-card-text class="pa-2">
-						<v-table v-if="statStore.records.length">
+					<v-card-text
+						:class="modeStore.darkMode ? 'bg-blue-grey-darken-1 pa-2 h-100' : 'bg-blue-lighten-3 pa-2 h-100'"
+					>
+						<v-table
+							v-if="statStore.records.length"
+							:class="modeStore.darkMode ? 'bg-blue-grey-darken-4 text-white' : 'bg-blue-grey-lighten-4 text-black'"
+						>
 							<thead>
 								<tr>
-									<th class="text-left">
+									<th :class="modeStore.darkMode ? 'text-white' : 'text-black'">
 										Date
 									</th>
-									<th class="text-left">
+									<th :class="modeStore.darkMode ? 'text-white' : 'text-black'">
 										Max (lbs)
 									</th>
 								</tr>
@@ -364,6 +379,8 @@ import MyFooter from '@/components/MyFooter.vue';
 import { useWorkoutStore } from '@/stores/workoutStore';
 import { useLoginStore } from '@/stores/loginStore';
 import { useStatStore } from '@/stores/statStore';
+import { useModeStore } from '@/stores/modeStore';
+import { useExerciseStore } from '@/stores/exerciseStore';
 
 const getData = async (url: string): Promise<any> => {
 	return await fetch(url)
@@ -489,7 +506,9 @@ export default defineComponent({
 			displayName,
 			workoutStore: useWorkoutStore(),
 			loginStore: useLoginStore(),
-			statStore: useStatStore()
+			statStore: useStatStore(),
+			modeStore: useModeStore(),
+			exerciseStore: useExerciseStore()
 		});
 	},
 	components: {
@@ -529,7 +548,8 @@ export default defineComponent({
 				width: '32px',
 				height: '32px',
 				display: 'inline-block',
-				marginRight: '8px'
+				marginRight: '8px',
+				filter: this.modeStore.darkMode ? 'invert(1)' : ''
 			};
 		}
 	},
@@ -578,6 +598,7 @@ export default defineComponent({
 			deep: true,
 			handler () {
 				if (this.exercise.isSuccess && this.exercise.data) {
+					this.exerciseStore.exercise = this.exercise.data;
 					this.exerciseBase = this.exercise.data.exercise_base || 0;
 					this.images.refetch();
 				}
@@ -585,7 +606,7 @@ export default defineComponent({
 		}
 	},
 	beforeMount () {
-		document.title = `${this.displayName} - Gym Tracker`;
+		document.title = `${this.displayName} - Lift Shark`;
 	}
 });
 </script>
@@ -593,5 +614,19 @@ export default defineComponent({
 <style scoped>
 .v-list-item--disabled {
 	opacity: 1;
+}
+
+.content {
+	background-image: url('/public/images/ui/shark-bg.webp');
+    background-size: 80%;
+    background-repeat: no-repeat;
+    background-position: center;
+    background-attachment: scroll;
+}
+
+@media only screen and (min-width: 600px) {
+	.content {
+		background-size: contain;
+	}
 }
 </style>

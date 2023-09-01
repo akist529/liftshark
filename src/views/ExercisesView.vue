@@ -1,5 +1,7 @@
 <template>
-<v-main class="bg-blue-lighten-4">
+<v-main
+	:class="modeStore.darkMode ? 'bg-grey-darken-4' : 'bg-blue-lighten-4'"
+>
 	<v-container
 		fluid
 		class="fill-height pa-0"
@@ -20,76 +22,91 @@
 		</v-row>
 		<v-row
 			no-gutters
-			class="w-100 ma-0 align-self-stretch"
+			class="content w-100 ma-0 align-self-stretch"
 		>
 			<v-col :cols="12">
-				<v-pagination
-					v-if="exercises.isSuccess && exercises.data"
-					v-model="exerciseStore.page"
-					:length="Math.ceil(exercises.data.count / 20)"
-					rounded="circle"
-				></v-pagination>
-			</v-col>
-		</v-row>
-		<v-row
-			no-gutters
-			class="w-100 ma-0 align-self-stretch"
-		>
-			<v-col
-				v-if="error"
-				:cols="12"
-			>
-				<v-alert
-					:max-width="650"
-					border="start"
-					border-color="red-accent-1"
-					elevation="2"
-					type="error"
-					title="Error"
-					text="There is an issue communicating with the server. Please try again later."
-				></v-alert>
-			</v-col>
-			<v-col
-				v-if="(exercises.isLoading || muscles.isLoading || equipment.isLoading) && !error"
-				:cols="12"
-			>
-				<LoadIcon />
-			</v-col>
-		</v-row>
-		<v-row
-			v-if="(exercises.isSuccess && exercises.data && muscles.isSuccess && muscles.data && equipment.isSuccess && equipment.data) && !error"
-			class="w-100 ma-0 align-self-stretch"
-		>
-			<v-col
-				v-for="exercise in exercises.data.results"
-				:key="exercise.id"
-				:xs="12"
-				:sm="6"
-				:md="4"
-				:lg="3"
-				:xl="3"
-				:xxl="3"
-				class="mx-auto d-flex justify-center align-center"
-			>
-				<ExerciseCard
-					:exercise="exercise"
-					:muscles="muscles.data.results"
-					:equipment="equipment.data.results"
-				/>
-			</v-col>
-		</v-row>
-		<v-row
-			no-gutters
-			class="w-100 ma-0 align-self-stretch"
-		>
-			<v-col :cols="12">
-				<v-pagination
-					v-if="exercises.isSuccess && exercises.data"
-					v-model="exerciseStore.page"
-					:length="Math.ceil(exercises.data.count / 20)"
-					:total-visible="7"
-					rounded="circle"
-				></v-pagination>
+				<v-container>
+					<v-row
+						no-gutters
+						class="w-100 ma-0 align-self-stretch"
+					>
+						<v-col :cols="12">
+							<v-pagination
+								v-if="exercises.isSuccess && exercises.data"
+								v-model="exerciseStore.page"
+								:length="Math.ceil(exercises.data.count / 20)"
+								rounded="circle"
+							></v-pagination>
+						</v-col>
+					</v-row>
+					<v-row
+						no-gutters
+						class="w-100 ma-0 align-self-stretch"
+					>
+						<v-col
+							v-if="error"
+							:cols="12"
+						>
+							<v-alert
+								:max-width="650"
+								border="start"
+								border-color="red-accent-1"
+								elevation="2"
+								type="error"
+								title="Error"
+								text="There is an issue communicating with the server. Please try again later."
+							></v-alert>
+						</v-col>
+						<v-col
+							v-if="(exercises.isLoading || muscles.isLoading || equipment.isLoading) && !error"
+							:cols="12"
+							class="d-flex justify-center align-center"
+						>
+							<v-progress-circular
+								indeterminate
+								:size="70"
+								:width="7"
+								color="primary"
+							></v-progress-circular>
+						</v-col>
+					</v-row>
+					<v-row
+						v-if="(exercises.isSuccess && exercises.data && muscles.isSuccess && muscles.data && equipment.isSuccess && equipment.data) && !error"
+						class="w-100 ma-0 align-self-stretch"
+					>
+						<v-col
+							v-for="exercise in exercises.data.results"
+							:key="exercise.id"
+							:xs="12"
+							:sm="6"
+							:md="4"
+							:lg="3"
+							:xl="3"
+							:xxl="3"
+							class="mx-auto d-flex justify-center align-center"
+						>
+							<ExerciseCard
+								:exercise="exercise"
+								:muscles="muscles.data.results"
+								:equipment="equipment.data.results"
+							/>
+						</v-col>
+					</v-row>
+					<v-row
+						no-gutters
+						class="w-100 ma-0 align-self-stretch"
+					>
+						<v-col :cols="12">
+							<v-pagination
+								v-if="exercises.isSuccess && exercises.data"
+								v-model="exerciseStore.page"
+								:length="Math.ceil(exercises.data.count / 20)"
+								:total-visible="7"
+								rounded="circle"
+							></v-pagination>
+						</v-col>
+					</v-row>
+				</v-container>
 			</v-col>
 		</v-row>
 		<v-row
@@ -113,9 +130,9 @@ import { useQuery } from 'vue-query';
 import { useExerciseStore } from '@/stores/exerciseStore';
 import { useWindowStore } from '@/stores/windowStore';
 import { useLoginStore } from '@/stores/loginStore';
+import { useModeStore } from '@/stores/modeStore';
 // Local components
 import ExerciseCard from '@/components/cards/ExerciseCard.vue';
-import LoadIcon from '@/components/LoadIcon.vue';
 import LoginBanner from '@/components/banners/LoginBanner.vue';
 import ExercisesToolbar from '@/components/toolbars/ExercisesToolbar.vue';
 import MyFooter from '@/components/MyFooter.vue';
@@ -132,8 +149,6 @@ const getExerciseData = async (page: number, muscle: Muscle | null, equipment: E
 	if (equipment) {
 		url = url + `&equipment=${equipment.id}`;
 	}
-
-	console.log(url);
 
 	return await fetch(url)
 		.then(res => res.json())
@@ -157,6 +172,7 @@ export default defineComponent({
 			exerciseStore,
 			windowStore: useWindowStore(),
 			loginStore: useLoginStore(),
+			modeStore: useModeStore(),
 			exercises,
 			muscles,
 			equipment
@@ -175,7 +191,6 @@ export default defineComponent({
 	},
 	components: {
 		ExerciseCard,
-		LoadIcon,
 		LoginBanner,
 		ExercisesToolbar,
 		MyFooter
@@ -214,3 +229,19 @@ export default defineComponent({
 	}
 });
 </script>
+
+<style scoped>
+.content {
+	background-image: url('/public/images/ui/shark-bg.webp');
+    background-size: 80%;
+    background-repeat: no-repeat;
+    background-position: center;
+    background-attachment: scroll;
+}
+
+@media only screen and (min-width: 600px) {
+	.content {
+		background-size: contain;
+	}
+}
+</style>

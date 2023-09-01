@@ -1,7 +1,10 @@
+// Vue imports
+import { ref } from 'vue';
 // Pinia imports
 import { defineStore } from 'pinia';
 // Type interfaces
 import { WeightData, MeasurementData, RecordData } from '@/types/index';
+import type { DatePickerInstance } from '@vuepic/vue-datepicker';
 // Third-party libraries
 import Cookies from 'js-cookie';
 
@@ -13,7 +16,10 @@ export const useStatStore = defineStore('statStore', {
         measurements: [] as MeasurementData[],
         records: [] as RecordData[],
         loading: false,
-        date: new Date().toISOString().split('T')[0],
+        date: ref(new Date()),
+        dateVal: new Date().getDate(),
+        dateString: new Date().toLocaleDateString('en-CA').split('T')[0],
+        datepicker: ref<DatePickerInstance>(null),
         tab: ''
     }),
     actions: {
@@ -27,7 +33,7 @@ export const useStatStore = defineStore('statStore', {
                     },
                     body: JSON.stringify({
                         data: {
-                            date: this.date,
+                            date: this.date.toLocaleDateString('en-CA').split('T')[0],
                             measurement: weight
                         }
                     })
@@ -38,7 +44,7 @@ export const useStatStore = defineStore('statStore', {
                 weights.push({
                     id: weights.length,
                     attributes: {
-                        date: this.date,
+                        date: this.date.toLocaleDateString('en-CA').split('T')[0],
                         measurement: weight
                     }
                 });
@@ -58,7 +64,7 @@ export const useStatStore = defineStore('statStore', {
                     },
                     body: JSON.stringify({
                         data: {
-                            date: this.date,
+                            date: this.date.toLocaleDateString('en-CA').split('T')[0],
                             muscle,
                             measurement
                         }
@@ -70,7 +76,7 @@ export const useStatStore = defineStore('statStore', {
                 measurements.push({
                     id: measurements.length,
                     attributes: {
-                        date: this.date,
+                        date: this.date.toLocaleDateString('en-CA').split('T')[0],
                         muscle,
                         measurement
                     }
@@ -91,7 +97,7 @@ export const useStatStore = defineStore('statStore', {
                     },
                     body: JSON.stringify({
                         data: {
-                            date: this.date,
+                            date: this.date.toLocaleDateString('en-CA').split('T')[0],
                             exercise,
                             max
                         }
@@ -103,7 +109,7 @@ export const useStatStore = defineStore('statStore', {
                 records.push({
                     id: records.length,
                     attributes: {
-                        date: this.date,
+                        date: this.date.toLocaleDateString('en-CA').split('T')[0],
                         exercise,
                         max
                     }

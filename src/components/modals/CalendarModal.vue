@@ -1,5 +1,10 @@
 <template>
-<v-dialog scrollable persistent v-model="dialog" class="CalendarModal w-100 h-100" :max-width="windowStore.width >= 600 ? '400px' : '100%'">
+<v-dialog
+	scrollable
+	persistent
+	v-model="dialog"
+	:max-width="windowStore.width >= 600 ? '400px' : '100%'"
+>
 	<template
 		v-slot:activator="{ props: dialog }"
 	>
@@ -24,7 +29,9 @@
 			</template>
 		</v-tooltip>
 	</template>
-	<v-card>
+	<v-card
+		:class="modeStore.darkMode ? 'bg-blue-grey-darken-3' : 'bg-blue-grey-lighten-3'"
+	>
 		<v-card-actions>
 			<CloseButton
 				@click="dialog = false" />
@@ -32,11 +39,13 @@
 		<v-card-text class="pa-3">
 			<VueDatePicker
 				class="d-flex justify-center align-center"
+				:dark="modeStore.darkMode ? true : false"
 				v-model="workoutStore.date"
 				ref="datepicker"
 				:enable-time-picker="false"
 				@update:model-value="handleDate"
-				inline />
+				inline
+			/>
 		</v-card-text>
 	</v-card>
 </v-dialog>
@@ -48,6 +57,7 @@ import { defineComponent, mergeProps } from 'vue';
 // Pinia stores
 import { useWorkoutStore } from '@/stores/workoutStore';
 import { useWindowStore } from '@/stores/windowStore';
+import { useModeStore } from '@/stores/modeStore';
 // Local components
 import CloseButton from '@/components/buttons/CloseButton.vue';
 // Third-party components
@@ -58,10 +68,12 @@ export default defineComponent({
 	data () {
 		const workoutStore = useWorkoutStore();
 		const windowStore = useWindowStore();
+		const modeStore = useModeStore();
 
 		return ({
 			workoutStore,
 			windowStore,
+			modeStore,
 			dialog: false
 		});
 	},

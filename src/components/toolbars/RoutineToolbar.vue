@@ -1,7 +1,7 @@
 <template>
 <v-toolbar
     class="px-5 py-1"
-    color="primary"
+    :color="modeStore.darkMode ? 'blue-grey-darken-4' : 'blue-lighten-3'"
     density="compact"
     extended
 >
@@ -53,12 +53,14 @@ import RoutineModal from '../../components/modals/RoutineModal.vue';
 // Pinia stores
 import { useRoutineStore } from '@/stores/routineStore';
 import { useWindowStore } from '@/stores/windowStore';
+import { useModeStore } from '@/stores/modeStore';
 
 export default defineComponent({
     data () {
         return ({
             routineStore: useRoutineStore(),
-            windowStore: useWindowStore()
+            windowStore: useWindowStore(),
+            modeStore: useModeStore()
         });
     },
     components: {

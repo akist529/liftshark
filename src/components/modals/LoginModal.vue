@@ -23,7 +23,7 @@
 		</v-btn>
 	</template>
 	<v-card
-		class="rounded-lg bg-blue-grey-lighten-3"
+		:class="modeStore.darkMode ? 'bg-blue-grey-darken-3 d-flex justify-center align-center pa-2 rounded-lg' : 'bg-blue-grey-lighten-3 d-flex justify-center align-center pa-2 rounded-lg'"
 	>
 		<v-card-title
 			class="d-flex justify-center text-uppercase pa-3"
@@ -36,7 +36,7 @@
 			Sign In
 		</v-card-title>
 		<v-card-actions
-			class="pa-0"
+			class="w-100 pa-0"
 			:style="{minHeight: 0}"
 		>
 			<v-tabs
@@ -209,6 +209,7 @@ import { defineComponent } from 'vue';
 import { useLoginStore } from '@/stores/loginStore';
 import { useWindowStore } from '@/stores/windowStore';
 import { useSnackbarStore } from '@/stores/snackbarStore';
+import { useModeStore } from '@/stores/modeStore';
 // Local components
 import CloseButton from '@/components/buttons/CloseButton.vue';
 // Third-party libraries
@@ -226,6 +227,7 @@ export default defineComponent({
 		const loginStore = useLoginStore();
 		const windowStore = useWindowStore();
 		const snackbarStore = useSnackbarStore();
+		const modeStore = useModeStore();
 		const showPassword = false;
 		const token = Cookies.get('token');
 		const stayLoggedIn = (Cookies.get('stayLoggedIn') === 'true');
@@ -239,6 +241,7 @@ export default defineComponent({
 			loginStore,
 			windowStore,
 			snackbarStore,
+			modeStore,
 			showPassword,
 			dialog: false,
 			token,

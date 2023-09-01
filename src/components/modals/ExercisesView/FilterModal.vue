@@ -28,7 +28,7 @@
         </v-tooltip>
 	</template>
 	<v-card
-        class="d-flex justify-center align-center pa-2 rounded-lg bg-blue-grey-lighten-3 text-black"
+        :class="modeStore.darkMode ? 'bg-blue-grey-darken-3 d-flex justify-center align-center pa-2 rounded-lg' : 'bg-blue-grey-lighten-3 d-flex justify-center align-center pa-2 rounded-lg'"
     >
 		<v-card-title
             class="d-flex justify-center align-center w-100"
@@ -118,6 +118,7 @@ import { defineComponent, mergeProps } from 'vue';
 // Pinia stores
 import { useWindowStore } from '../../../stores/windowStore';
 import { useExerciseStore } from '@/stores/exerciseStore';
+import { useModeStore } from '@/stores/modeStore';
 // Local components
 import CloseButton from '../../../components/buttons/CloseButton.vue';
 // Type interfaces
@@ -128,6 +129,7 @@ export default defineComponent({
         return ({
             windowStore: useWindowStore(),
             exerciseStore: useExerciseStore(),
+            modeStore: useModeStore(),
             dialog: false,
             mode: 'muscle'
         });

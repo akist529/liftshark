@@ -1,11 +1,11 @@
 <template>
 <v-card
-	class="d-flex flex-column justify-center align-center bg-blue-grey-darken-4"
+	:class="modeStore.darkMode ? 'd-flex flex-column justify-center align-center bg-blue-grey-darken-4' : 'd-flex flex-column justify-center align-center bg-blue-grey-darken-4'"
 	:width="300"
 	:style="{filter: 'drop-shadow(3px 3px 10px rgba(0,0,0,0.5))'}"
 >
 	<v-card-item
-		class="d-flex justify-center align-center w-100 text-white bg-primary"
+		:class="modeStore.darkMode ? 'd-flex justify-center align-center w-100 bg-blue-grey-darken-3' : 'd-flex justify-center align-center w-100 bg-blue-lighten-2'"
 	>
 		<v-card-title>{{ name }}</v-card-title>
 	</v-card-item>
@@ -20,7 +20,7 @@
 	</v-card-actions>
 	<v-card-text
 		v-if="images.isError"
-		class="d-flex justify-center align-center"
+		:class="modeStore.darkMode ? 'd-flex justify-center align-center bg-blue-grey-darken-1 pa-2 h-100' : 'd-flex justify-center align-center bg-blue-lighten-3 pa-2 h-100'"
 	>
 		<strong>Error!</strong>
 	</v-card-text>
@@ -41,11 +41,12 @@
 	<v-card-text
 		v-if="images.isSuccess && images.data"
 		class="w-100"
+		:class="modeStore.darkMode ? 'bg-blue-grey-darken-1 w-100' : 'bg-blue-lighten-3 w-100'"
 	>
 		<v-card-subtitle>Primary Muscles</v-card-subtitle>
 		<v-divider></v-divider>
 		<v-sheet
-			class="d-flex justify-center align-center bg-blue-grey-darken-3 w-100 pa-2"
+			:class="modeStore.darkMode ? 'd-flex justify-center align-center bg-blue-grey-darken-3 w-100 pa-2' : 'd-flex justify-center align-center bg-blue-grey-lighten-4 w-100 pa-2'"
 			:height="48"
 		>
 			<v-slide-group
@@ -74,7 +75,7 @@
 		<v-card-subtitle>Secondary Muscles</v-card-subtitle>
 		<v-divider></v-divider>
 		<v-sheet
-			class="d-flex justify-center align-center bg-blue-grey-darken-3 w-100 pa-2"
+			:class="modeStore.darkMode ? 'd-flex justify-center align-center bg-blue-grey-darken-3 w-100 pa-2' : 'd-flex justify-center align-center bg-blue-grey-lighten-4 w-100 pa-2'"
 			:height="48"
 		>
 			<v-slide-group
@@ -102,7 +103,7 @@
 		<v-card-subtitle>Equipment</v-card-subtitle>
 		<v-divider></v-divider>
 		<v-sheet
-			class="d-flex justify-center align-center bg-blue-grey-darken-3 w-100 pa-2"
+			:class="modeStore.darkMode ? 'd-flex justify-center align-center bg-blue-grey-darken-3 w-100 pa-2' : 'd-flex justify-center align-center bg-blue-grey-lighten-4 w-100 pa-2'"
 			:height="48"
 		>
 			<v-slide-group
@@ -130,10 +131,10 @@
 	</v-card-text>
 	<router-link
 		class="w-100"
-		:to="{ name: 'Exercise - Gym Tracker', params: { id: exercise.name.toLowerCase().replaceAll(' ', '-') } }"
+		:to="{ name: 'Exercise - Lift Shark', params: { id: exercise.name.toLowerCase().replaceAll(' ', '-') } }"
 	>
 		<v-card-actions
-			class="d-flex justify-center align-center bg-indigo"
+			class="d-flex justify-center align-center bg-primary"
 		>SEE MORE</v-card-actions>
 	</router-link>
 </v-card>
@@ -149,6 +150,8 @@ import { Muscle, Equipment, Exercise, ImageData } from '@/types/index';
 // Mixins
 import { getCorrectName } from '@/mixins/getCorrectName';
 import { getSlug } from '@/mixins/getSlug';
+// Pinia stores
+import { useModeStore } from '@/stores/modeStore';
 
 const getImageData = async (base: number): Promise<ImageData> => {
 	return await fetch(`https://wger.de/api/v2/exerciseimage/?limit=999&exercise_base=${base}`)
@@ -161,7 +164,8 @@ export default defineComponent({
 		const images = useQuery(['images', this.exercise.exercise_base], () => getImageData(this.exercise.exercise_base));
 
 		return ({
-			images
+			images,
+			modeStore: useModeStore()
 		});
 	},
 	props: {
@@ -202,7 +206,7 @@ export default defineComponent({
 				width: '32px',
 				height: '32px',
 				display: 'inline-block',
-				filter: 'invert(1)'
+				filter: this.modeStore.darkMode ? 'invert(1)' : ''
 			});
 		}
 	},

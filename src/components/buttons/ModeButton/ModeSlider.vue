@@ -7,14 +7,14 @@
 	<template v-slot:prepend>
 		<v-icon
 			icon="mdi-weather-sunny"
-			:color="modeStore.darkMode ? 'white' : 'orange'"
+			:color="modeStore.darkMode ? 'white' : 'red'"
 			:style="{marginRight: '-8px'}"
 		></v-icon>
 	</template>
 	<template v-slot:append>
 		<v-icon
 			icon="mdi-moon-waning-crescent"
-			:color="modeStore.darkMode ? 'info' : 'white'"
+			:color="modeStore.darkMode ? 'info' : 'black'"
 			:style="{marginLeft: '-8px'}"
 		></v-icon>
 	</template>

@@ -3,7 +3,6 @@
     scrollable
     persistent
     v-model="dialog"
-    class="ExerciseRoutineModal w-100 h-100"
     :max-width="windowStore.width >= 600 ? '400px' : '100%'"
 >
     <template
@@ -17,6 +16,7 @@
             >
                 <v-btn
                     v-bind="mergeProps(dialog, tooltip)"
+                    @click="checkRoutines"
                 >
                     <v-icon
                         icon="mdi-notebook"
@@ -26,7 +26,9 @@
             </template>
         </v-tooltip>
     </template>
-	<v-card class="d-flex justify-center align-center pa-2 rounded-lg bg-blue-grey-lighten-3 text-black">
+	<v-card
+        :class="modeStore.darkMode ? 'bg-blue-grey-darken-3 d-flex justify-center align-center pa-2 rounded-lg' : 'bg-blue-grey-lighten-3 d-flex justify-center align-center pa-2 rounded-lg'"
+    >
 		<template v-slot:prepend>
             <v-icon
                 icon="mdi-notebook"
@@ -46,7 +48,7 @@
                 class="w-75"
             ></v-select>
             <v-btn
-                @click="routineStore.updateRoutine(routine)"
+                @click="checkInput"
                 variant="flat"
                 color="success"
                 prepend-icon="mdi-check"
@@ -70,6 +72,8 @@ import { defineComponent, mergeProps } from 'vue';
 // Pinia imports
 import { useRoutineStore } from '@/stores/routineStore';
 import { useWindowStore } from '@/stores/windowStore';
+import { useModeStore } from '@/stores/modeStore';
+import { useSnackbarStore } from '@/stores/snackbarStore';
 // Type interfaces
 import { RoutineData } from '@/types/index';
 // Local components
@@ -81,6 +85,8 @@ export default defineComponent({
             routine: {} as RoutineData,
             routineStore: useRoutineStore(),
             windowStore: useWindowStore(),
+            modeStore: useModeStore(),
+            snackbarStore: useSnackbarStore(),
             dialog: false
         });
     },
@@ -89,6 +95,25 @@ export default defineComponent({
             return this.routineStore.routines.map(function (routine: RoutineData) {
                 return routine.attributes.name;
             });
+        },
+        checkInput () {
+            if (!Object.keys(this.routine).length) {
+                this.snackbarStore.text = 'No routine selected!';
+                this.snackbarStore.color = 'error';
+                this.snackbarStore.icon = 'mdi-alert-circle';
+                this.snackbarStore.open = true;
+            } else {
+                this.routineStore.updateRoutine(this.routine);
+            }
+        },
+        checkRoutines () {
+            if (!this.routineStore.routines.length) {
+                this.snackbarStore.text = 'No routines available!';
+                this.snackbarStore.color = 'error';
+                this.snackbarStore.icon = 'mdi-alert-circle';
+                this.snackbarStore.open = true;
+                this.dialog = false;
+            }
         },
         mergeProps
     },

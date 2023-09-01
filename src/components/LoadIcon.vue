@@ -1,30 +1,55 @@
 <template>
-<div class="LoadIcon">
-	<img v-if="firstFrameShown"
-		alt="Loading..."
-		:src="assetspath('./ui/loading-0.webp')" />
-	<img v-if="!firstFrameShown"
-		alt="Loading..."
-		:src="assetspath('./ui/loading-1.webp')" />
-	<span>Loading...</span>
-</div>
+<v-container
+	fluid
+	class="fill-height pa-0"
+>
+	<v-row
+		no-gutters
+		class="ma-0 align-self-start w-100"
+	>
+		<v-col
+			:cols="12"
+			class="d-flex justify-center align-center"
+		>
+			<v-img
+				v-if="firstFrameShown"
+				alt="Loading..."
+				:width="96"
+				:height="96"
+				:style="modeStore.darkMode ? {filter: 'invert(1)'} : {}"
+				:src="require('/public/images/ui/loading-0.webp')"
+			></v-img>
+			<v-img
+				v-else
+				alt="Loading..."
+				:width="96"
+				:height="96"
+				:style="modeStore.darkMode ? {filter: 'invert(1)'} : {}"
+				:src="require('/public/images/ui/loading-1.webp')"
+			></v-img>
+		</v-col>
+	</v-row>
+	<v-row>
+		<v-col :cols="12">
+			<span>Loading...</span>
+		</v-col>
+	</v-row>
+</v-container>
 </template>
 
 <script lang="ts">
 // Vue imports
 import { defineComponent } from 'vue';
-// Mixins
-import { fetchImages } from '@/mixins/fetchImages';
+// Pinia stores
+import { useModeStore } from '@/stores/modeStore';
 
 export default defineComponent({
 	data () {
-		const firstFrameShown = true;
-
 		return ({
-			firstFrameShown
+			firstFrameShown: true,
+			modeStore: useModeStore()
 		});
 	},
-	mixins: [fetchImages],
 	methods: {
 		changeIcons () {
 			this.firstFrameShown = !this.firstFrameShown;
@@ -35,17 +60,3 @@ export default defineComponent({
 	}
 });
 </script>
-
-<style scoped lang="scss">
-.LoadIcon {
-	display: flex;
-		flex-direction: column;
-		justify-content: center;
-		align-items: center;
-		gap: 10px;
-
-	img {
-		width: 96px;
-	}
-}
-</style>

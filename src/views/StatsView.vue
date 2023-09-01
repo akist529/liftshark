@@ -1,5 +1,7 @@
 <template>
-<v-main class="bg-blue-lighten-4">
+<v-main
+    :class="modeStore.darkMode ? 'bg-grey-darken-4' : 'bg-blue-lighten-4'"
+>
     <v-container
         fluid
 		class="fill-height pa-0"
@@ -21,10 +23,11 @@
         </v-row>
         <v-row
             no-gutters
-			class="w-100 ma-0 pa-5 align-self-stretch"
+			class="content w-100 ma-0 align-self-stretch"
         >
             <v-col :cols="12">
                 <v-window
+                    class="h-100 d-flex justify-center align-center"
                     v-model="statStore.tab"
                 >
                     <v-window-item
@@ -64,6 +67,7 @@ import { defineComponent } from 'vue';
 import { useStatStore } from '@/stores/statStore';
 import { useWindowStore } from '@/stores/windowStore';
 import { useLoginStore } from '@/stores/loginStore';
+import { useModeStore } from '@/stores/modeStore';
 // Local components
 import WeightCard from '@/components/cards/WeightCard.vue';
 import MeasurementCard from '@/components/cards/MeasurementCard.vue';
@@ -82,7 +86,8 @@ export default defineComponent({
 			pageShown,
             statStore: useStatStore(),
             windowStore: useWindowStore(),
-            loginStore: useLoginStore()
+            loginStore: useLoginStore(),
+            modeStore: useModeStore()
 		});
 	},
 	methods: {
@@ -122,3 +127,19 @@ export default defineComponent({
 	}
 })
 </script>
+
+<style scoped>
+.content {
+	background-image: url('/public/images/ui/shark-bg.webp');
+    background-size: 80%;
+    background-repeat: no-repeat;
+    background-position: center;
+    background-attachment: scroll;
+}
+
+@media only screen and (min-width: 600px) {
+	.content {
+		background-size: contain;
+	}
+}
+</style>

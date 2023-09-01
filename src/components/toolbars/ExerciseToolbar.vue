@@ -2,7 +2,7 @@
 <v-toolbar
     v-if="isLoaded && !isError && exercise.data && muscles.data && equipment.data"
     class="px-5 py-1"
-    color="primary"
+    :color="modeStore.darkMode ? 'blue-grey-darken-4' : 'blue-lighten-3'"
     density="compact"
     extended
 >
@@ -29,12 +29,7 @@
         </v-tooltip>
         <v-spacer></v-spacer>
         <v-toolbar-items>
-            <v-btn>
-                <v-icon
-                    icon="mdi-medal"
-                    size="xx-large"
-                ></v-icon>
-            </v-btn>
+            <AddMaxModal />
             <ExerciseRoutineModal />
             <ExerciseWorkoutModal />
             <BookmarkButton
@@ -50,14 +45,23 @@ import { defineComponent } from 'vue';
 // Local components
 import ExerciseRoutineModal from '../modals/ExerciseRoutineModal.vue';
 import ExerciseWorkoutModal from '../modals/ExerciseWorkoutModal.vue';
+import AddMaxModal from '../modals/ExerciseView/AddMaxModal.vue';
 import BookmarkButton from '../buttons/BookmarkButton.vue';
+// Pinia stores
+import { useModeStore } from '@/stores/modeStore';
 
 export default defineComponent({
+    data () {
+        return ({
+            modeStore: useModeStore()
+        });
+    },
     components: {
         ExerciseRoutineModal,
         ExerciseWorkoutModal,
+        AddMaxModal,
         BookmarkButton
     },
     props: ['exercise', 'muscles', 'equipment', 'isLoaded', 'isError']
-})
+});
 </script>

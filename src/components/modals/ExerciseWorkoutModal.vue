@@ -3,7 +3,6 @@
     scrollable
     persistent
     v-model="dialog"
-    class="ExerciseWorkoutModal w-100 h-100"
     :max-width="windowStore.width >= 600 ? '400px' : '100%'"
 >
     <template
@@ -27,7 +26,7 @@
         </v-tooltip>
     </template>
     <v-card
-        class="d-flex justify-center align-center pa-2 rounded-lg bg-blue-grey-lighten-3 text-black"
+        :class="modeStore.darkMode ? 'bg-blue-grey-darken-3 d-flex justify-center align-center pa-2 rounded-lg' : 'bg-blue-grey-lighten-3 d-flex justify-center align-center pa-2 rounded-lg'"
     >
         <template
             v-slot:prepend
@@ -79,6 +78,7 @@ import { defineComponent, mergeProps } from 'vue';
 // Pinia imports
 import { useWorkoutStore } from '@/stores/workoutStore';
 import { useWindowStore } from '@/stores/windowStore';
+import { useModeStore } from '@/stores/modeStore';
 // Type interfaces
 import { WorkoutData } from '@/types/index';
 // Local components
@@ -90,6 +90,7 @@ export default defineComponent({
             workout: {} as WorkoutData,
             workoutStore: useWorkoutStore(),
             windowStore: useWindowStore(),
+            modeStore: useModeStore(),
             dialog: false
         });
     },

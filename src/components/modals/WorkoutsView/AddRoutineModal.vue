@@ -1,6 +1,5 @@
 <template>
 <v-dialog
-	:fullscreen="windowStore.width < 600"
 	scrollable
 	persistent
 	v-model="dialog"
@@ -18,6 +17,7 @@
 			>
 				<v-btn
 					v-bind="mergeProps(dialog, tooltip)"
+					@click="checkRoutines"
 				>
 					<v-icon
 						icon="mdi-notebook"
@@ -28,16 +28,18 @@
 		</v-tooltip>
 	</template>
 	<v-card
-		class="d-flex justify-center align-center pa-2 rounded-lg bg-blue-grey-lighten-3 text-black"
+		:class="modeStore.darkMode ? 'bg-blue-grey-darken-3 d-flex justify-center align-center pa-2 rounded-lg' : 'bg-blue-grey-lighten-3 d-flex justify-center align-center pa-2 rounded-lg'"
 	>
-		<v-card-title class="text-uppercase">
+		<v-card-title
+			class="text-uppercase text-wrap text-center w-75"
+		>
 			<v-icon
 				icon="mdi-notebook"
 				size="xx-large"
 			></v-icon>
 			Add Routine as Workout
 		</v-card-title>
-		<v-card-actions class="d-flex flex-column justify-center align-center">
+		<v-card-actions class="d-flex flex-column justify-center align-center w-100">
 			<v-select
 				name="routine"
 				id="routine"
@@ -52,7 +54,7 @@
 				@click="useRoutine"
 				prepend-icon="mdi-notebook"
 				class="bg-primary"
-			>Log Routine as Workout</v-btn>
+			>Log Routine</v-btn>
 			<CloseButton
 				@click="dialog = false"
 			/>
@@ -69,6 +71,7 @@ import { useWindowStore } from '../../../stores/windowStore';
 import { useRoutineStore } from '../../../stores/routineStore';
 import { useWorkoutStore } from '@/stores/workoutStore';
 import { useSnackbarStore } from '@/stores/snackbarStore';
+import { useModeStore } from '@/stores/modeStore';
 // Type interfaces
 import { Workout } from '../../../types/index';
 // Local components
@@ -81,6 +84,7 @@ export default defineComponent({
             routineStore: useRoutineStore(),
 			workoutStore: useWorkoutStore(),
 			snackbarStore: useSnackbarStore(),
+			modeStore: useModeStore(),
             dialog: false,
             routineName: ''
         });
@@ -96,13 +100,27 @@ export default defineComponent({
 				} as Workout);
 
 				this.workoutStore.addWorkout(workout);
-			}
 
-			this.dialog = false;
-			this.snackbarStore.text = 'Successfully added routine as workout';
-			this.snackbarStore.color = 'success';
-			this.snackbarStore.icon = 'mdi-check-circle';
-			this.snackbarStore.toggleSnackbar();
+				this.dialog = false;
+				this.snackbarStore.text = 'Successfully added routine as workout';
+				this.snackbarStore.color = 'success';
+				this.snackbarStore.icon = 'mdi-check';
+				this.snackbarStore.open = true;
+			} else {
+				this.snackbarStore.text = 'Routine not selected - please select a routine';
+				this.snackbarStore.color = 'error';
+				this.snackbarStore.icon = 'mdi-alert-circle';
+				this.snackbarStore.open = true;
+			}
+		},
+		checkRoutines () {
+			if (!this.routineStore.routines.length) {
+				this.dialog = false;
+				this.snackbarStore.text = 'No routines exist - cannot log a routine';
+				this.snackbarStore.color = 'error';
+				this.snackbarStore.icon = 'mdi-alert-circle';
+				this.snackbarStore.open = true;
+			}
 		},
 		mergeProps
     },

@@ -2,11 +2,10 @@
 <v-btn
     class="DeleteButton"
     variant="plain"
-    width="24"
-    height="24">
+>
     <v-icon
         icon="mdi-delete"
-        size="large"
+        size="xx-large"
     ></v-icon>
 </v-btn>
 </template>

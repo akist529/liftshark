@@ -3,12 +3,13 @@ import { defineStore } from 'pinia';
 // Third-party libraries
 import Cookies from 'js-cookie';
 // Type interfaces
-import { FavoriteData, Muscle, Equipment } from '@/types/index';
+import { Exercise, FavoriteData, Muscle, Equipment } from '@/types/index';
 
 const token: string = Cookies.get('token');
 
 export const useExerciseStore = defineStore('exerciseStore', {
     state: () => ({
+        exercise: {} as Exercise,
         favorites: [] as FavoriteData[],
         loading: false,
         page: 1,

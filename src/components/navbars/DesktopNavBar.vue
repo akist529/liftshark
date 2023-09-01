@@ -1,7 +1,7 @@
 <template>
 <v-app-bar
     :elevation="2"
-    color="blue-grey-darken-4"
+    :color="modeStore.darkMode ? 'blue-grey-darken-4' : 'blue-grey-lighten-5'"
     density="compact"
     scroll-behavior="hide"
 >
@@ -21,7 +21,7 @@
     >
         <span>Lift</span>
         <span
-            class="shark-icon"
+            :class="modeStore.darkMode ? 'shark-icon dark' : 'shark-icon'"
         ></span>
         <span>Shark</span>
     </v-app-bar-title>
@@ -74,6 +74,7 @@ import LogoutModal from '../modals/LogoutModal.vue';
 // Pinia stores
 import { useLoginStore } from '@/stores/loginStore';
 import { useWindowStore } from '@/stores/windowStore';
+import { useModeStore } from '@/stores/modeStore';
 // Third-party libraries
 import Cookies from 'js-cookie';
 
@@ -82,6 +83,7 @@ export default defineComponent({
         return ({
             loginStore: useLoginStore(),
             windowStore: useWindowStore(),
+            modeStore: useModeStore(),
             token: Cookies.get('token')
         });
     },
@@ -109,6 +111,9 @@ export default defineComponent({
     height: 32px;
     content: '';
     display: inline-flex;
+}
+
+.dark {
     filter: invert(1);
 }
 </style>

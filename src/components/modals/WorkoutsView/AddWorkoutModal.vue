@@ -18,6 +18,7 @@
 			>
 				<v-btn
 					v-bind="mergeProps(dialog, tooltip)"
+					@click="checkWorkouts"
 				>
 					<v-icon
 						icon="mdi-plus"
@@ -29,32 +30,40 @@
 	</template>
 	<v-card
 		v-if="exerciseQuery.isSuccess"
-		class="d-flex justify-center align-center pa-2 rounded-lg bg-blue-grey-lighten-3 text-black"
-		prepend-icon="mdi-dumbbell"
+		:class="modeStore.darkMode ? 'bg-blue-grey-darken-3 d-flex justify-center align-center rounded-lg h-100' : 'bg-blue-grey-lighten-3 d-flex justify-center align-center rounded-lg h-100'"
 	>
-		<template v-slot:title>
-			<span class="text-uppercase">{{ workoutStore.days[workoutStore.date.getDay()] }}, {{ workoutStore.months[workoutStore.date.getMonth()] }} {{ workoutStore.date.getDate() }}, {{ workoutStore.date.getFullYear() }}</span>
-		</template>
-		<v-card-actions class="w-100 d-flex justify-center align-center">
+		<v-card-title
+			class="text-uppercase text-wrap text-center w-75"
+		>
+			<v-icon
+				icon="mdi-dumbbell"
+				size="xx-large"
+			></v-icon>
+			{{ workoutStore.days[workoutStore.date.getDay()] }}, {{ workoutStore.months[workoutStore.date.getMonth()] }} {{ workoutStore.date.getDate() }}, {{ workoutStore.date.getFullYear() }}
+		</v-card-title>
+		<v-card-actions
+			class="w-100 d-flex justify-center align-center"
+		>
 			<v-tabs
 				bg-color="primary"
 				show-arrows
 				fixed-tabs
 				centered
 				density="compact"
+				v-model="workoutStore.tab"
 			>
 				<v-tab
-					v-for="entry in entryCount"
-					:key="entry"
-					:value="entry"
-				>{{ entry }}</v-tab>
+					v-for="(entry, index) in workoutStore.entries"
+					:key="index"
+					:value="index"
+				>Exercise {{ index + 1 }}</v-tab>
 			</v-tabs>
 			<v-tooltip text="Add Exercise" :open-delay="125">
 				<template v-slot:activator="{ props }">
 					<v-btn
 						v-bind="props"
 						class="bg-primary rounded-0"
-						@click="entryCount++"
+						@click="workoutStore.addEntry"
 					>
 						<v-icon
 							icon="mdi-plus"
@@ -67,16 +76,23 @@
 				@click="dialog = false" />
 		</v-card-actions>
 		<v-card-text
-			class="w-100 bg-blue-grey-lighten-1"
+			class="w-100 pa-2"
 		>
-			<v-window v-model="entryCount">
+			<v-window
+				v-model="workoutStore.tab"
+				class="bg-blue-grey-darken-4 pa-3 h-100"
+			>
+				<v-window-item
+					v-for="(entry, index) in workoutStore.entries"
+					:key="index"
+					:value="index"
+				>
 					<ExerciseForm
-						v-for="entry in entryCount"
-						:key="entry"
+						:entry="entry"
+						modal="workout"
 						:exercises="exerciseQuery.data.results"
-						:count="entry"
-						@deleteExercise="deleteExercise($event)"
 					/>
+				</v-window-item>
 			</v-window>
 		</v-card-text>
 		<v-card-actions>
@@ -98,11 +114,12 @@ import { defineComponent, mergeProps } from 'vue';
 // Vue Query imports
 import { useQuery } from 'vue-query';
 // Type interfaces
-import { ExerciseData, Entry, Set } from '@/types/index';
+import { ExerciseData } from '@/types/index';
 // Pinia stores
 import { useWorkoutStore } from '@/stores/workoutStore';
 import { useWindowStore } from '@/stores/windowStore';
 import { useSnackbarStore } from '@/stores/snackbarStore';
+import { useModeStore } from '@/stores/modeStore';
 // Local components
 import CloseButton from '@/components/buttons/CloseButton.vue';
 import ExerciseForm from '../WorkoutModal/ExerciseForm.vue';
@@ -115,18 +132,14 @@ const getData = async (): Promise<ExerciseData> => {
 
 export default defineComponent({
     data () {
-        const workoutStore = useWorkoutStore();
-		const windowStore = useWindowStore();
-		const snackbarStore = useSnackbarStore();
 		const exerciseQuery = useQuery('exercises', () => getData());
-		const entryCount = 1;
 
         return ({
-            workoutStore,
-			windowStore,
-			snackbarStore,
+            workoutStore: useWorkoutStore(),
+			windowStore: useWindowStore(),
+			snackbarStore: useSnackbarStore(),
+			modeStore: useModeStore(),
 			exerciseQuery,
-			entryCount,
 			dialog: false,
 			snackbar: false
         });
@@ -136,52 +149,31 @@ export default defineComponent({
 		ExerciseForm
     },
 	methods: {
-		deleteExercise (e: MouseEvent) {
-			e.preventDefault();
-
-			if (this.entryCount > 1) {
-				this.entryCount--;
-			}
-		},
 		addWorkout (e: MouseEvent) {
 			e.preventDefault();
 
 			const workout = ({
-				date: this.workoutStore.date.toISOString().split('T')[0],
-				entries: [] as Entry[]
+				date: this.workoutStore.date.toLocaleDateString('en-CA').split('T')[0],
+				entries: this.workoutStore.entries
 			});
 
-			for (let i = 1; i <= this.entryCount; i++) {
-				const name = document.getElementById(`exercise-${i}-name`) as HTMLSelectElement;
-
-				const entry = ({
-					key: i,
-					name: name.value || `Exercise ${i}`,
-					sets: []
-				} as Entry);
-
-				for (let j = 1; j <= 6; j++) {
-					const reps = document.getElementById(`exc-${i}-repCount-${j}`) as HTMLInputElement;
-					const weight = document.getElementById(`exc-${i}-weight-${j}`) as HTMLInputElement;
-
-					if (reps && weight) {
-						entry.sets.push({
-							key: j,
-							weight: Number(weight.value),
-							reps: Number(reps.value)
-						} as Set)
-					}
-				}
-
-				workout.entries.push(entry);
-			}
-
-			console.log(workout);
 			this.workoutStore.addWorkout(workout);
 			this.dialog = false;
 			this.snackbarStore.text = 'Workout successfully logged';
 			this.snackbarStore.color = 'success';
+			this.snackbarStore.icon = 'mdi-check';
 			this.snackbarStore.open = true;
+		},
+		checkWorkouts () {
+			const numOfWorkouts = this.workoutStore.workouts.filter(workout => workout.attributes.date === this.workoutStore.date.toLocaleDateString('en-CA').split('T')[0]);
+
+			if (numOfWorkouts.length === 2) {
+				this.dialog = false;
+				this.snackbarStore.text = 'Workout limit reached for this day. Take it easy!';
+				this.snackbarStore.color = 'error';
+				this.snackbarStore.icon = 'mdi-alert-circle';
+				this.snackbarStore.open = true;
+			}
 		},
 		mergeProps
 	}

@@ -4,7 +4,7 @@
 	scrollable
 	persistent
 	v-model="dialog"
-	class="RoutineModal w-100 h-100"
+	class="RoutineModal"
 	:max-width="windowStore.width >= 600 ? '400px' : '100%'"
 >
 	<template
@@ -19,6 +19,7 @@
 			>
 				<v-btn
 					v-bind="mergeProps(dialog, tooltip)"
+					@click="checkRoutines"
 				>
 					<v-icon
 						icon="mdi-plus"
@@ -30,7 +31,7 @@
 	</template>
 	<v-card
 		v-if="exerciseQuery.isSuccess"
-		class="d-flex justify-center align-center pa-2 rounded-lg bg-blue-grey-lighten-3 text-black"
+		:class="modeStore.darkMode ? 'bg-blue-grey-darken-3 d-flex justify-center align-center pa-2 rounded-lg' : 'bg-blue-grey-lighten-3 d-flex justify-center align-center pa-2 rounded-lg'"
 	>
 		<v-card-title
 			class="d-flex flex-column justify-center align-center w-75"
@@ -44,26 +45,29 @@
 				class="w-100"
 			></v-text-field>
 		</v-card-title>
-		<v-card-actions class="w-100 d-flex justify-center align-center">
+		<v-card-actions
+			class="w-100 d-flex justify-center align-center"
+		>
 			<v-tabs
 				bg-color="primary"
 				show-arrows
 				fixed-tabs
 				centered
 				density="compact"
+				v-model="routineStore.tab"
 			>
 				<v-tab
-					v-for="entry in entryCount"
-					:key="entry"
-					:value="entry"
-				>{{ entry }}</v-tab>
+					v-for="(entry, index) in routineStore.entries"
+					:key="index"
+					:value="index"
+				>Exercise {{ index + 1 }}</v-tab>
 			</v-tabs>
 			<v-tooltip text="Add Exercise" :open-delay="125">
 				<template v-slot:activator="{ props }">
 					<v-btn
 						v-bind="props"
 						class="bg-primary rounded-0"
-						@click="entryCount++"
+						@click="routineStore.addEntry"
 					>
 						<v-icon
 							icon="mdi-plus"
@@ -76,24 +80,24 @@
 				@click="dialog = false" />
 		</v-card-actions>
 		<v-card-text
-			class="w-100 bg-blue-grey-lighten-1"
+			class="w-100 pa-2"
 		>
-			<v-form
-				class="w-100"
+			<v-window
+				v-model="routineStore.tab"
+				class="bg-blue-grey-darken-4 pa-3 h-100"
 			>
-				<v-window>
-					<v-window-item
-						v-for="exercise in entryCount"
-						:key="exercise"
-					>
-						<ExerciseForm
-							:exercises="exerciseQuery.data.results"
-							:count="exercise"
-							@deleteExercise="deleteExercise($event)"
-						/>
-					</v-window-item>
-				</v-window>
-			</v-form>
+				<v-window-item
+					v-for="(entry, index) in routineStore.entries"
+					:key="index"
+					:value="index"
+				>
+					<ExerciseForm
+						:entry="entry"
+						modal="routine"
+						:exercises="exerciseQuery.data.results"
+					/>
+				</v-window-item>
+			</v-window>
 		</v-card-text>
 		<v-card-actions>
 			<v-btn
@@ -117,6 +121,7 @@ import { ExerciseData, Entry, Set } from '@/types/index';
 import { useRoutineStore } from '@/stores/routineStore';
 import { useWindowStore } from '@/stores/windowStore';
 import { useSnackbarStore } from '@/stores/snackbarStore';
+import { useModeStore } from '@/stores/modeStore';
 // Local components
 import CloseButton from '../buttons/CloseButton.vue';
 import ExerciseForm from './WorkoutModal/ExerciseForm.vue';
@@ -129,22 +134,18 @@ const getData = async (): Promise<ExerciseData> => {
 
 export default defineComponent({
     data () {
-		const routineStore = useRoutineStore();
-		const windowStore = useWindowStore();
-		const snackbarStore = useSnackbarStore();
 		const exerciseQuery = useQuery('exercises', () => getData());
-		const entryCount = 1;
-		const name = 'New Routine';
 
         return ({
-            routineStore,
-			windowStore,
-			snackbarStore,
+            routineStore: useRoutineStore(),
+			windowStore: useWindowStore(),
+			snackbarStore: useSnackbarStore(),
+			modeStore: useModeStore(),
 			exerciseQuery,
-			entryCount,
+			entryCount: 1,
 			dialog: false,
 			snackbar: false,
-			name
+			name: 'New Routine'
         });
     },
     components: {
@@ -152,52 +153,32 @@ export default defineComponent({
 		ExerciseForm
     },
 	methods: {
-		deleteExercise (e: MouseEvent) {
-			e.preventDefault();
-
-			if (this.entryCount > 1) {
-				this.entryCount--;
-			}
-		},
 		addRoutine (e: MouseEvent) {
 			e.preventDefault();
 
 			const routine = ({
 				name: this.name,
 				day: this.routineStore.weekdays[this.routineStore.activeDay],
-				entries: [] as Entry[]
+				entries: this.routineStore.entries
 			});
-
-			for (let i = 1; i <= this.entryCount; i++) {
-				const name = document.getElementById(`exercise-${i}-name`) as HTMLSelectElement;
-
-				const entry = ({
-					key: i,
-					name: name.value || `Exercise ${i}`,
-					sets: []
-				} as Entry);
-
-				for (let j = 1; j <= 6; j++) {
-					const reps = document.getElementById(`exc-${i}-repCount-${j}`) as HTMLInputElement;
-					const weight = document.getElementById(`exc-${i}-weight-${j}`) as HTMLInputElement;
-
-					if (reps && weight) {
-						entry.sets.push({
-							key: j,
-							weight: Number(weight.value),
-							reps: Number(reps.value)
-						} as Set)
-					}
-				}
-
-				routine.entries.push(entry);
-			}
 
 			this.routineStore.addRoutine(routine);
 			this.dialog = false;
 			this.snackbarStore.text = 'Routine successfully added';
 			this.snackbarStore.color = 'success';
+			this.snackbarStore.icon = 'mdi-check';
 			this.snackbarStore.open = true;
+		},
+		checkRoutines () {
+			const numOfRoutines = this.routineStore.routines.filter(routine => routine.attributes.day === this.routineStore.weekdays[this.routineStore.activeDay]);
+
+			if (numOfRoutines.length === 2) {
+				this.dialog = false;
+				this.snackbarStore.text = 'You already have 2 routines for this day!';
+				this.snackbarStore.color = 'error';
+				this.snackbarStore.icon = 'mdi-alert-circle';
+				this.snackbarStore.open = true;
+			}
 		},
 		mergeProps
 	}

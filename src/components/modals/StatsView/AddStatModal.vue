@@ -27,7 +27,9 @@
 			</template>
 		</v-tooltip>
 	</template>
-	<v-card class="d-flex justify-center align-center pa-2 rounded-lg bg-blue-grey-lighten-3 text-black">
+	<v-card
+		:class="modeStore.darkMode ? 'bg-blue-grey-darken-3 d-flex justify-center align-center pa-2 rounded-lg' : 'bg-blue-grey-lighten-3 d-flex justify-center align-center pa-2 rounded-lg'"
+	>
 		<v-card-title class="d-flex justify-center align-center w-100">
 			<v-icon
 				icon="mdi-account-search"
@@ -35,8 +37,24 @@
 			></v-icon>
 			Log Statistic
 		</v-card-title>
-		<v-card-actions class="d-flex flex-wrap justify-center align-center w-100" :style="{gap: '10px'}">
-			<v-tabs v-model="tab" bg-color="primary">
+		<v-card-actions
+			class="d-flex flex-wrap justify-center align-center w-100"
+			:style="{gap: '10px'}"
+		>
+			<VueDatePicker
+				class="d-flex justify-center align-center"
+				:dark="modeStore.darkMode ? true : false"
+				v-model="statStore.date"
+				ref="datepicker"
+				:teleport="true"
+				:enable-time-picker="false"
+				@update:model-value="handleDate"
+			/>
+			<v-tabs
+				v-model="tab"
+				bg-color="primary"
+				show-arrows
+			>
 				<v-tab
 					value="weight"
 					prepend-icon="mdi-scale-bathroom"
@@ -152,10 +170,14 @@ import { useStatStore } from '@/stores/statStore';
 import { useExerciseStore } from '@/stores/exerciseStore';
 import { useSnackbarStore } from '@/stores/snackbarStore';
 import { useWindowStore } from '@/stores/windowStore';
+import { useModeStore } from '@/stores/modeStore';
 // Local components
 import CloseButton from '@/components/buttons/CloseButton.vue';
 // Type interfaces
 import { ExerciseData } from '@/types';
+// Third-party components
+import VueDatePicker from '@vuepic/vue-datepicker';
+import '@vuepic/vue-datepicker/dist/main.css';
 
 const getData = async (url: string): Promise<ExerciseData> => {
 	return await fetch(url)
@@ -165,26 +187,18 @@ const getData = async (url: string): Promise<ExerciseData> => {
 
 export default defineComponent({
     data () {
-        const statStore = useStatStore();
-		const exerciseStore = useExerciseStore();
-		const snackbarStore = useSnackbarStore();
-		const windowStore = useWindowStore();
-		const weight = 0;
-		const muscle = 'Upper Arm';
-		const measurement = 0;
 		const { error, isError, isLoading, isFetching, isSuccess, data, refetch } = useQuery('exercises', () => getData('https://wger.de/api/v2/exercise/?language=2&limit=999'));
-		const exercise = '';
-		const record = 0;
 
         return ({
-            statStore,
-			exerciseStore,
-			snackbarStore,
-			windowStore,
+            statStore: useStatStore(),
+			exerciseStore: useExerciseStore(),
+			snackbarStore: useSnackbarStore(),
+			windowStore: useWindowStore(),
+			modeStore: useModeStore(),
 			dialog: false,
-			weight,
-			muscle,
-			measurement,
+			weight: 0,
+			muscle: 'Upper Arm',
+			measurement: 0,
 			error,
 			isError,
 			isLoading,
@@ -192,13 +206,14 @@ export default defineComponent({
 			isSuccess,
 			data,
 			refetch,
-			exercise,
-			record,
+			exercise: '',
+			record: 0,
 			tab: 'weight'
         });
     },
     components: {
-        CloseButton
+        CloseButton,
+		VueDatePicker
     },
 	methods: {
 		addStat (e: MouseEvent) {
@@ -217,33 +232,42 @@ export default defineComponent({
 				default:
 					break;
 			}
-
-			this.dialog = false;
-			this.snackbarStore.text = 'Stat successfully added';
-			this.snackbarStore.color = 'success';
-			this.snackbarStore.open = true;
 		},
 		addWeight () {
+			const weightExists = this.statStore.weights.find(weight => weight.attributes.date === this.statStore.date.toLocaleDateString('en-CA').split('T')[0]);
+
+			if (weightExists) this.statStore.deleteWeight(weightExists.id);
+
 			this.statStore.addWeight(this.weight);
+			this.dialog = false;
+			this.snackbarStore.text = 'Weight successfully added';
+			this.snackbarStore.color = 'success';
+			this.snackbarStore.icon = 'mdi-check';
+			this.snackbarStore.open = true;
 		},
 		addMeasurement () {
-			const recordExists = this.statStore.measurements.find(measurement => {
-				if (measurement.attributes.date === this.statStore.date &&
+			const measurementExists = this.statStore.measurements.find(measurement => {
+				if (measurement.attributes.date === this.statStore.date.toLocaleDateString('en-CA').split('T')[0] &&
 				measurement.attributes.muscle === this.muscle) {
 					return true;
 				} else return false;
 			});
 
-			if (recordExists) this.statStore.deleteRecord(recordExists.id);
+			if (measurementExists) this.statStore.deleteMeasurement(measurementExists.id);
 
 			this.statStore.addMeasurement(this.muscle, this.measurement);
+			this.dialog = false;
+			this.snackbarStore.text = 'Measurement successfully added';
+			this.snackbarStore.color = 'success';
+			this.snackbarStore.icon = 'mdi-check';
+			this.snackbarStore.open = true;
 		},
 		addRecord () {
 			const exercise = this.data?.results.find(exercise => exercise.name === this.exercise);
 			if (!exercise) return;
 
 			const recordExists = this.statStore.records.find(record => {
-				if (record.attributes.date === this.statStore.date &&
+				if (record.attributes.date === this.statStore.date.toLocaleDateString('en-CA').split('T')[0] &&
 				record.attributes.exercise === exercise.exercise_base) {
 					return true;
 				} else return false;
@@ -252,6 +276,16 @@ export default defineComponent({
 			if (recordExists) this.statStore.deleteRecord(recordExists.id);
 
 			this.statStore.addRecord(exercise.exercise_base, this.record);
+			this.dialog = false;
+			this.snackbarStore.text = 'Record successfully added';
+			this.snackbarStore.color = 'success';
+			this.snackbarStore.icon = 'mdi-check';
+			this.snackbarStore.open = true;
+		},
+		handleDate (modelData) {
+			this.statStore.date = modelData;
+			this.statStore.dateVal = this.statStore.date.getDate();
+			this.statStore.dateString = modelData.toLocaleDateString('en-CA').split('T')[0];
 		},
 		mergeProps
 	}

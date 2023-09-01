@@ -23,7 +23,7 @@
         </v-btn>
     </template>
     <v-card
-		class="rounded-lg bg-blue-grey-lighten-3"
+        :class="modeStore.darkMode ? 'bg-blue-grey-darken-3 d-flex justify-center align-center pa-2 rounded-lg' : 'bg-blue-grey-lighten-3 d-flex justify-center align-center pa-2 rounded-lg'"
 	>
         <v-card-text>Are you sure you want to log out?</v-card-text>
         <v-card-actions>
@@ -54,6 +54,7 @@ import CloseButton from '../buttons/CloseButton.vue';
 import { useLoginStore } from '@/stores/loginStore';
 import { useSnackbarStore } from '@/stores/snackbarStore';
 import { useWindowStore } from '@/stores/windowStore';
+import { useModeStore } from '@/stores/modeStore';
 
 export default defineComponent({
     data () {
@@ -61,6 +62,7 @@ export default defineComponent({
             loginStore: useLoginStore(),
             snackbarStore: useSnackbarStore(),
             windowStore: useWindowStore(),
+            modeStore: useModeStore(),
             dialog: false
         });
     },

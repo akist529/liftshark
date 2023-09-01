@@ -1,29 +1,34 @@
 <template>
 <v-card
 	v-if="workout || routine"
-	class="d-flex flex-column justify-center align-center bg-blue-grey-darken-4"
+	:class="modeStore.darkMode ? 'd-flex flex-column justify-center align-center bg-blue-grey-darken-3 overflow-scroll' : 'd-flex flex-column justify-center align-center bg-blue-grey-lighten-3'"
 	:width="300"
-	height="100%"
 >
 	<v-card-actions
 		v-if="!preview"
 	>
-		<v-btn
-			:title="workout ? 'Edit Workout' : 'Edit Routine'"
-			variant="plain"
-			width="24"
-			height="24"
-			:style="{position: 'absolute', top: '5px', left: '5px'}">
-			<v-icon
-				icon="mdi-book-edit"
-				size="large"
-			></v-icon>
-		</v-btn>
-		<DeleteButton
-			:title="workout ? 'Delete Workout' : 'Delete Routine'"
-			:style="{position: 'absolute', top: '5px', right: '5px'}"
-			@click="deleteItem"
-		/>
+		<v-tooltip :text="workout ? 'Edit Workout' : 'Edit Routine'">
+			<template v-slot:activator="{ props }">
+				<v-btn
+					v-bind="props"
+					variant="plain"
+					:style="{ position: 'absolute', top: '5px', left: '5px' }">
+					<v-icon
+						icon="mdi-book-edit"
+						size="xx-large"
+					></v-icon>
+				</v-btn>
+			</template>
+		</v-tooltip>
+		<v-tooltip :text="workout ? 'Delete Workout' : 'Delete Routine'">
+			<template v-slot:activator="{ props }">
+				<DeleteButton
+					v-bind="props"
+					:style="{ position: 'absolute', top: '5px', right: '5px' }"
+					@click="deleteItem"
+				/>
+			</template>
+		</v-tooltip>
 	</v-card-actions>
 	<v-card-title
 		v-if="!preview"
@@ -36,15 +41,18 @@
 			v-else-if="routine"
 		>{{ routine.attributes.name }}</span>
 	</v-card-title>
-	<v-card-text>
+	<v-card-text class="overflow-y-auto">
 		<v-list
-			height="100%"
+			:class="modeStore.darkMode ? 'bg-blue-grey-darken-4' : 'bg-blue-grey-lighten-4'"
+			:height="300"
 		>
 			<v-list-item
 				v-for="entry in entries"
 				:key="entry.key"
 			>
-				<v-table>
+				<v-table
+					:class="modeStore.darkMode ? 'bg-blue-grey-darken-4 text-white' : 'bg-blue-grey-lighten-4 text-black'"
+				>
 					<caption>{{ entry.name }}</caption>
 					<tbody>
 						<tr
@@ -82,6 +90,7 @@ import { WorkoutData, RoutineData } from '@/types/index';
 // Pinia stores
 import { useWorkoutStore } from '@/stores/workoutStore';
 import { useRoutineStore } from '@/stores/routineStore';
+import { useModeStore } from '@/stores/modeStore';
 // Local components
 import DeleteButton from '@/components/buttons/DeleteButton.vue';
 
@@ -89,7 +98,8 @@ export default defineComponent({
 	data () {
 		return ({
 			workoutStore: useWorkoutStore(),
-			routineStore: useRoutineStore()
+			routineStore: useRoutineStore(),
+			modeStore: useModeStore()
 		});
 	},
 	components: {
