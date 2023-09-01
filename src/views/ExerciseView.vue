@@ -216,7 +216,7 @@
 						:class="modeStore.darkMode ? 'bg-blue-grey-darken-1 pa-2 h-100' : 'bg-blue-lighten-3 pa-2 h-100'"
 					>
 						<v-carousel
-							v-if="images.data.results.length"
+							v-if="images.isFetched && images.data && images.data.results.length"
 							class="bg-white"
 						>
 							<v-carousel-item
@@ -254,16 +254,25 @@
 					<v-card-text
 						:class="modeStore.darkMode ? 'bg-blue-grey-darken-1 pa-2 h-100' : 'bg-blue-lighten-3 pa-2 h-100'"
 					>
-						<v-table v-if="workouts.length">
+						<v-table
+							v-if="workouts.length"
+							:class="modeStore.darkMode ? 'bg-blue-grey-darken-4 text-white' : 'bg-blue-grey-lighten-4 text-black'"
+						>
 							<thead>
 								<tr>
-									<th class="text-left">
+									<th
+										:class="modeStore.darkMode ? 'text-white' : 'text-black'"
+									>
 										Date
 									</th>
-									<th class="text-left">
+									<th
+										:class="modeStore.darkMode ? 'text-white' : 'text-black'"
+									>
 										Record (lbs)
 									</th>
-									<th class="text-left">
+									<th
+										:class="modeStore.darkMode ? 'text-white' : 'text-black'"
+									>
 										Record (reps)
 									</th>
 								</tr>
@@ -308,10 +317,14 @@
 						>
 							<thead>
 								<tr>
-									<th :class="modeStore.darkMode ? 'text-white' : 'text-black'">
+									<th
+										:class="modeStore.darkMode ? 'text-white' : 'text-black'"
+									>
 										Date
 									</th>
-									<th :class="modeStore.darkMode ? 'text-white' : 'text-black'">
+									<th
+										:class="modeStore.darkMode ? 'text-white' : 'text-black'"
+									>
 										Max (lbs)
 									</th>
 								</tr>
