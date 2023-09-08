@@ -12,6 +12,7 @@
     "@vueuse/core": "^10.3.0",
     "@vueuse/integrations": "^10.3.0",
     "axios": "^1.2.2",
+    "build": "^0.1.4",
     "core-js": "^3.8.3",
     "js-cookie": "^3.0.1",
     "pinia": "^2.1.4",

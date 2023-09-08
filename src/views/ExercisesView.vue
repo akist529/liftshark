@@ -164,7 +164,7 @@ const getData = async (url: string): Promise<any> => {
 export default defineComponent({
 	data () {
 		const exerciseStore = useExerciseStore();
-		const exercises = useQuery(['exercises', exerciseStore], () => getExerciseData(exerciseStore.page, exerciseStore.filteredMuscle, exerciseStore.filteredEquipment), { onError: (error) => console.log('ERROR', error) });
+		const exercises = useQuery('exercises', () => getExerciseData(exerciseStore.page, exerciseStore.filteredMuscle, exerciseStore.filteredEquipment), { onError: (error) => console.log('ERROR', error) });
 		const muscles = useQuery('muscles', () => getData('https://wger.de/api/v2/muscle?limit=999'), { useErrorBoundary: true });
 		const equipment = useQuery('equipment', () => getData('https://wger.de/api/v2/equipment?limit=999'), { useErrorBoundary: true });
 
@@ -179,14 +179,11 @@ export default defineComponent({
 		});
 	},
 	watch: {
-		exerciseStore: {
-			deep: true,
-			handler () {
-				this.exercises.refetch();
-				this.$nextTick(() => {
-					window.scrollTo({ top: 0, behavior: 'smooth' });
-				});
-			}
+		'exerciseStore.page' () {
+			this.exercises.refetch();
+			this.$nextTick(() => {
+				window.scrollTo({ top: 0, behavior: 'smooth' });
+			});
 		}
 	},
 	components: {
@@ -196,15 +193,6 @@ export default defineComponent({
 		MyFooter
 	},
 	computed: {
-		cols () {
-			if (this.windowStore.width < 800) {
-				return 12;
-			} else if (this.windowStore.width < 992) {
-				return 6;
-			} else {
-				return 4;
-			}
-		},
 		error () {
 			if (this.exercises.error ||
 			this.exercises.isError ||

@@ -116,7 +116,7 @@ import { defineComponent, mergeProps } from 'vue';
 // Vue Query imports
 import { useQuery } from 'vue-query';
 // Type interfaces
-import { ExerciseData, Entry, Set } from '@/types/index';
+import { ExerciseData } from '@/types/index';
 // Pinia stores
 import { useRoutineStore } from '@/stores/routineStore';
 import { useWindowStore } from '@/stores/windowStore';
