@@ -4,13 +4,13 @@ A fitness tracker app that allows users to measure their workout activity and mo
 
 ## Built With
 
-* [TypeScript](https://www.typescriptlang.org/)
-* [Vue.js](https://vuejs.org/)
-* [Redux Toolkit](https://pinia.vuejs.org/)
-* [SASS](https://sass-lang.com/)
-* [Vue Query](https://vue-query.vercel.app/#/)
-* [Vuetify](https://vuetifyjs.com)
-* [Strapi](https://strapi.io/)
+* [TypeScript](https://www.typescriptlang.org/) - For type-safe JavaScript
+* [Vue.js](https://vuejs.org/) - Front-end framework
+* [Pinia](https://pinia.vuejs.org/) - State management tool
+* [SASS](https://sass-lang.com/) - For scalable and clean CSS
+* [Vue Query](https://vue-query.vercel.app/#/) - For fetching and caching API data
+* [Vuetify](https://vuetifyjs.com) - UI library for Vue components
+* [Strapi](https://strapi.io/) - Headless CMS for backend data and APIs
 
 ## Authors
 
