@@ -115,7 +115,6 @@ export default defineComponent({
         updateName (name: string) {
             if (this.modal === 'workout') {
                 this.workoutStore.entries[this.entry.key].name = name;
-                console.log(this.workoutStore.entries[this.entry.key].name);
             } else {
                 this.routineStore.entries[this.entry.key].name = name;
             }

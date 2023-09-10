@@ -36,6 +36,13 @@
 			:src="images.data.results[0].image"
 			alt="Exercise Image"
 		></v-img>
+		<v-progress-circular
+			v-else-if="images.isLoading && !images.error"
+			indeterminate
+			:size="70"
+			:width="7"
+			color="primary"
+		></v-progress-circular>
 		<span v-else>NO IMAGE AVAILABLE</span>
 	</v-sheet>
 	<v-card-text
