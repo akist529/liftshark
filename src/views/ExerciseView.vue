@@ -110,11 +110,11 @@
 										v-slot:prepend
 									>
 										<span
-											:style="getIcon('muscles', getSlug(getMuscleName(muscle)))"
+											:style="getIcon('muscles', getSlug(getMuscleName(muscle).split(' ')[0]))"
 										></span>
 									</template>
 									<v-list-item-title
-										v-text="getMuscleName(muscle)"
+										v-text="getMuscleName(muscle).split(' ')[0]"
 									></v-list-item-title>
 								</v-list-item>
 								<v-list-item
