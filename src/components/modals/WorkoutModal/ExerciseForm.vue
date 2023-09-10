@@ -7,7 +7,8 @@
             <v-select
                 label="Exercise"
                 :items="exercises.map(exercise => exercise.name)"
-                :v-model="modal === 'workout' ? workoutStore.entries[entry.key].name : routineStore.entries[entry.key].name"
+                :modelValue="name"
+                @update:modelValue="newValue => updateName(newValue)"
             ></v-select>
         </v-col>
         <v-col
@@ -87,6 +88,7 @@ export default defineComponent({
             workoutStore: useWorkoutStore(),
             routineStore: useRoutineStore(),
             modeStore: useModeStore(),
+            name: '2 Handed Kettlebell Swing',
             sets: 1,
             tickLabels
         });
@@ -110,6 +112,16 @@ export default defineComponent({
         DeleteButton
     },
     methods: {
+        updateName (name: string) {
+            if (this.modal === 'workout') {
+                this.workoutStore.entries[this.entry.key].name = name;
+                console.log(this.workoutStore.entries[this.entry.key].name);
+            } else {
+                this.routineStore.entries[this.entry.key].name = name;
+            }
+
+            this.name = name;
+        },
         updateSetCount (oldCount: number, newCount: number) {
             if (this.sets > newCount) {
                 if (this.modal === 'workout') {
