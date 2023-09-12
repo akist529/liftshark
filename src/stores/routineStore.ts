@@ -82,7 +82,7 @@ export const useRoutineStore = defineStore('routineStore', {
             this.loading = true;
 
             if (token) {
-				await fetch('http://localhost:1337/api/routines', {
+				await fetch('https://strapi-hj5r.onrender.com/api/routines', {
 					method: 'POST',
 					headers: {
                         Authorization: `Bearer ${token}`,
@@ -114,7 +114,7 @@ export const useRoutineStore = defineStore('routineStore', {
 
             if (routine) {
                 if (token) {
-                    await fetch(`http://localhost:1337/api/routines/${routine.id}`, {
+                    await fetch(`https://strapi-hj5r.onrender.com/api/routines/${routine.id}`, {
                         method: 'PUT',
                         headers: {
                             Authorization: `Bearer ${Cookies.get('token')}`,
@@ -149,7 +149,7 @@ export const useRoutineStore = defineStore('routineStore', {
             this.routines = updatedRoutines;
 
             if (token) {
-				await fetch('http://localhost:1337/apis/routines', {
+				await fetch('https://strapi-hj5r.onrender.com/apis/routines', {
 					method: 'PUT',
 					headers: {
 						Authorization: `Bearer ${Cookies.get('token')}`,
@@ -174,7 +174,7 @@ export const useRoutineStore = defineStore('routineStore', {
             this.loading = true;
 
             if (token) {
-				await fetch('http://localhost:1337/api/routines', {
+				await fetch('https://strapi-hj5r.onrender.com/api/routines', {
 					method: 'GET',
 					headers: {
 						Authorization: `Bearer ${Cookies.get('token')}`,

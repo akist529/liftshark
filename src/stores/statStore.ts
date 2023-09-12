@@ -25,7 +25,7 @@ export const useStatStore = defineStore('statStore', {
     actions: {
         async addWeight (weight: number) {
             if (token) {
-                await fetch('http://localhost:1337/api/weights', {
+                await fetch('https://strapi-hj5r.onrender.com/api/weights', {
                     method: 'POST',
                     headers: {
                         Authorization: `Bearer ${token}`,
@@ -56,7 +56,7 @@ export const useStatStore = defineStore('statStore', {
         },
         async addMeasurement (muscle: string, measurement: number) {
             if (token) {
-                await fetch('http://localhost:1337/api/measurements', {
+                await fetch('https://strapi-hj5r.onrender.com/api/measurements', {
                     method: 'POST',
                     headers: {
                         Authorization: `Bearer ${token}`,
@@ -89,7 +89,7 @@ export const useStatStore = defineStore('statStore', {
         },
         async addRecord (exercise: number, max: number) {
             if (token) {
-                await fetch('http://localhost:1337/api/records', {
+                await fetch('https://strapi-hj5r.onrender.com/api/records', {
                     method: 'POST',
                     headers: {
                         Authorization: `Bearer ${token}`,
@@ -124,7 +124,7 @@ export const useStatStore = defineStore('statStore', {
             const weights = this.weights.filter(weight => weight.id !== idToDelete);
 
             if (token) {
-                await fetch('http://localhost:1337/api/weights', {
+                await fetch('https://strapi-hj5r.onrender.com/api/weights', {
                     method: 'PUT',
                     headers: {
                         Authorization: `Bearer ${token}`,
@@ -144,7 +144,7 @@ export const useStatStore = defineStore('statStore', {
             const measurements = this.measurements.filter(measurement => measurement.id !== idToDelete);
 
             if (token) {
-                await fetch('http://localhost:1337/api/measurements', {
+                await fetch('https://strapi-hj5r.onrender.com/api/measurements', {
                     method: 'PUT',
                     headers: {
                         Authorization: `Bearer ${token}`,
@@ -164,7 +164,7 @@ export const useStatStore = defineStore('statStore', {
             const records = this.records.filter(record => record.id !== idToDelete);
 
             if (token) {
-                await fetch('http://localhost:1337/api/records', {
+                await fetch('https://strapi-hj5r.onrender.com/api/records', {
                     method: 'PUT',
                     headers: {
                         Authorization: `Bearer ${token}`,
@@ -185,7 +185,7 @@ export const useStatStore = defineStore('statStore', {
             weights.push(weight);
 
             if (token) {
-                await fetch('http://localhost:1337/api/weights', {
+                await fetch('https://strapi-hj5r.onrender.com/api/weights', {
                     method: 'PUT',
                     headers: {
                         Authorization: `Bearer ${token}`,
@@ -206,7 +206,7 @@ export const useStatStore = defineStore('statStore', {
             measurements.push(measurement);
 
             if (token) {
-                await fetch('http://localhost:1337/api/measurements', {
+                await fetch('https://strapi-hj5r.onrender.com/api/measurements', {
                     method: 'PUT',
                     headers: {
                         Authorization: `Bearer ${token}`,
@@ -227,7 +227,7 @@ export const useStatStore = defineStore('statStore', {
             records.push(record);
 
             if (token) {
-                await fetch('http://localhost:1337/api/records', {
+                await fetch('https://strapi-hj5r.onrender.com/api/records', {
                     method: 'PUT',
                     headers: {
                         Authorization: `Bearer ${token}`,
@@ -247,7 +247,7 @@ export const useStatStore = defineStore('statStore', {
             this.loading = true;
 
             if (token) {
-                await fetch('http://localhost:1337/api/weights', {
+                await fetch('https://strapi-hj5r.onrender.com/api/weights', {
                     method: 'GET',
                     headers: {
                         Authorization: `Bearer ${token}`,
@@ -270,7 +270,7 @@ export const useStatStore = defineStore('statStore', {
             this.loading = true;
 
             if (token) {
-                await fetch('http://localhost:1337/api/measurements', {
+                await fetch('https://strapi-hj5r.onrender.com/api/measurements', {
                     method: 'GET',
                     headers: {
                         Authorization: `Bearer ${Cookies.get('token')}`,
@@ -293,7 +293,7 @@ export const useStatStore = defineStore('statStore', {
             this.loading = true;
 
             if (token) {
-                await fetch('http://localhost:1337/api/records', {
+                await fetch('https://strapi-hj5r.onrender.com/api/records', {
                     method: 'GET',
                     headers: {
                         Authorization: `Bearer ${Cookies.get('token')}`,

@@ -76,7 +76,7 @@ export const useWorkoutStore = defineStore('workoutStore', {
             this.loading = true;
 
             if (token) {
-                await fetch('http://localhost:1337/api/workouts', {
+                await fetch('https://strapi-hj5r.onrender.com/api/workouts', {
                     method: 'POST',
                     headers: {
                         Authorization: `Bearer ${token}`,
@@ -107,7 +107,7 @@ export const useWorkoutStore = defineStore('workoutStore', {
             this.loading = true;
 
             if (token) {
-				await fetch(`http://localhost:1337/api/workouts/${idToDelete}`, {
+				await fetch(`https://strapi-hj5r.onrender.com/api/workouts/${idToDelete}`, {
 					method: 'DELETE',
 					headers: {
 						Authorization: `Bearer ${token}`,
@@ -133,7 +133,7 @@ export const useWorkoutStore = defineStore('workoutStore', {
             workouts.push(workout);
 
             if (token) {
-                await fetch('http://localhost:1337/api/workouts', {
+                await fetch('https://strapi-hj5r.onrender.com/api/workouts', {
                     method: 'PUT',
                     headers: {
                         Authorization: `Bearer ${token}`,
@@ -159,7 +159,7 @@ export const useWorkoutStore = defineStore('workoutStore', {
             this.loading = true;
 
             if (token) {
-				await fetch('http://localhost:1337/api/workouts', {
+				await fetch('https://strapi-hj5r.onrender.com/api/workouts', {
 					method: 'GET',
 					headers: {
 						Authorization: `Bearer ${token}`,
