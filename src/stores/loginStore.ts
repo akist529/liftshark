@@ -6,7 +6,7 @@ import { useSnackbarStore } from './snackbarStore';
 import Cookies from 'js-cookie';
 import axios from 'axios';
 
-export const useLoginStore = defineStore('useLoginStore', {
+export const useLoginStore = defineStore('loginStore', {
     state: () => ({
         error: false,
 		snackbarStore: useSnackbarStore(),
