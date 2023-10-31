@@ -1,6 +1,5 @@
 <template>
 <v-toolbar
-    v-if="isLoaded && !isError && exercise.data && muscles.data && equipment.data"
     class="px-5 py-1"
     :color="modeStore.darkMode ? 'blue-grey-darken-4' : 'blue-lighten-3'"
     density="compact"
@@ -9,7 +8,14 @@
     <v-toolbar-title
         class="flex text-center pa-0 ma-0"
     >
-        {{ exercise.data.name }}
+        <VSkeletonLoader
+            v-if="exercise.isLoading || exercise.isFetching"
+            type="list-item-avatar"
+            color="transparent"
+        ></VSkeletonLoader>
+        <span
+            v-else-if="exercise.isSuccess && exercise.data"
+        >{{ exercise.data.name }}</span>
     </v-toolbar-title>
     <template v-slot:extension>
         <v-tooltip text="Back to Exercises">
@@ -33,6 +39,7 @@
             <ExerciseRoutineModal />
             <ExerciseWorkoutModal />
             <BookmarkButton
+                v-if="exercise.isSuccess && exercise.data"
                 :id="exercise.data.id" />
         </v-toolbar-items>
     </template>
@@ -42,6 +49,8 @@
 <script lang="ts">
 // Vue imports
 import { defineComponent } from 'vue';
+// Vuetify imports
+import { VSkeletonLoader } from 'vuetify/lib/labs/components.mjs';
 // Local components
 import ExerciseRoutineModal from '../modals/ExerciseRoutineModal.vue';
 import ExerciseWorkoutModal from '../modals/ExerciseWorkoutModal.vue';
@@ -60,7 +69,8 @@ export default defineComponent({
         ExerciseRoutineModal,
         ExerciseWorkoutModal,
         AddMaxModal,
-        BookmarkButton
+        BookmarkButton,
+        VSkeletonLoader
     },
     props: ['exercise', 'muscles', 'equipment', 'isLoaded', 'isError']
 });

@@ -75,7 +75,7 @@
 						class="w-100 ma-0 align-self-stretch"
 					>
 						<v-col
-							v-for="exercise in exercises.data.results"
+							v-for="exercise in filteredExercises"
 							:key="exercise.id"
 							:xs="12"
 							:sm="6"
@@ -137,7 +137,7 @@ import LoginBanner from '@/components/banners/LoginBanner.vue';
 import ExercisesToolbar from '@/components/toolbars/ExercisesToolbar.vue';
 import MyFooter from '@/components/MyFooter.vue';
 // Type interfaces
-import { ExerciseData, Muscle, Equipment } from '@/types/index';
+import { ExerciseData, Exercise, Muscle, Equipment } from '@/types/index';
 
 const getExerciseData = async (page: number, muscle: Muscle | null, equipment: Equipment | null): Promise<ExerciseData> => {
 	let url = `https://wger.de/api/v2/exercise/?language=2&limit=20&offset=${(page - 1) * 20}`;
@@ -212,6 +212,21 @@ export default defineComponent({
 				return true;
 			} else {
 				return false;
+			}
+		},
+		filteredExercises (): Exercise[] {
+			if (this.exercises.data) {
+				const filtered = Array.from(this.exercises.data.results);
+
+				for (let i = 0; i < filtered.length - 1; i++) {
+					if (filtered[i].name === filtered[i + 1].name) {
+						filtered.splice(i + 1, 1);
+					}
+				}
+
+				return filtered;
+			} else {
+				return [];
 			}
 		}
 	}

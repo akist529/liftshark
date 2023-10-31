@@ -94,7 +94,7 @@
 					<ExerciseForm
 						:entry="entry"
 						modal="routine"
-						:exercises="exerciseQuery.data.results"
+						:exercises="filteredExercises"
 					/>
 				</v-window-item>
 			</v-window>
@@ -116,7 +116,7 @@ import { defineComponent, mergeProps } from 'vue';
 // Vue Query imports
 import { useQuery } from 'vue-query';
 // Type interfaces
-import { ExerciseData } from '@/types/index';
+import { ExerciseData, Exercise } from '@/types/index';
 // Pinia stores
 import { useRoutineStore } from '@/stores/routineStore';
 import { useWindowStore } from '@/stores/windowStore';
@@ -181,6 +181,23 @@ export default defineComponent({
 			}
 		},
 		mergeProps
+	},
+	computed: {
+		filteredExercises (): Exercise[] {
+			if (this.exerciseQuery.data) {
+				const filtered = Array.from(this.exerciseQuery.data.results);
+
+				for (let i = 0; i < filtered.length - 1; i++) {
+					if (filtered[i].name === filtered[i + 1].name) {
+						filtered.splice(i + 1, 1);
+					}
+				}
+
+				return filtered;
+			} else {
+				return [];
+			}
+		}
 	}
 });
 </script>

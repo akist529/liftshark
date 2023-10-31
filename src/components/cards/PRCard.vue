@@ -20,7 +20,7 @@
             v-model="exercise"
             label="Exercise"
             :placeholder="data.results[0].name"
-            :items="data.results.map(exercise => exercise.name)"
+            :items="filteredExercises.map(exercise => exercise.name)"
         ></v-select>
     </v-card-actions>
     <v-card-text>
@@ -61,7 +61,7 @@ import { useQuery } from 'vue-query';
 import { useStatStore } from '@/stores/statStore';
 import { useModeStore } from '@/stores/modeStore';
 // Type interfaces
-import { ExerciseData } from '@/types/index';
+import { ExerciseData, Exercise } from '@/types/index';
 // Local components
 import InfoAlert from '../alerts/InfoAlert.vue';
 
@@ -98,6 +98,23 @@ export default defineComponent({
     },
     components: {
         InfoAlert
+    },
+    computed: {
+        filteredExercises (): Exercise[] {
+			if (this.data) {
+				const filtered = Array.from(this.data.results);
+
+				for (let i = 0; i < filtered.length - 1; i++) {
+					if (filtered[i].name === filtered[i + 1].name) {
+						filtered.splice(i + 1, 1);
+					}
+				}
+
+				return filtered;
+			} else {
+				return [];
+			}
+		}
     }
 });
 </script>

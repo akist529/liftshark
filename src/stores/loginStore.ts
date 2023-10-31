@@ -6,7 +6,7 @@ import { useSnackbarStore } from './snackbarStore';
 import Cookies from 'js-cookie';
 import axios from 'axios';
 
-export const useLoginStore = defineStore('useLoginStore', {
+export const useLoginStore = defineStore('loginStore', {
     state: () => ({
         error: false,
 		snackbarStore: useSnackbarStore(),
@@ -17,7 +17,7 @@ export const useLoginStore = defineStore('useLoginStore', {
             Cookies.remove('token');
         },
         async registerUser (username: string, email: string, password: string) {
-			await axios.post('http://localhost:1337/api/auth/local/register', {
+			await axios.post('https://strapi-hj5r.onrender.com/api/auth/local/register', {
 					username: username,
 					email: email,
 					password: password
@@ -31,7 +31,7 @@ export const useLoginStore = defineStore('useLoginStore', {
 			});
 		},
         async loginUser (email: string, password: string) {
-			await axios.post('http://localhost:1337/api/auth/local', {
+			await axios.post('https://strapi-hj5r.onrender.com/api/auth/local', {
 				identifier: email,
 				password: password
 			}, {

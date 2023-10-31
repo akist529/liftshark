@@ -21,7 +21,7 @@ export const useExerciseStore = defineStore('exerciseStore', {
             this.loading = true;
 
             if (token) {
-                await fetch('http://localhost:1337/api/favorites', {
+                await fetch('https://strapi-hj5r.onrender.com/api/favorites', {
                     method: 'POST',
                     headers: {
                         Authorization: `Bearer ${token}`,
@@ -55,7 +55,7 @@ export const useExerciseStore = defineStore('exerciseStore', {
             if (!entry) return;
 
             if (token) {
-                await fetch(`http://localhost:1337/api/favorites/${entry.id}`, {
+                await fetch(`https://strapi-hj5r.onrender.com/api/favorites/${entry.id}`, {
                     method: 'DELETE',
                     headers: {
                         Authorization: `Bearer ${token}`,
@@ -73,7 +73,7 @@ export const useExerciseStore = defineStore('exerciseStore', {
             this.loading = true;
 
             if (token) {
-				await fetch('http://localhost:1337/api/favorites', {
+				await fetch('https://strapi-hj5r.onrender.com/api/favorites', {
 					method: 'GET',
 					headers: {
 						Authorization: `Bearer ${token}`,

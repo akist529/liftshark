@@ -22,16 +22,6 @@
 			</v-col>
 		</v-row>
 		<v-row
-			v-if="!isLoaded && !isError"
-			no-gutters
-			class="w-100 ma-0 align-self-stretch"
-		>
-			<v-col>
-				<LoadIcon />
-			</v-col>
-		</v-row>
-		<v-row
-			v-else-if="isLoaded && !isError && exercise.data"
 			no-gutters
 			class="w-100 ma-0 align-self-stretch"
 		>
@@ -55,6 +45,16 @@
 						Muscles
 					</v-card-title>
 					<v-card-text
+						v-if="exercise.isLoading || muscles.isLoading || exercise.isFetching || muscles.isFetching"
+						:class="modeStore.darkMode ? 'bg-blue-grey-darken-1 pa-2 h-100' : 'bg-blue-lighten-3 pa-2 h-100'"
+					>
+						<VSkeletonLoader
+							type="paragraph"
+							color="transparent"
+						></VSkeletonLoader>
+					</v-card-text>
+					<v-card-text
+						v-else-if="exercise.isSuccess && muscles.isSuccess && exercise.data && muscles.data"
 						:class="modeStore.darkMode ? 'bg-blue-grey-darken-1 pa-2 h-100' : 'bg-blue-lighten-3 pa-2 h-100'"
 					>
 						<v-list
@@ -110,11 +110,11 @@
 										v-slot:prepend
 									>
 										<span
-											:style="getIcon('muscles', getSlug(getMuscleName(muscle)))"
+											:style="getIcon('muscles', getSlug(getMuscleName(muscle).split(' ')[0]))"
 										></span>
 									</template>
 									<v-list-item-title
-										v-text="getMuscleName(muscle)"
+										v-text="getMuscleName(muscle).split(' ')[0]"
 									></v-list-item-title>
 								</v-list-item>
 								<v-list-item
@@ -143,6 +143,16 @@
 						Equipment
 					</v-card-title>
 					<v-card-text
+						v-if="exercise.isLoading || equipment.isLoading || exercise.isFetching || equipment.isFetching"
+						:class="modeStore.darkMode ? 'bg-blue-grey-darken-1 pa-2 h-100' : 'bg-blue-lighten-3 pa-2 h-100'"
+					>
+						<VSkeletonLoader
+							type="paragraph"
+							color="transparent"
+						></VSkeletonLoader>
+					</v-card-text>
+					<v-card-text
+						v-else-if="exercise.isSuccess && equipment.isSuccess && exercise.data && equipment.data"
 						:class="modeStore.darkMode ? 'bg-blue-grey-darken-1 pa-2 h-100' : 'bg-blue-lighten-3 pa-2 h-100'"
 					>
 						<v-list
@@ -194,6 +204,16 @@
 						Description
 					</v-card-title>
 					<v-card-text
+						v-if="exercise.isLoading || exercise.isFetching"
+						:class="modeStore.darkMode ? 'bg-blue-grey-darken-1 pa-2 h-100' : 'bg-blue-lighten-3 pa-2 h-100'"
+					>
+						<VSkeletonLoader
+							type="paragraph"
+							color="transparent"
+						></VSkeletonLoader>
+					</v-card-text>
+					<v-card-text
+						v-else-if="exercise.isSuccess && exercise.data"
 						:class="modeStore.darkMode ? 'bg-blue-grey-darken-1 pa-2 h-100' : 'bg-blue-lighten-3 pa-2 h-100'"
 						:innerHTML="exercise.data.description || '<span>None</span>'"
 					></v-card-text>
@@ -213,10 +233,20 @@
 						Images
 					</v-card-title>
 					<v-card-text
+						v-if="exercise.isLoading || images.isLoading || exercise.isFetching || images.isFetching"
+						:class="modeStore.darkMode ? 'bg-blue-grey-darken-1 pa-2 h-100' : 'bg-blue-lighten-3 pa-2 h-100'"
+					>
+						<VSkeletonLoader
+							type="paragraph"
+							color="transparent"
+						></VSkeletonLoader>
+					</v-card-text>
+					<v-card-text
+						v-else-if="exercise.isSuccess && images.isSuccess && exercise.data && images.data"
 						:class="modeStore.darkMode ? 'bg-blue-grey-darken-1 pa-2 h-100' : 'bg-blue-lighten-3 pa-2 h-100'"
 					>
 						<v-carousel
-							v-if="images.isFetched && images.data && images.data.results.length"
+							v-if="images.data && images.data.results.length"
 							class="bg-white"
 						>
 							<v-carousel-item
@@ -233,7 +263,7 @@
 							</v-carousel-item>
 						</v-carousel>
 						<span
-							v-if="!images.data.results.length"
+							v-if="!images.data || !images.data.results.length"
 						>No Images Available</span>
 					</v-card-text>
 				</v-card>
@@ -252,6 +282,16 @@
 						Workout History
 					</v-card-title>
 					<v-card-text
+						v-if="exercise.isLoading || exercise.isFetching"
+						:class="modeStore.darkMode ? 'bg-blue-grey-darken-1 pa-2 h-100' : 'bg-blue-lighten-3 pa-2 h-100'"
+					>
+						<VSkeletonLoader
+							type="paragraph"
+							color="transparent"
+						></VSkeletonLoader>
+					</v-card-text>
+					<v-card-text
+						v-else-if="exercise.isSuccess && exercise.data"
 						:class="modeStore.darkMode ? 'bg-blue-grey-darken-1 pa-2 h-100' : 'bg-blue-lighten-3 pa-2 h-100'"
 					>
 						<v-table
@@ -309,6 +349,16 @@
 						1-Rep Max
 					</v-card-title>
 					<v-card-text
+						v-if="exercise.isLoading || exercise.isFetching"
+						:class="modeStore.darkMode ? 'bg-blue-grey-darken-1 pa-2 h-100' : 'bg-blue-lighten-3 pa-2 h-100'"
+					>
+						<VSkeletonLoader
+							type="paragraph"
+							color="transparent"
+						></VSkeletonLoader>
+					</v-card-text>
+					<v-card-text
+						v-else-if="exercise.isSuccess && exercise.data"
 						:class="modeStore.darkMode ? 'bg-blue-grey-darken-1 pa-2 h-100' : 'bg-blue-lighten-3 pa-2 h-100'"
 					>
 						<v-table
@@ -348,7 +398,7 @@
 			</v-col>
 		</v-row>
 		<v-row
-			v-else
+			v-if="isError"
 			no-gutters
 			class="w-100 ma-0 align-self-stretch"
 		>
@@ -381,10 +431,11 @@
 import { defineComponent } from 'vue';
 // Vue Query imports
 import { useQuery } from 'vue-query';
+// Vuetify imports
+import { VSkeletonLoader } from 'vuetify/lib/labs/components.mjs';
 // Type interfaces
 import { Muscle, Equipment, Category, Exercise, RecordData } from '@/types/index';
 // Local components
-import LoadIcon from '@/components/LoadIcon.vue';
 import LoginBanner from '@/components/banners/LoginBanner.vue';
 import ExerciseToolbar from '@/components/toolbars/ExerciseToolbar.vue';
 import MyFooter from '@/components/MyFooter.vue';
@@ -398,7 +449,10 @@ import { useExerciseStore } from '@/stores/exerciseStore';
 const getData = async (url: string): Promise<any> => {
 	return await fetch(url)
 		.then(res => res.json())
-		.catch(err => console.log(err));
+		.catch(err => {
+			console.log(err);
+			throw new Error('Error retrieving data!');
+		});
 }
 
 const getExerciseData = async (slug: string): Promise<Exercise | undefined> => {
@@ -414,7 +468,10 @@ const getExerciseData = async (slug: string): Promise<Exercise | undefined> => {
 	let exercise = await fetch(`https://wger.de/api/v2/exercise/?name=${newSlug}&language=2`)
 		.then(res => res.json())
 		.then(data => data.results[0])
-		.catch(err => console.log(err));
+		.catch(err => {
+			console.log(err);
+			throw new Error('Error retrieving data!');
+		});
 
 	if (exercise) return exercise;
 
@@ -430,7 +487,10 @@ const getExerciseData = async (slug: string): Promise<Exercise | undefined> => {
 	exercise = await fetch(`https://wger.de/api/v2/exercise/?name=${newSlug}&language=2`)
 		.then(res => res.json())
 		.then(data => data.results[0])
-		.catch(err => console.log(err));
+		.catch(err => {
+			console.log(err);
+			throw new Error('Error retrieving data!');
+		});
 
 	if (exercise) return exercise;
 
@@ -448,7 +508,10 @@ const getExerciseData = async (slug: string): Promise<Exercise | undefined> => {
 		exercise = await fetch(`https://wger.de/api/v2/exercise/?name=${newSlug}&language=2`)
 			.then(res => res.json())
 			.then(data => data.results[0])
-			.catch(err => console.log(err));
+			.catch(err => {
+				console.log(err);
+				throw new Error('Error retrieving data!');
+			});
 
 		if (exercise) return exercise;
 	}
@@ -469,7 +532,10 @@ const getExerciseData = async (slug: string): Promise<Exercise | undefined> => {
 		exercise = await fetch(`https://wger.de/api/v2/exercise/?name=${newSlug}&language=2`)
 			.then(res => res.json())
 			.then(data => data.results[0])
-			.catch(err => console.log(err));
+			.catch(err => {
+				console.log(err);
+				throw new Error('Error retrieving data!');
+			});
 
 		if (exercise) return exercise;
 	}
@@ -490,7 +556,10 @@ const getExerciseData = async (slug: string): Promise<Exercise | undefined> => {
 		exercise = await fetch(`https://wger.de/api/v2/exercise/?name=${newSlug}&language=2`)
 			.then(res => res.json())
 			.then(data => data.results[0])
-			.catch(err => console.log(err));
+			.catch(err => {
+				console.log(err);
+				throw new Error('Error retrieving data!');
+			});
 
 		if (exercise) return exercise;
 	}
@@ -498,10 +567,12 @@ const getExerciseData = async (slug: string): Promise<Exercise | undefined> => {
 
 export default defineComponent({
 	data () {
+		// Vue Queries
 		const exercise = useQuery('exercise', () => getExerciseData(this.$route.params.id as string));
 		const muscles = useQuery('muscles', () => getData('https://wger.de/api/v2/muscle?limit=999'));
 		const equipment = useQuery('equipment', () => getData('https://wger.de/api/v2/equipment?limit=999'));
 		const images = useQuery(['images', this.exerciseBase], () => getData(`https://wger.de/api/v2/exerciseimage/?limit=999&exercise_base=${this.exerciseBase}`), { enabled: false });
+
 		const displayName = (this.$route.params.id as string).split('-').map(word => {
 				return word[0].toUpperCase() + word.slice(1);
 			}).join(' ');
@@ -516,6 +587,7 @@ export default defineComponent({
 			routerName: this.$route.params.id as string,
 			exerciseBase: 0,
 			error: true,
+			loading: true,
 			displayName,
 			workoutStore: useWorkoutStore(),
 			loginStore: useLoginStore(),
@@ -525,10 +597,10 @@ export default defineComponent({
 		});
 	},
 	components: {
-		LoadIcon,
 		LoginBanner,
 		ExerciseToolbar,
-		MyFooter
+		MyFooter,
+		VSkeletonLoader
 	},
 	methods: {
 		getMuscleName (item: number) {
@@ -568,12 +640,12 @@ export default defineComponent({
 	},
 	computed: {
 		isLoaded () {
-			if (this.exercise.isLoading || this.muscles.isLoading || this.equipment.isLoading) {
+			if (this.exercise.isLoading || this.muscles.isLoading || this.equipment.isLoading || this.images.isLoading) {
 				return false;
 			} else return true;
 		},
 		isError () {
-			if (this.exercise.isError || this.muscles.isError || this.equipment.isError) {
+			if (this.exercise.isError || this.muscles.isError || this.equipment.isError || this.images.isError) {
 				return true;
 			} else return false;
 		},
